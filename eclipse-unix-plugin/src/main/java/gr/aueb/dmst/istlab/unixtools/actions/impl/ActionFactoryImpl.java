@@ -5,8 +5,6 @@
 
 package gr.aueb.dmst.istlab.unixtools.actions.impl;
 
-import java.io.InputStream;
-
 import gr.aueb.dmst.istlab.unixtools.actions.Action;
 import gr.aueb.dmst.istlab.unixtools.actions.ActionFactory;
 import gr.aueb.dmst.istlab.unixtools.actions.DataActionResult;
@@ -14,8 +12,10 @@ import gr.aueb.dmst.istlab.unixtools.actions.VoidActionResult;
 import gr.aueb.dmst.istlab.unixtools.core.model.CommandPrototypeModel;
 import gr.aueb.dmst.istlab.unixtools.core.model.CustomCommand;
 import gr.aueb.dmst.istlab.unixtools.core.model.CustomCommandModel;
-import gr.aueb.dmst.istlab.unixtools.factories.IOFactorySingleton;
 import gr.aueb.dmst.istlab.unixtools.factories.RepositoryFactorySingleton;
+import gr.aueb.dmst.istlab.unixtools.importExport.CustomCommandImportExportHandler;
+
+import java.io.InputStream;
 
 public final class ActionFactoryImpl implements ActionFactory {
 
@@ -60,15 +60,15 @@ public final class ActionFactoryImpl implements ActionFactory {
   }
 
   @Override
-  public Action<VoidActionResult> createImportCustomCommandsFileAction(String filename,
-      CustomCommandModel model) {
-    return new ImportCustomCommandsFileAction(filename, model, IOFactorySingleton.INSTANCE);
+  public Action<VoidActionResult> createImportCustomCommandsFileAction(
+      CustomCommandImportExportHandler importExportHandler, CustomCommandModel model) {
+    return new ImportCustomCommandsFileAction(importExportHandler, model);
   }
 
   @Override
-  public Action<VoidActionResult> createExportCustomCommandsFileAction(String filename,
-      CustomCommandModel model) {
-    return new ExportCustomCommandsFileAction(filename, model, IOFactorySingleton.INSTANCE);
+  public Action<VoidActionResult> createExportCustomCommandsFileAction(
+      CustomCommandImportExportHandler importExportHandler, CustomCommandModel model) {
+    return new ExportCustomCommandsFileAction(importExportHandler, model);
   }
 
 }
