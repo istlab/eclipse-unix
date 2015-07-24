@@ -9,22 +9,19 @@ import gr.aueb.dmst.istlab.unixtools.actions.Action;
 import gr.aueb.dmst.istlab.unixtools.actions.ActionExecutionCallback;
 import gr.aueb.dmst.istlab.unixtools.actions.VoidActionResult;
 import gr.aueb.dmst.istlab.unixtools.core.model.CustomCommandModel;
-import gr.aueb.dmst.istlab.unixtools.dal.DataAccessException;
-import gr.aueb.dmst.istlab.unixtools.io.IOFactory;
-import gr.aueb.dmst.istlab.unixtools.io.impl.CustomCommandsFileExporter;
+import gr.aueb.dmst.istlab.unixtools.importExport.CustomCommandImportExportHandler;
+import gr.aueb.dmst.istlab.unixtools.importExport.ImportExportException;
 import gr.aueb.dmst.istlab.unixtools.util.Logger;
 
 public final class ExportCustomCommandsFileAction implements Action<VoidActionResult> {
 
-  private String filename;
   private CustomCommandModel model;
-  private CustomCommandsFileExporter customCommandsExporter;
+  private CustomCommandImportExportHandler importExportHandler;
 
-  public ExportCustomCommandsFileAction(String filename, CustomCommandModel model,
-      IOFactory ioFactory) {
-    this.filename = filename;
+  public ExportCustomCommandsFileAction(CustomCommandImportExportHandler importExportHandler,
+      CustomCommandModel model) {
+    this.importExportHandler = importExportHandler;
     this.model = model;
-    this.customCommandsExporter = ioFactory.createCustomCommandsFileExporter();
   }
 
   @Override
@@ -32,11 +29,11 @@ public final class ExportCustomCommandsFileAction implements Action<VoidActionRe
     VoidActionResult result = new VoidActionResult();
 
     try {
-      this.customCommandsExporter.exportModel(this.filename, this.model);
-    } catch (DataAccessException e) {
+      this.importExportHandler.exportModel(model);
+    } catch (ImportExportException ex) {
       Logger logger = Logger.request();
       logger.log("Problem occured while executing the ExportCustomCommandsFileAction");
-      result = new VoidActionResult(e);
+      result = new VoidActionResult(ex);
     }
 
     callback.onCommandExecuted(result);

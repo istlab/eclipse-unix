@@ -5,57 +5,38 @@
 
 package gr.aueb.dmst.istlab.unixtools.dal.impl;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-
 import gr.aueb.dmst.istlab.unixtools.core.model.CommandPrototypeModel;
 import gr.aueb.dmst.istlab.unixtools.dal.CommandPrototypeRepository;
 import gr.aueb.dmst.istlab.unixtools.dal.DataAccessException;
+import gr.aueb.dmst.istlab.unixtools.io.IOStreamProvider;
 import gr.aueb.dmst.istlab.unixtools.serialization.SerializationException;
 import gr.aueb.dmst.istlab.unixtools.serialization.Serializer;
-import gr.aueb.dmst.istlab.unixtools.serialization.SerializerFactory;
-import gr.aueb.dmst.istlab.unixtools.util.SettingsFileUtil;
+import gr.aueb.dmst.istlab.unixtools.serialization.StreamSerializer;
 
 public final class CommandPrototypeRepositoryImpl implements CommandPrototypeRepository {
 
-  private static final String FILE_NAME = "src/main/resources/command_prototypes.yml";
+  private StreamSerializer<CommandPrototypeModel> streamSerializer;
 
-  private final Serializer<CommandPrototypeModel> serializer;
-
-  public CommandPrototypeRepositoryImpl(SerializerFactory serializerFactory) {
-    this.serializer = serializerFactory.createSerializer();
+  public CommandPrototypeRepositoryImpl(Serializer<CommandPrototypeModel> serializer,
+      IOStreamProvider streamProvider) {
+    this.streamSerializer = new StreamSerializer<>(serializer, streamProvider);
   }
 
   @Override
   public CommandPrototypeModel getModel() throws DataAccessException {
     try {
-      InputStream in = SettingsFileUtil.createInputStream(FILE_NAME);
-      CommandPrototypeModel model = this.serializer.deserialize(in);
-
-      if (model == null) {
-        model = new CommandPrototypeModel();
-      }
-
-      return model;
-    } catch (IOException ex) {
-      throw new DataAccessException("Problem occured while trying to read " + FILE_NAME, ex);
+      return this.streamSerializer.deserialize();
     } catch (SerializationException ex) {
-      throw new DataAccessException(
-          "Problem occured while trying to deserialize the CommandProtorypeModel", ex);
+      throw new DataAccessException(ex);
     }
   }
 
   @Override
   public void saveModel(CommandPrototypeModel model) throws DataAccessException {
     try {
-      OutputStream out = SettingsFileUtil.createOutputstream(FILE_NAME);
-      this.serializer.serialize(model, out);
-    } catch (IOException ex) {
-      throw new DataAccessException("Problem occured while trying to write to " + FILE_NAME, ex);
+      this.streamSerializer.serialize(model);
     } catch (SerializationException ex) {
-      throw new DataAccessException(
-          "Problem occured while trying to serialize the CommandProtorypeModel", ex);
+      throw new DataAccessException(ex);
     }
   }
 

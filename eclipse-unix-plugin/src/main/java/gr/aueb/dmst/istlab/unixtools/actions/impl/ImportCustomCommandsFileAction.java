@@ -9,22 +9,19 @@ import gr.aueb.dmst.istlab.unixtools.actions.Action;
 import gr.aueb.dmst.istlab.unixtools.actions.ActionExecutionCallback;
 import gr.aueb.dmst.istlab.unixtools.actions.VoidActionResult;
 import gr.aueb.dmst.istlab.unixtools.core.model.CustomCommandModel;
-import gr.aueb.dmst.istlab.unixtools.dal.DataAccessException;
-import gr.aueb.dmst.istlab.unixtools.io.IOFactory;
-import gr.aueb.dmst.istlab.unixtools.io.impl.CustomCommandsFileImporter;
+import gr.aueb.dmst.istlab.unixtools.importExport.CustomCommandImportExportHandler;
+import gr.aueb.dmst.istlab.unixtools.importExport.ImportExportException;
 import gr.aueb.dmst.istlab.unixtools.util.Logger;
 
 public final class ImportCustomCommandsFileAction implements Action<VoidActionResult> {
 
-  private String filename;
   private CustomCommandModel model;
-  private CustomCommandsFileImporter customCommandsImporter;
+  private CustomCommandImportExportHandler importExportHandler;
 
-  public ImportCustomCommandsFileAction(String filename, CustomCommandModel model,
-      IOFactory ioFactory) {
-    this.filename = filename;
+  public ImportCustomCommandsFileAction(CustomCommandImportExportHandler importExportHandler,
+      CustomCommandModel model) {
+    this.importExportHandler = importExportHandler;
     this.model = model;
-    this.customCommandsImporter = ioFactory.createCustomCommandsFileImporter();
   }
 
   @Override
@@ -32,12 +29,12 @@ public final class ImportCustomCommandsFileAction implements Action<VoidActionRe
     VoidActionResult result = new VoidActionResult();
 
     try {
-      CustomCommandModel importedModel = this.customCommandsImporter.importModel(filename);
+      CustomCommandModel importedModel = this.importExportHandler.importModel();
       this.model.setCommands(importedModel.getCommands());
-    } catch (DataAccessException e) {
+    } catch (ImportExportException ex) {
       Logger logger = Logger.request();
       logger.log("Problem occured while executing the ImportCustomCommandsFileAction");
-      result = new VoidActionResult(e);
+      result = new VoidActionResult(ex);
     }
 
     callback.onCommandExecuted(result);
