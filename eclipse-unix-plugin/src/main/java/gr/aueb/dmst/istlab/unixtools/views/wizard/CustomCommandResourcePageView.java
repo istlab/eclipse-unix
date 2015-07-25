@@ -1,3 +1,7 @@
+/*
+ * Copyright 2015 The ISTLab. Use of this source code is governed by a GNU AFFERO GPL 3.0 license
+ * that can be found in the LICENSE file.
+ */
 package gr.aueb.dmst.istlab.unixtools.views.wizard;
 
 import org.eclipse.jface.wizard.WizardPage;
@@ -117,7 +121,7 @@ public class CustomCommandResourcePageView extends WizardPage {
 
   /**
    * Get access to the input file name's text
-   * 
+   *
    * @return
    */
   public Text getInputFileNameText() {
@@ -135,7 +139,7 @@ public class CustomCommandResourcePageView extends WizardPage {
 
   /**
    * Get access to the view's container
-   * 
+   *
    * @return
    */
   public Composite getViewContainer() {
