@@ -14,19 +14,21 @@ import gr.aueb.dmst.istlab.unixtools.core.model.CustomCommandModel;
 public class EditCustomCommandAction implements Action<VoidActionResult> {
 
   private CustomCommandModel model;
-  private CustomCommand commandToAdd;
-  private int index;
+  private CustomCommand commandToUpdate;
+  private CustomCommand updatedCommand;
 
-  public EditCustomCommandAction(CustomCommandModel model, CustomCommand commandToAdd, int index) {
+  public EditCustomCommandAction(CustomCommandModel model, CustomCommand commandToUpdate,
+      CustomCommand updatedCommand) {
     this.model = model;
-    this.commandToAdd = commandToAdd;
-    this.index = index;
+    this.commandToUpdate = commandToUpdate;
+    this.updatedCommand = updatedCommand;
   }
 
   @Override
   public void execute(ActionExecutionCallback<VoidActionResult> callback) {
-    this.model.getCommands().remove(index);
-    this.model.getCommands().add(index, commandToAdd);
+    int itemIndex = this.model.getCommands().indexOf(this.commandToUpdate);
+    this.model.getCommands().set(itemIndex, updatedCommand);
+
     callback.onCommandExecuted(new VoidActionResult());
   }
 
