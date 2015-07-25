@@ -15,6 +15,7 @@ import gr.aueb.dmst.istlab.unixtools.io.impl.FileStreamProvider;
 import gr.aueb.dmst.istlab.unixtools.serialization.Serializer;
 import gr.aueb.dmst.istlab.unixtools.serialization.SerializerFactory;
 import gr.aueb.dmst.istlab.unixtools.serialization.yaml.YamlSerializerFactory;
+import gr.aueb.dmst.istlab.unixtools.util.PropertiesLoader;
 
 public final class RepositoryFactoryImpl implements RepositoryFactory {
 
@@ -22,8 +23,8 @@ public final class RepositoryFactoryImpl implements RepositoryFactory {
   private static final String FILE_NAME_CUSTOM_COMMANDS;
 
   static {
-    FILE_NAME_COMMAND_PROTOTYPES = "src/main/resources/command_prototypes.yml";
-    FILE_NAME_CUSTOM_COMMANDS = "src/main/resources/custom_commands.yml";
+    FILE_NAME_COMMAND_PROTOTYPES = PropertiesLoader.DEFAULT_PROTOTYPE_COMMAND_PATH;
+    FILE_NAME_CUSTOM_COMMANDS = PropertiesLoader.DEFAULT_CUSTOM_COMMAND_PATH;
   }
 
   private final SerializerFactory serializerFactory;

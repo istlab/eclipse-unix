@@ -8,6 +8,8 @@ package gr.aueb.dmst.istlab.unixtools.plugin;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
+import gr.aueb.dmst.istlab.unixtools.util.PropertiesLoader;
+
 /**
  * The activator class controls the plug-in life cycle
  */
@@ -22,6 +24,8 @@ public class Activator extends AbstractUIPlugin {
 
   @Override
   public void start(BundleContext context) throws Exception {
+    // load plugin's properties
+    PropertiesLoader.loadPropertiesFile();
     super.start(context);
     plugin = this;
   }
@@ -29,6 +33,8 @@ public class Activator extends AbstractUIPlugin {
   @Override
   public void stop(BundleContext context) throws Exception {
     plugin = null;
+    // close properties file
+    PropertiesLoader.closePropertiesFile();
     super.stop(context);
   }
 

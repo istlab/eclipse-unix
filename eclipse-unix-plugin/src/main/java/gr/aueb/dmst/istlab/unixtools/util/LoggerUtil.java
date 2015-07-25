@@ -15,7 +15,7 @@ import org.apache.log4j.PropertyConfigurator;
 public final class LoggerUtil {
 
   private static final Logger logger = Logger.getLogger(LoggerUtil.class);
-  private static final String log4JPropertyFile = "src/main/resources/config/log4j.properties";
+  private static final String log4JPropertyFile = PropertiesLoader.LOGGER_CONFIG_FILE_PATH;
 
   private LoggerUtil() {}
 
