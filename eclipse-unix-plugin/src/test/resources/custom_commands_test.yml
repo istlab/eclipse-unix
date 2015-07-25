@@ -1,0 +1,19 @@
+!gr.aueb.dmst.istlab.unixtools.core.model.CustomCommandModel
+commands: 
+- !gr.aueb.dmst.istlab.unixtools.core.model.CustomCommand
+   command: ls -a   > C:\Users\Evan\Hash.java
+   description: name1
+   outputFilename:  
+   outputToConsole: false
+- !gr.aueb.dmst.istlab.unixtools.core.model.CustomCommand
+   command: 'ls   | uptime -s  '
+   description: name2
+   outputFilename: 
+   outputToConsole: false
+   shellDirectory: C:\Users\Evan\Desktop
+- !gr.aueb.dmst.istlab.unixtools.core.model.CustomCommand
+   command: 'uptime  -p'
+   description: name3
+   outputFilename: 
+   outputToConsole: false
+   shellDirectory: C:\Users\Evan
