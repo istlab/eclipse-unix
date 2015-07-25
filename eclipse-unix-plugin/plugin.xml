@@ -7,5 +7,11 @@
       name="Unix tools"
       class="gr.aueb.dmst.istlab.unixtools.views.preferences.PluginSettingsPageView" 
     />
+    <page
+      id="customCommands"
+      name="Custom Commands"
+      class="gr.aueb.dmst.istlab.unixtools.views.preferences.CustomCommandTableView" 
+      category="unixtoolspreferences"
+    />
   </extension>
 </plugin>
