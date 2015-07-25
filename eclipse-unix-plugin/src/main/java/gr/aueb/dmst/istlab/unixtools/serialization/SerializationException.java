@@ -5,27 +5,29 @@
 
 package gr.aueb.dmst.istlab.unixtools.serialization;
 
-import gr.aueb.dmst.istlab.unixtools.util.Logger;
-
 public final class SerializationException extends Exception {
 
   private static final long serialVersionUID = 1L;
 
-  public SerializationException() {}
+  public SerializationException() {
+    super();
+  }
 
   public SerializationException(String message) {
-    this(message, null);
+    super(message);
   }
 
   public SerializationException(Throwable cause) {
-    this(null, cause);
+    super(cause);
   }
 
   public SerializationException(String message, Throwable cause) {
     super(message, cause);
+  }
 
-    Logger logger = Logger.request();
-    logger.log(message, this);
+  public SerializationException(String message, Throwable cause, boolean enableSuppression,
+      boolean writableStackTrace) {
+    super(message, cause, enableSuppression, writableStackTrace);
   }
 
 }

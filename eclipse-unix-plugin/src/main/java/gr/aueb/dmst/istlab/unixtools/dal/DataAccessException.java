@@ -5,27 +5,28 @@
 
 package gr.aueb.dmst.istlab.unixtools.dal;
 
-import gr.aueb.dmst.istlab.unixtools.util.Logger;
-
 public class DataAccessException extends Exception {
 
   private static final long serialVersionUID = 1L;
 
-  public DataAccessException() {}
+  public DataAccessException() {
+    super();
+  }
 
   public DataAccessException(String message) {
-    this(message, null);
+    super(message);
   }
 
   public DataAccessException(Throwable cause) {
-    this(null, cause);
+    super(cause);
   }
 
   public DataAccessException(String message, Throwable cause) {
     super(message, cause);
-
-    Logger logger = Logger.request();
-    logger.log(message, cause);
   }
 
+  public DataAccessException(String message, Throwable cause, boolean enableSuppression,
+      boolean writableStackTrace) {
+    super(message, cause, enableSuppression, writableStackTrace);
+  }
 }
