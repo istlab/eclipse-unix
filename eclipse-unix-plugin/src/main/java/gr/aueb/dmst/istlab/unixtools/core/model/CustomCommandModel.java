@@ -13,7 +13,7 @@ public final class CustomCommandModel {
   private List<CustomCommand> commands;
 
   public CustomCommandModel() {
-    this.setCommands(new ArrayList<CustomCommand>());
+    this.setCommands(new ArrayList<>());
   }
 
   public List<CustomCommand> getCommands() {

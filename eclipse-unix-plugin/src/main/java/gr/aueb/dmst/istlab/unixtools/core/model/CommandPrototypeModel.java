@@ -13,7 +13,7 @@ public final class CommandPrototypeModel {
   private List<CommandPrototype> commands;
 
   public CommandPrototypeModel() {
-    this.setCommands(new ArrayList<CommandPrototype>());
+    this.setCommands(new ArrayList<>());
   }
 
   public List<CommandPrototype> getCommands() {

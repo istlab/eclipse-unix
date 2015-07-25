@@ -19,6 +19,7 @@ public final class CommandPrototype {
   public CommandPrototype(String name, String description) {
     this.setName(name);
     this.setDescription(description);
+    this.setOptions(new ArrayList<>());
   }
 
   public void setName(String name) {
@@ -42,8 +43,7 @@ public final class CommandPrototype {
   }
 
   public void setOptions(List<CommandPrototypeOption> options) {
-    this.options = new ArrayList<>();
-    this.options.addAll(options);
+    this.options = options;
   }
 
 }
