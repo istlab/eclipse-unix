@@ -7,6 +7,6 @@ package gr.aueb.dmst.istlab.unixtools.actions;
 
 public interface Action<T extends ActionResult> {
 
-  void execute(ActionExecutionCallback<T> callback);
+  void execute(ActionExecutionCallback<T> callback) throws Exception;
 
 }

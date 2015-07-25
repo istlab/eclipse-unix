@@ -5,6 +5,8 @@
 
 package gr.aueb.dmst.istlab.unixtools.actions.impl;
 
+import java.io.InputStream;
+
 import gr.aueb.dmst.istlab.unixtools.actions.Action;
 import gr.aueb.dmst.istlab.unixtools.actions.ActionFactory;
 import gr.aueb.dmst.istlab.unixtools.actions.DataActionResult;
@@ -14,8 +16,6 @@ import gr.aueb.dmst.istlab.unixtools.core.model.CustomCommand;
 import gr.aueb.dmst.istlab.unixtools.core.model.CustomCommandModel;
 import gr.aueb.dmst.istlab.unixtools.factories.RepositoryFactorySingleton;
 import gr.aueb.dmst.istlab.unixtools.importExport.CustomCommandImportExportHandler;
-
-import java.io.InputStream;
 
 public final class ActionFactoryImpl implements ActionFactory {
 
@@ -27,8 +27,8 @@ public final class ActionFactoryImpl implements ActionFactory {
 
   @Override
   public Action<VoidActionResult> createCustomCommandEditAction(CustomCommandModel model,
-      CustomCommand commandToAdd, int index) {
-    return new EditCustomCommandAction(model, commandToAdd, index);
+      CustomCommand commandToUpdate, CustomCommand updatedCommand) {
+    return new EditCustomCommandAction(model, commandToUpdate, updatedCommand);
   }
 
   @Override

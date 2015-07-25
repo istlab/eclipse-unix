@@ -11,7 +11,6 @@ import gr.aueb.dmst.istlab.unixtools.actions.VoidActionResult;
 import gr.aueb.dmst.istlab.unixtools.core.model.CustomCommandModel;
 import gr.aueb.dmst.istlab.unixtools.importExport.CustomCommandImportExportHandler;
 import gr.aueb.dmst.istlab.unixtools.importExport.ImportExportException;
-import gr.aueb.dmst.istlab.unixtools.util.Logger;
 
 public final class ImportCustomCommandsFileAction implements Action<VoidActionResult> {
 
@@ -25,16 +24,16 @@ public final class ImportCustomCommandsFileAction implements Action<VoidActionRe
   }
 
   @Override
-  public void execute(ActionExecutionCallback<VoidActionResult> callback) {
+  public void execute(ActionExecutionCallback<VoidActionResult> callback)
+      throws ImportExportException {
     VoidActionResult result = new VoidActionResult();
 
     try {
       CustomCommandModel importedModel = this.importExportHandler.importModel();
       this.model.setCommands(importedModel.getCommands());
     } catch (ImportExportException ex) {
-      Logger logger = Logger.request();
-      logger.log("Problem occured while executing the ImportCustomCommandsFileAction");
       result = new VoidActionResult(ex);
+      throw new ImportExportException(ex);
     }
 
     callback.onCommandExecuted(result);

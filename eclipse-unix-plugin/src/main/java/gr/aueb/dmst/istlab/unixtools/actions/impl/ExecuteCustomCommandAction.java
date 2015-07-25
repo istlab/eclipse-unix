@@ -25,7 +25,8 @@ public final class ExecuteCustomCommandAction implements Action<DataActionResult
 
 
   @Override
-  public void execute(ActionExecutionCallback<DataActionResult<InputStream>> callback) {
+  public void execute(ActionExecutionCallback<DataActionResult<InputStream>> callback)
+      throws IOException, InterruptedException {
     DataActionResult<InputStream> result;
     List<String> arguments = SystemInfo.getSystemShellInfo();
     arguments.add(this.commandToExecute.getCommand());
@@ -42,8 +43,10 @@ public final class ExecuteCustomCommandAction implements Action<DataActionResult
       result = new DataActionResult<>(cmdStream);
     } catch (IOException ex) {
       result = new DataActionResult<>(ex);
+      throw new IOException(ex);
     } catch (InterruptedException ex) {
       result = new DataActionResult<>(ex);
+      throw new InterruptedException();
     }
 
     callback.onCommandExecuted(result);

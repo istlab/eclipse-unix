@@ -5,12 +5,12 @@
 
 package gr.aueb.dmst.istlab.unixtools.actions;
 
+import java.io.InputStream;
+
 import gr.aueb.dmst.istlab.unixtools.core.model.CommandPrototypeModel;
 import gr.aueb.dmst.istlab.unixtools.core.model.CustomCommand;
 import gr.aueb.dmst.istlab.unixtools.core.model.CustomCommandModel;
 import gr.aueb.dmst.istlab.unixtools.importExport.CustomCommandImportExportHandler;
-
-import java.io.InputStream;
 
 public interface ActionFactory {
 
@@ -18,7 +18,7 @@ public interface ActionFactory {
       CustomCommand commandToAdd);
 
   public Action<VoidActionResult> createCustomCommandEditAction(CustomCommandModel model,
-      CustomCommand commandToAdd, int index);
+      CustomCommand commandToUpdate, CustomCommand updatedCommand);
 
   public Action<VoidActionResult> createCustomCommandRemoveAction(CustomCommandModel model,
       CustomCommand commandToRemove);

@@ -12,7 +12,6 @@ import gr.aueb.dmst.istlab.unixtools.core.model.CustomCommandModel;
 import gr.aueb.dmst.istlab.unixtools.dal.CustomCommandRepository;
 import gr.aueb.dmst.istlab.unixtools.dal.DataAccessException;
 import gr.aueb.dmst.istlab.unixtools.dal.RepositoryFactory;
-import gr.aueb.dmst.istlab.unixtools.util.Logger;
 
 public final class SerializeCustomCommandsAction implements Action<VoidActionResult> {
 
@@ -26,15 +25,15 @@ public final class SerializeCustomCommandsAction implements Action<VoidActionRes
   }
 
   @Override
-  public void execute(ActionExecutionCallback<VoidActionResult> callback) {
+  public void execute(ActionExecutionCallback<VoidActionResult> callback)
+      throws DataAccessException {
     VoidActionResult result = new VoidActionResult();
 
     try {
       this.customCommandRepository.saveModel(model);
-    } catch (DataAccessException e) {
-      Logger logger = Logger.request();
-      logger.log("Problem occured while executing the SerializeCustomCommandsAction");
-      result = new VoidActionResult(e);
+    } catch (DataAccessException ex) {
+      result = new VoidActionResult(ex);
+      throw new DataAccessException(ex);
     }
 
     callback.onCommandExecuted(result);
