@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+  <extension point="org.eclipse.ui.preferencePages">
+    <page
+      id="unixtoolspreferences"
+      name="Unix tools"
+      class="gr.aueb.dmst.istlab.unixtools.views.preferences.PluginSettingsPageView" 
+    />
+  </extension>
+</plugin>
