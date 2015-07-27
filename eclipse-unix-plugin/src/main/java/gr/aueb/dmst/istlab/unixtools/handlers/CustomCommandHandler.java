@@ -16,6 +16,7 @@ import org.eclipse.core.commands.ExecutionException;
 import gr.aueb.dmst.istlab.unixtools.actions.ActionExecutionCallback;
 import gr.aueb.dmst.istlab.unixtools.actions.DataActionResult;
 import gr.aueb.dmst.istlab.unixtools.actions.impl.ExecuteCustomCommandAction;
+import gr.aueb.dmst.istlab.unixtools.controllers.UnixToolsRecentlyUsedController;
 import gr.aueb.dmst.istlab.unixtools.core.model.CustomCommand;
 import gr.aueb.dmst.istlab.unixtools.factories.ActionFactorySingleton;
 
@@ -80,6 +81,8 @@ public class CustomCommandHandler extends AbstractHandler {
     } catch (InterruptedException e) {
       e.printStackTrace();
     }
+    // finally add the executed command to the recently used list
+    UnixToolsRecentlyUsedController.addCommand(this.cc);
     return null;
   }
 }

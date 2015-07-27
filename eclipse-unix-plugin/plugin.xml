@@ -29,6 +29,14 @@
             id="gr.aueb.dmst.istlab.unixtools.views.explorer.UnixToolsMenu">
           </dynamic>
         </menu>
+        <menu
+          id="submenuRecentlyUsed"
+          label="Recently Used Commands">
+          <dynamic
+            class="gr.aueb.dmst.istlab.unixtools.views.explorer.UnixToolsRecentlyUsed"
+            id="gr.aueb.dmst.istlab.unixtools.views.explorer.UnixToolsRecentlyUsed">
+          </dynamic>
+        </menu>
       </menu>
     </menuContribution>
   </extension>
