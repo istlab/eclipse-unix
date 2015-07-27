@@ -14,4 +14,22 @@
       category="unixtoolspreferences"
     />
   </extension>
+  
+  <extension point="org.eclipse.ui.menus">
+    <menuContribution
+      locationURI="popup:org.eclipse.ui.popup.any?after=additions">
+      <menu
+        label="Unix Tools"
+        id="menuPackageExplorer">
+        <menu
+          id="submenuCustomCommands"
+          label="Custom Commands">
+          <dynamic
+            class="gr.aueb.dmst.istlab.unixtools.views.explorer.UnixToolsMenu"
+            id="gr.aueb.dmst.istlab.unixtools.views.explorer.UnixToolsMenu">
+          </dynamic>
+        </menu>
+      </menu>
+    </menuContribution>
+  </extension>
 </plugin>
