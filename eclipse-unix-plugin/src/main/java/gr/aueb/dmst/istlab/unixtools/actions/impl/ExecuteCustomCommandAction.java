@@ -5,6 +5,7 @@
 
 package gr.aueb.dmst.istlab.unixtools.actions.impl;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
@@ -33,7 +34,7 @@ public final class ExecuteCustomCommandAction implements Action<DataActionResult
 
     ProcessBuilder pb = new ProcessBuilder(arguments);
     pb.redirectErrorStream(true);
-    pb.directory(null);
+    pb.directory(new File(this.commandToExecute.getShellDirectory()));
 
     Process p;
     try {
