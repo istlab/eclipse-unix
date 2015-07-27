@@ -1,3 +1,7 @@
+/*
+ * Copyright 2015 The ISTLab. Use of this source code is governed by a GNU AFFERO GPL 3.0 license
+ * that can be found in the LICENSE file.
+ */
 package gr.aueb.dmst.istlab.unixtools.controllers;
 
 import java.util.List;
@@ -53,7 +57,7 @@ public abstract class AbstractUnixToolsController {
 
   /**
    * Create an eclipse command using a custom command handler
-   * 
+   *
    * @param cc
    * @return
    */
@@ -70,7 +74,7 @@ public abstract class AbstractUnixToolsController {
 
   /**
    * Undefine the given eclipse command
-   * 
+   *
    * @param command
    */
   protected void disposeCommand(Command command) {
@@ -86,7 +90,7 @@ public abstract class AbstractUnixToolsController {
 
   /**
    * Activate a handler with the given parameters
-   * 
+   *
    * @param cc
    * @param commandId
    */
@@ -99,7 +103,7 @@ public abstract class AbstractUnixToolsController {
 
   /**
    * Deactivate the given handler
-   * 
+   *
    * @param handlerActivation
    */
   protected void deactivateHandler(IHandlerActivation handlerActivation) {
@@ -125,7 +129,7 @@ public abstract class AbstractUnixToolsController {
 
   /**
    * Get the handler service
-   * 
+   *
    * @param serviceLocator
    * @return
    */
@@ -135,7 +139,7 @@ public abstract class AbstractUnixToolsController {
 
   /**
    * Get the command service
-   * 
+   *
    * @param serviceLocator
    * @return
    */
@@ -145,7 +149,7 @@ public abstract class AbstractUnixToolsController {
 
   /**
    * Get the service locator
-   * 
+   *
    * @return
    */
   protected IServiceLocator getServiceLocator() {
