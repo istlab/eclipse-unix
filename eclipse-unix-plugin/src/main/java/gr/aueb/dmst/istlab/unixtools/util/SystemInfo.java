@@ -5,6 +5,8 @@ import java.util.List;
 
 import org.apache.commons.lang3.SystemUtils;
 
+import gr.aueb.dmst.istlab.unixtools.plugin.Activator;
+
 public final class SystemInfo {
 
   private SystemInfo() {}
@@ -19,8 +21,14 @@ public final class SystemInfo {
       shellInfo.add("");
       shellInfo.add("");
     } else if (SystemUtils.IS_OS_WINDOWS) {
-      shellInfo.add("");
-      shellInfo.add("");
+      String value =
+          Activator.getDefault().getPreferenceStore().getString(PropertiesLoader.SHELL_PATH_KEY);
+      String cygwin = path(value) ? value + "bash.exe" : value + "/bash.exe";
+      shellInfo.add("CMD");
+      shellInfo.add("/C");
+      shellInfo.add(cygwin);
+      shellInfo.add("--login");
+      shellInfo.add("-c");
     } else if (SystemUtils.IS_OS_MAC_OSX) {
       shellInfo.add("/bin/sh");
       shellInfo.add("-c");
@@ -29,4 +37,7 @@ public final class SystemInfo {
     return shellInfo;
   }
 
+  private static boolean path(String value) {
+    return value.endsWith("\\") || value.endsWith("/");
+  }
 }
