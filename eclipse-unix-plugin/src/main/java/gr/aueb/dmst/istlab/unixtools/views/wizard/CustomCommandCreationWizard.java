@@ -27,7 +27,7 @@ public class CustomCommandCreationWizard extends Wizard {
 
   private Shell shell;
   private CustomCommandMainPageView mainPageView;
-  private CustomCommandArgumentPageView argurmentPageView;
+  private CustomCommandArgumentPageView argumentPageView;
   private CustomCommandResourcePageView resourcePageView;
   private static boolean piped = false;
   private static String command = "";
@@ -44,9 +44,9 @@ public class CustomCommandCreationWizard extends Wizard {
 
   @Override
   public void addPages() {
-    mainPageView = new CustomCommandMainPageView(command);
+    mainPageView = new CustomCommandMainPageView(command, nickname, shellDir);
     addPage(mainPageView);
-    argurmentPageView = new CustomCommandArgumentPageView();
+    argumentPageView = new CustomCommandArgumentPageView();
     // the Argument page is not added here but in the getNextPage
     // to ensure that we have the command from the first page
     // in order to present the available arguments to the user
@@ -74,12 +74,12 @@ public class CustomCommandCreationWizard extends Wizard {
        * command, pressed next, but then pressed back cause he/she decided to change the prototype
        * command used
        */
-      this.argurmentPageView = new CustomCommandArgumentPageView();
-      this.argurmentPageView.setCommand(mainPageView.getCommand());
-      addPage(this.argurmentPageView);
+      this.argumentPageView = new CustomCommandArgumentPageView();
+      this.argumentPageView.setCommand(mainPageView.getCommand());
+      addPage(this.argumentPageView);
 
-      return this.argurmentPageView;
-    } else if (current == argurmentPageView) {
+      return this.argumentPageView;
+    } else if (current == argumentPageView) {
       return this.resourcePageView;
     } else if (current == resourcePageView) {
       return null;
@@ -91,20 +91,22 @@ public class CustomCommandCreationWizard extends Wizard {
   @Override
   public boolean performFinish() {
     command += mainPageView.getCommand() + " ";
-    command += argurmentPageView.getSelectedArguments() + " ";
+    command += argumentPageView.getSelectedArguments() + " ";
 
     if (resourcePageView.getInputFile().length() != 0) {
       command += " > " + resourcePageView.getInputFile();
     }
 
-    if (mainPageView.pipe() || argurmentPageView.pipe() || resourcePageView.pipe()) {
+    if (mainPageView.pipe() || argumentPageView.pipe() || resourcePageView.pipe()) {
       piped = true;
       command += " | ";
+      nickname = mainPageView.getNickname();
+      shellDir = mainPageView.getShellStartDir();
       WizardDialog wizardDialog =
           new WizardDialog(this.getShell(), new CustomCommandCreationWizard());
       wizardDialog.open();
     } else {
-      save(this.argurmentPageView.getSelectedArguments(), this.mainPageView.getNickname(),
+      save(this.argumentPageView.getSelectedArguments(), this.mainPageView.getNickname(),
           this.mainPageView.getShellStartDir(), this.resourcePageView.getInputFile(),
           this.resourcePageView.getOutputFile());
     }

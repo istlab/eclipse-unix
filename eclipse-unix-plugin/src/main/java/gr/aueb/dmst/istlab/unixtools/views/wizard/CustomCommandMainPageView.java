@@ -47,15 +47,19 @@ public class CustomCommandMainPageView extends WizardPage {
   private Button shellButton;
   private Button pipe;
   private String cc;
+  private String pipedNickname;
+  private String pipedShellDir;
   private CustomCommandWizardMainPageController controller;
   private final String infoText = PropertiesLoader.WIZARD_ADD_FIRST_PAGE_LABEL;
 
-  public CustomCommandMainPageView(String command) {
+  public CustomCommandMainPageView(String command, String pipedNickname, String pipedShellDir) {
     super("Command's wizard page");
     this.setTitle(PropertiesLoader.WIZARD_ADD_PAGE_TITLE);
     this.setDescription(PropertiesLoader.WIZARD_ADD_PAGE_DESCRIPTION);
     this.cc = command;
     this.controller = new CustomCommandWizardMainPageController(this);
+    this.pipedNickname = pipedNickname;
+    this.pipedShellDir = pipedShellDir;
   }
 
   @Override
@@ -85,6 +89,9 @@ public class CustomCommandMainPageView extends WizardPage {
     this.nick.setText("Enter the command's nickname : ");
     this.nickname = new Combo(this.container, SWT.NONE);
     this.nickname.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
+    if (this.cc.length() > 0) {
+      nickname.setText(this.pipedNickname);
+    }
     this.nickname.addModifyListener(this.controller.getNewAddCommandModifyListener());
 
     this.label = new Label(this.container, SWT.NONE);
@@ -109,6 +116,9 @@ public class CustomCommandMainPageView extends WizardPage {
     this.shellDir = new Text(this.container, SWT.BORDER);
     GridData dataShell = new GridData(GridData.FILL_HORIZONTAL);
     dataShell.horizontalSpan = 4;
+    if (cc.length() > 0) {
+      this.shellDir.setText(this.pipedShellDir);
+    }
     this.shellDir.setLayoutData(dataShell);
 
     this.shellButton = new Button(this.container, SWT.PUSH);
