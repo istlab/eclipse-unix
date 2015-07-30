@@ -48,8 +48,10 @@ public class UnixToolsRecentlyUsedController extends AbstractUnixToolsController
           new CommandContributionItemParameter(this.getServiceLocator(), command.getId(),
               command.getId(), CommandContributionItem.STYLE_PUSH);
       commandContributionItemParameter.label = recentlyUsed.get(i).getDescription();
+
       contributionItemList.add(new CommandContributionItem(commandContributionItemParameter));
     }
+
     return contributionItemList.toArray(new CommandContributionItem[contributionItemList.size()]);
   }
 }

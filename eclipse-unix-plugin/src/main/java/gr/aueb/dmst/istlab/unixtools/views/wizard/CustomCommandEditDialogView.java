@@ -2,6 +2,7 @@
  * Copyright 2015 The ISTLab. Use of this source code is governed by a GNU AFFERO GPL 3.0 license
  * that can be found in the LICENSE file.
  */
+
 package gr.aueb.dmst.istlab.unixtools.views.wizard;
 
 import org.eclipse.jface.dialogs.IMessageProvider;
@@ -23,7 +24,6 @@ import org.eclipse.swt.widgets.Text;
 import gr.aueb.dmst.istlab.unixtools.util.PropertiesLoader;
 
 /**
- *
  * This class represents a modified input dialog. In our project this dialog is used to help the
  * user edit an already added command. It offers five fields : A text area used to modify the given
  * command. A text area used to modify the given command's name. A text area used to modify the
@@ -33,7 +33,6 @@ import gr.aueb.dmst.istlab.unixtools.util.PropertiesLoader;
  */
 public class CustomCommandEditDialogView extends TitleAreaDialog {
 
-  // instance variables
   private String command;
   private String name;
   private String shellPath;
@@ -45,11 +44,6 @@ public class CustomCommandEditDialogView extends TitleAreaDialog {
   private Button shellButton;
   private Button outputButton;
 
-  /**
-   * Constructor
-   *
-   * @param parentShell
-   */
   public CustomCommandEditDialogView(Shell parentShell) {
     super(parentShell);
   }
@@ -57,8 +51,8 @@ public class CustomCommandEditDialogView extends TitleAreaDialog {
   @Override
   public void create() {
     super.create();
-    setTitle(PropertiesLoader.WIZARD_EDIT_DIALOG_TITLE);
-    setMessage("Enter the new command's info", IMessageProvider.INFORMATION);
+    this.setTitle(PropertiesLoader.WIZARD_EDIT_DIALOG_TITLE);
+    this.setMessage("Enter the new command's info", IMessageProvider.INFORMATION);
   }
 
   @Override
@@ -87,11 +81,11 @@ public class CustomCommandEditDialogView extends TitleAreaDialog {
     container.setLayout(layout);
 
     createCommand(container);
-    Label l1 = new Label(container, SWT.NONE);
-    l1.setText("");
+    Label label1 = new Label(container, SWT.NONE);
+    label1.setText("");
     createName(container);
-    Label l3 = new Label(container, SWT.NONE);
-    l3.setText("");
+    Label label2 = new Label(container, SWT.NONE);
+    label2.setText("");
     createShell(container);
     createOutput(container);
 
@@ -115,12 +109,14 @@ public class CustomCommandEditDialogView extends TitleAreaDialog {
     outputText.setLayoutData(data);
     outputButton = new Button(container, SWT.PUSH);
     outputButton.setText("Browse");
+
     outputButton.addSelectionListener(new SelectionAdapter() {
       @Override
       public void widgetSelected(SelectionEvent event) {
         // User has selected to open a single file
         FileDialog dlg = new FileDialog(getShell(), SWT.OPEN);
         String dir = dlg.open();
+
         if (dir != null) {
           // Set the text box to the new selection
           outputText.setText(dir);
@@ -142,11 +138,12 @@ public class CustomCommandEditDialogView extends TitleAreaDialog {
     data.grabExcessHorizontalSpace = true;
     data.horizontalAlignment = GridData.FILL;
 
-    shellText = new Text(container, SWT.BORDER);
-    shellText.setLayoutData(data);
-    shellButton = new Button(container, SWT.PUSH);
-    shellButton.setText("Browse");
-    shellButton.addSelectionListener(new SelectionAdapter() {
+    this.shellText = new Text(container, SWT.BORDER);
+    this.shellText.setLayoutData(data);
+    this.shellButton = new Button(container, SWT.PUSH);
+    this.shellButton.setText("Browse");
+
+    this.shellButton.addSelectionListener(new SelectionAdapter() {
       @Override
       public void widgetSelected(SelectionEvent event) {
         DirectoryDialog dlg = new DirectoryDialog(container.getShell());
@@ -203,8 +200,8 @@ public class CustomCommandEditDialogView extends TitleAreaDialog {
     data.grabExcessHorizontalSpace = true;
     data.horizontalAlignment = GridData.FILL;
 
-    commandText = new Text(container, SWT.BORDER);
-    commandText.setLayoutData(data);
+    this.commandText = new Text(container, SWT.BORDER);
+    this.commandText.setLayoutData(data);
   }
 
   /**

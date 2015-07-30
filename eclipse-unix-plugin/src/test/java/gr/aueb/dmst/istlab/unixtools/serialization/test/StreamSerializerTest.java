@@ -51,13 +51,13 @@ public class StreamSerializerTest {
     assertEquals(expected.get(0).getCommand(), actual.get(0).getCommand());
     assertEquals(expected.get(0).getDescription(), actual.get(0).getDescription());
     assertEquals(expected.get(0).getShellDirectory(), actual.get(0).getShellDirectory());
-    assertEquals(expected.get(0).isOutputToConsole(), actual.get(0).isOutputToConsole());
+    assertEquals(expected.get(0).getHasConsoleOutput(), actual.get(0).getHasConsoleOutput());
     assertEquals(expected.get(0).getOutputFilename(), actual.get(0).getOutputFilename());
 
     assertEquals(expected.get(1).getCommand(), actual.get(1).getCommand());
     assertEquals(expected.get(1).getDescription(), actual.get(1).getDescription());
     assertEquals(expected.get(1).getShellDirectory(), actual.get(1).getShellDirectory());
-    assertEquals(expected.get(1).isOutputToConsole(), actual.get(1).isOutputToConsole());
+    assertEquals(expected.get(1).getHasConsoleOutput(), actual.get(1).getHasConsoleOutput());
     assertEquals(expected.get(1).getOutputFilename(), actual.get(1).getOutputFilename());
   }
 

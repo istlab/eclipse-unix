@@ -2,6 +2,7 @@
  * Copyright 2015 The ISTLab. Use of this source code is governed by a GNU AFFERO GPL 3.0 license
  * that can be found in the LICENSE file.
  */
+
 package gr.aueb.dmst.istlab.unixtools.controllers;
 
 import java.util.ArrayList;
@@ -14,32 +15,35 @@ import gr.aueb.dmst.istlab.unixtools.factories.RepositoryFactorySingleton;
 
 public class CustomCommandWizardArgumentPageController {
 
-  private final CommandPrototypeRepository cpr =
-      RepositoryFactorySingleton.INSTANCE.createCommandPrototypeRepository();
+  private final CommandPrototypeRepository repository;
 
-  public CustomCommandWizardArgumentPageController() {}
+  public CustomCommandWizardArgumentPageController() {
+    this.repository = RepositoryFactorySingleton.INSTANCE.createCommandPrototypeRepository();
+  }
 
   /**
    * Get the available arguments for the given command
-   *
    *
    * @param command
    * @return
    */
   public ArrayList<CommandPrototypeOption> getArguments(String command) {
-    ArrayList<CommandPrototypeOption> args = new ArrayList<CommandPrototypeOption>();
+    ArrayList<CommandPrototypeOption> arguments = new ArrayList<CommandPrototypeOption>();
+
     try {
-      for (CommandPrototype c : cpr.getModel().getCommands()) {
-        if (c.getName().equals(command)) {
-          for (CommandPrototypeOption a : c.getOptions()) {
-            args.add(a);
+      for (CommandPrototype commandPrototype : this.repository.getModel().getCommands()) {
+        if (commandPrototype.getName().equals(command)) {
+          for (CommandPrototypeOption option : commandPrototype.getOptions()) {
+            arguments.add(option);
           }
+
           break;
         }
       }
     } catch (DataAccessException e) {
       e.printStackTrace();
     }
-    return args;
+
+    return arguments;
   }
 }

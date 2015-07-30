@@ -12,19 +12,19 @@ public final class CustomCommand {
   private String command;
   private String description;
   private String shellDirectory;
-  private boolean outputToConsole;
+  private boolean hasConsoleOutput;
   private String outputFilename;
 
   public CustomCommand() {}
 
-  @ConstructorProperties({"command", "description", "shellDirectory", "outputToConsole",
+  @ConstructorProperties({"command", "description", "shellDirectory", "hasConsoleOutput",
       "outputFilename"})
   public CustomCommand(String command, String description, String shellDirectory,
-      boolean outputToConsole, String outputFilename) {
+      boolean hasConsoleOutput, String outputFilename) {
     this.setCommand(command);
     this.setDescription(description);
     this.setShellDirectory(shellDirectory);
-    this.setOutputToConsole(outputToConsole);
+    this.setHasConsoleOutput(hasConsoleOutput);
     this.setOutputFilename(outputFilename);
   }
 
@@ -52,12 +52,12 @@ public final class CustomCommand {
     this.shellDirectory = shellDirectory;
   }
 
-  public boolean isOutputToConsole() {
-    return outputToConsole;
+  public boolean getHasConsoleOutput() {
+    return hasConsoleOutput;
   }
 
-  public void setOutputToConsole(boolean outputToConsole) {
-    this.outputToConsole = outputToConsole;
+  public void setHasConsoleOutput(boolean hasConsoleOutput) {
+    this.hasConsoleOutput = hasConsoleOutput;
   }
 
   public String getOutputFilename() {

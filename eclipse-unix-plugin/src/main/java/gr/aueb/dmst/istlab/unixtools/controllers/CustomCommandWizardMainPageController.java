@@ -2,6 +2,7 @@
  * Copyright 2015 The ISTLab. Use of this source code is governed by a GNU AFFERO GPL 3.0 license
  * that can be found in the LICENSE file.
  */
+
 package gr.aueb.dmst.istlab.unixtools.controllers;
 
 import java.util.ArrayList;
@@ -33,7 +34,7 @@ public class CustomCommandWizardMainPageController {
   private final String lowerCaseLetters = "abcdefghijklmnopqrstuvwxyz";
   private final String upperCaseLetters = lowerCaseLetters.toUpperCase();
   private final String numbers = "0123456789";
-  private final CommandPrototypeRepository cpr =
+  private final CommandPrototypeRepository repository =
       RepositoryFactorySingleton.INSTANCE.createCommandPrototypeRepository();
 
   public CustomCommandWizardMainPageController(CustomCommandMainPageView view) {
@@ -41,32 +42,31 @@ public class CustomCommandWizardMainPageController {
   }
 
   class AddCommandModifyListener implements ModifyListener {
-
     @Override
-    public void modifyText(ModifyEvent arg0) {
+    public void modifyText(ModifyEvent event) {
       view.canFlipToNextPage();
       view.getWizard().getContainer().updateButtons();
     }
   }
 
   class AddDescriptionModifyListener implements ModifyListener {
-
     @Override
-    public void modifyText(ModifyEvent e) {
-      if (e.getSource() == view.getCommandCombo()) {
+    public void modifyText(ModifyEvent event) {
+      if (event.getSource() == view.getCommandCombo()) {
         view.getDescriptionCombo().setText(getDescription(view.getCommandCombo().getText()));
       }
     }
   }
 
   class AddShellDirSelectionListener implements SelectionListener {
+    @Override
+    public void widgetDefaultSelected(SelectionEvent e) {}
 
     @Override
     public void widgetSelected(SelectionEvent event) {
       DirectoryDialog dlg = new DirectoryDialog(view.getViewContainer().getShell());
 
-      // Set the initial filter path according
-      // to anything they've selected or typed in
+      // Set the initial filter path according to anything they've selected or typed in
       dlg.setFilterPath(view.getShellDirText().getText());
 
       // Change the title bar text
@@ -75,18 +75,16 @@ public class CustomCommandWizardMainPageController {
       // Customizable message displayed in the dialog
       dlg.setMessage("Select a directory");
 
-      // Calling open() will open and run the dialog.
-      // It will return the selected directory, or
-      // null if user cancels
-      String dir = dlg.open();
-      if (dir != null) {
+      /*
+       * Calling open() will open and run the dialog. It will return the selected directory, or null
+       * if user cancels
+       */
+      String directory = dlg.open();
+      if (directory != null) {
         // Set the text box to the new selection
-        view.getShellDirText().setText(dir);
+        view.getShellDirText().setText(directory);
       }
     }
-
-    @Override
-    public void widgetDefaultSelected(SelectionEvent e) {}
   }
 
   public ModifyListener getNewAddCommandModifyListener() {
@@ -107,17 +105,19 @@ public class CustomCommandWizardMainPageController {
    * @param control
    */
   public void addAutocomplete(Control control) {
-    SimpleContentProposalProvider proposalProvider = null;
-    ContentProposalAdapter proposalAdapter = null;
+    SimpleContentProposalProvider proposalProvider;
+    ContentProposalAdapter proposalAdapter;
+
     if (control instanceof Combo) {
       Combo combo = (Combo) control;
       proposalProvider = new SimpleContentProposalProvider(combo.getItems());
       proposalAdapter = new ContentProposalAdapter(combo, new ComboContentAdapter(),
-          proposalProvider, getActivationKeystroke(), getAutoactivationChars());
+          proposalProvider, getActivationKeystroke(), getAutoActivationChars());
+
+      proposalProvider.setFiltering(true);
+      proposalAdapter.setPropagateKeys(true);
+      proposalAdapter.setProposalAcceptanceStyle(ContentProposalAdapter.PROPOSAL_REPLACE);
     }
-    proposalProvider.setFiltering(true);
-    proposalAdapter.setPropagateKeys(true);
-    proposalAdapter.setProposalAcceptanceStyle(ContentProposalAdapter.PROPOSAL_REPLACE);
   }
 
   /**
@@ -127,7 +127,7 @@ public class CustomCommandWizardMainPageController {
    *
    * @return
    */
-  private char[] getAutoactivationChars() {
+  private char[] getAutoActivationChars() {
     // To enable content proposal on deleting a char
     String delete = new String(new char[] {8});
     String allChars = this.lowerCaseLetters + this.upperCaseLetters + this.numbers + delete;
@@ -142,6 +142,7 @@ public class CustomCommandWizardMainPageController {
   private KeyStroke getActivationKeystroke() {
     KeyStroke instance =
         KeyStroke.getInstance(new Integer(SWT.CTRL).intValue(), new Integer(' ').intValue());
+
     return instance;
   }
 
@@ -152,15 +153,18 @@ public class CustomCommandWizardMainPageController {
    */
   public String[] getCommands() {
     List<CommandPrototype> list = null;
+
     try {
-      list = cpr.getModel().getCommands();
-    } catch (DataAccessException dae) {
-      dae.printStackTrace();
+      list = repository.getModel().getCommands();
+    } catch (DataAccessException ex) {
+      ex.printStackTrace();
     }
+
     String[] commands = new String[list.size()];
     for (int i = 0; i < list.size(); ++i) {
       commands[i] = list.get(i).getName();
     }
+
     return commands;
   }
 
@@ -170,17 +174,20 @@ public class CustomCommandWizardMainPageController {
    * @return
    */
   public String getDescription(String selected) {
-    List<CommandPrototype> list = null;
+    List<CommandPrototype> commandPrototypes = null;
+
     try {
-      list = cpr.getModel().getCommands();
-    } catch (DataAccessException dae) {
-      dae.printStackTrace();
+      commandPrototypes = repository.getModel().getCommands();
+    } catch (DataAccessException ex) {
+      ex.printStackTrace();
     }
-    for (CommandPrototype c : list) {
-      if (c.getName().equals(selected)) {
-        return c.getDescription();
+
+    for (CommandPrototype command : commandPrototypes) {
+      if (command.getName().equals(selected)) {
+        return command.getDescription();
       }
     }
+
     return "";
   }
 

@@ -2,6 +2,7 @@
  * Copyright 2015 The ISTLab. Use of this source code is governed by a GNU AFFERO GPL 3.0 license
  * that can be found in the LICENSE file.
  */
+
 package gr.aueb.dmst.istlab.unixtools.views.wizard;
 
 import org.eclipse.jface.wizard.WizardPage;
@@ -49,84 +50,81 @@ public class CustomCommandMainPageView extends WizardPage {
   private CustomCommandWizardMainPageController controller;
   private final String infoText = PropertiesLoader.WIZARD_ADD_FIRST_PAGE_LABEL;
 
-  /**
-   * Constructor
-   */
   public CustomCommandMainPageView(String command) {
     super("Command's wizard page");
-    setTitle(PropertiesLoader.WIZARD_ADD_PAGE_TITLE);
-    setDescription(PropertiesLoader.WIZARD_ADD_PAGE_DESCRIPTION);
+    this.setTitle(PropertiesLoader.WIZARD_ADD_PAGE_TITLE);
+    this.setDescription(PropertiesLoader.WIZARD_ADD_PAGE_DESCRIPTION);
     this.cc = command;
-    controller = new CustomCommandWizardMainPageController(this);
+    this.controller = new CustomCommandWizardMainPageController(this);
   }
 
   @Override
   public void createControl(Composite parent) {
-    container = new Composite(parent, SWT.NONE);
+    this.container = new Composite(parent, SWT.NONE);
     GridLayout layout = new GridLayout();
-    container.setLayout(layout);
+    this.container.setLayout(layout);
     layout.numColumns = 1;
 
-    info = new Label(container, SWT.NONE);
-    info.setText(infoText);
-    info.setAlignment(SWT.LEFT);
-    info.pack();
+    this.info = new Label(container, SWT.NONE);
+    this.info.setText(infoText);
+    this.info.setAlignment(SWT.LEFT);
+    this.info.pack();
 
     if (this.cc.length() > 0) {
-      currentCommand = new Label(container, SWT.NONE);
-      currentCommand.setText("Current command state : ");
-      commandCombo = new Combo(container, SWT.NONE);
-      commandCombo.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
-      commandCombo.setText(cc);
+      this.currentCommand = new Label(this.container, SWT.NONE);
+      this.currentCommand.setText("Current command state : ");
+      this.commandCombo = new Combo(this.container, SWT.NONE);
+      this.commandCombo.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
+      this.commandCombo.setText(this.cc);
     }
 
-    empty = new Label(container, SWT.NONE);
-    empty.setText("\n");
+    this.empty = new Label(this.container, SWT.NONE);
+    this.empty.setText("\n");
 
-    nick = new Label(container, SWT.NONE);
-    nick.setText("Enter the command's nickname : ");
-    nickname = new Combo(container, SWT.NONE);
-    nickname.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
-    nickname.addModifyListener(controller.getNewAddCommandModifyListener());
+    this.nick = new Label(this.container, SWT.NONE);
+    this.nick.setText("Enter the command's nickname : ");
+    this.nickname = new Combo(this.container, SWT.NONE);
+    this.nickname.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
+    this.nickname.addModifyListener(this.controller.getNewAddCommandModifyListener());
 
-    label = new Label(container, SWT.NONE);
-    label.setText("Enter the desired command : ");
+    this.label = new Label(this.container, SWT.NONE);
+    this.label.setText("Enter the desired command : ");
 
-    combo = new Combo(container, SWT.NONE);
-    combo.setItems(controller.getCommands());
-    combo.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
-    combo.addModifyListener(controller.getNewAddDescriptionModifyListener());
+    this.combo = new Combo(this.container, SWT.NONE);
+    this.combo.setItems(this.controller.getCommands());
+    this.combo.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
+    this.combo.addModifyListener(this.controller.getNewAddDescriptionModifyListener());
 
-    controller.addAutocomplete(combo);
+    this.controller.addAutocomplete(this.combo);
 
-    descriptionLabel = new Label(container, SWT.NONE);
-    descriptionLabel.setText("Description : ");
+    this.descriptionLabel = new Label(this.container, SWT.NONE);
+    this.descriptionLabel.setText("Description : ");
 
-    description = new Combo(container, SWT.NONE);
-    description.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
+    this.description = new Combo(this.container, SWT.NONE);
+    this.description.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
 
-    shell = new Label(container, SWT.NONE);
-    shell.setText("Enter the shell's starting dir :");
+    this.shell = new Label(this.container, SWT.NONE);
+    this.shell.setText("Enter the shell's starting dir :");
 
-    shellDir = new Text(container, SWT.BORDER);
+    this.shellDir = new Text(this.container, SWT.BORDER);
     GridData dataShell = new GridData(GridData.FILL_HORIZONTAL);
     dataShell.horizontalSpan = 4;
-    shellDir.setLayoutData(dataShell);
+    this.shellDir.setLayoutData(dataShell);
 
-    shellButton = new Button(container, SWT.PUSH);
-    shellButton.setText("Browse");
-    shellButton.addSelectionListener(controller.getNewAddShellDirSelectionListener());
+    this.shellButton = new Button(this.container, SWT.PUSH);
+    this.shellButton.setText("Browse");
+    this.shellButton.addSelectionListener(this.controller.getNewAddShellDirSelectionListener());
 
-    pipe = new Button(container, SWT.CHECK);
-    pipe.setText("Click to add pipe");
+    this.pipe = new Button(this.container, SWT.CHECK);
+    this.pipe.setText("Click to add pipe");
 
     // needed to avoid errors in the system
-    this.setControl(container);
+    this.setControl(this.container);
   }
 
   @Override
   public boolean canFlipToNextPage() {
-    if (!controller.isValidNickname(this.nickname.getText())) {
+    if (!this.controller.isValidNickname(this.nickname.getText())) {
       this.setErrorMessage("Cannot continue! Command name is either empty or duplicate!");
       return false;
     } else {
@@ -181,7 +179,7 @@ public class CustomCommandMainPageView extends WizardPage {
 
   /**
    * Get access to the command combo
-   * 
+   *
    * @return
    */
   public Combo getCommandCombo() {
@@ -190,7 +188,7 @@ public class CustomCommandMainPageView extends WizardPage {
 
   /**
    * Get access to the description combo
-   * 
+   *
    * @return
    */
   public Combo getDescriptionCombo() {
@@ -199,7 +197,7 @@ public class CustomCommandMainPageView extends WizardPage {
 
   /**
    * Get access to the shell's directory text
-   * 
+   *
    * @return
    */
   public Text getShellDirText() {
@@ -208,7 +206,7 @@ public class CustomCommandMainPageView extends WizardPage {
 
   /**
    * Get access to the container
-   * 
+   *
    * @return
    */
   public Composite getViewContainer() {

@@ -2,6 +2,7 @@
  * Copyright 2015 The ISTLab. Use of this source code is governed by a GNU AFFERO GPL 3.0 license
  * that can be found in the LICENSE file.
  */
+
 package gr.aueb.dmst.istlab.unixtools.views.wizard;
 
 import java.util.ArrayList;
@@ -32,48 +33,50 @@ import gr.aueb.dmst.istlab.unixtools.util.PropertiesLoader;
 public class CustomCommandArgumentPageView extends WizardPage {
 
   private String givenCommand;
-  private Button[] buttonz;
+  private Button[] buttons;
   private Composite container;
   private Label label;
   private Label textLabel;
   private Text text;
-  private Button pipe;
-  private ArrayList<CommandPrototypeOption> args = new ArrayList<CommandPrototypeOption>();
+  private Button pipeButton;
+  private ArrayList<CommandPrototypeOption> arguments = new ArrayList<CommandPrototypeOption>();
   private CustomCommandWizardArgumentPageController controller;
   private final String labelText = PropertiesLoader.WIZARD_ARG_PAGE_LABEL;
 
   public CustomCommandArgumentPageView() {
     super("Command's arguments");
-    setTitle(PropertiesLoader.WIZARD_ARG_PAGE_TITLE);
-    setDescription(PropertiesLoader.WIZARD_ARG_PAGE_DESCRIPTION);
-    controller = new CustomCommandWizardArgumentPageController();
+    this.controller = new CustomCommandWizardArgumentPageController();
+    this.setTitle(PropertiesLoader.WIZARD_ARG_PAGE_TITLE);
+    this.setDescription(PropertiesLoader.WIZARD_ARG_PAGE_DESCRIPTION);
   }
 
   @Override
   public void createControl(Composite arg0) {
-    container = new Composite(arg0, SWT.NONE);
-    args = controller.getArguments(this.givenCommand);
+    this.container = new Composite(arg0, SWT.NONE);
+    this.arguments = controller.getArguments(this.givenCommand);
     GridLayout grid = new GridLayout();
     grid.numColumns = 1;
-    container.setLayout(grid);
-    label = new Label(container, SWT.NONE);
-    label.setText(this.labelText);
-    textLabel = new Label(container, SWT.NONE);
-    textLabel.setText("Enter the arguments you want : ");
+    this.container.setLayout(grid);
+    this.label = new Label(container, SWT.NONE);
+    this.label.setText(this.labelText);
+    this.textLabel = new Label(container, SWT.NONE);
+    this.textLabel.setText("Enter the arguments you want : ");
     GridData data = new GridData();
     data.grabExcessHorizontalSpace = true;
     data.horizontalAlignment = GridData.FILL;
-    text = new Text(container, SWT.BORDER);
-    text.setLayoutData(data);
-    pipe = new Button(container, SWT.CHECK);
-    pipe.setText("Click to add pipe");
+    this.text = new Text(container, SWT.BORDER);
+    this.text.setLayoutData(data);
+    this.pipeButton = new Button(container, SWT.CHECK);
+    this.pipeButton.setText("Click to add pipe");
 
-    buttonz = new Button[args.size()];
-    for (int i = 0; i < args.size(); ++i) {
-      buttonz[i] = new Button(container, SWT.CHECK);
-      buttonz[i].setText(args.get(i).getName());
-      buttonz[i].setToolTipText(args.get(i).getDescription());
+    this.buttons = new Button[arguments.size()];
+
+    for (int i = 0; i < arguments.size(); ++i) {
+      this.buttons[i] = new Button(this.container, SWT.CHECK);
+      this.buttons[i].setText(this.arguments.get(i).getName());
+      this.buttons[i].setToolTipText(this.arguments.get(i).getDescription());
     }
+
     setControl(container);
   }
 
@@ -106,10 +109,7 @@ public class CustomCommandArgumentPageView extends WizardPage {
    * @return
    */
   public boolean pipe() {
-    if (this.pipe != null)
-      return this.pipe.getSelection();
-    else
-      return false;
+    return (this.pipeButton != null ? this.pipeButton.getSelection() : false);
   }
 
   /**
@@ -117,18 +117,20 @@ public class CustomCommandArgumentPageView extends WizardPage {
    *
    * @return
    */
-  public String getSelectedArgs() {
-    String args = "";
+  public String getSelectedArguments() {
+    String arguments = "";
+
     if (this.text != null) {
       if (this.text.getText().length() == 0) {
-        for (int i = 0; i < this.buttonz.length; i++) {
-          if (buttonz[i].getSelection())
-            args += buttonz[i].getText() + " ";
+        for (int i = 0; i < this.buttons.length; i++) {
+          if (this.buttons[i].getSelection())
+            arguments += this.buttons[i].getText() + " ";
         }
       } else {
-        args = this.text.getText();
+        arguments = this.text.getText();
       }
     }
-    return args;
+
+    return arguments;
   }
 }

@@ -1,3 +1,8 @@
+/*
+ * Copyright 2015 The ISTLab. Use of this source code is governed by a GNU AFFERO GPL 3.0 license
+ * that can be found in the LICENSE file.
+ */
+
 package gr.aueb.dmst.istlab.unixtools.views.preferences;
 
 import java.util.ArrayList;
@@ -53,9 +58,9 @@ public class CustomCommandTableView extends AbstractPreferencePage {
   @Override
   public void init(IWorkbench arg0) {
     super.init(arg0);
-    setDescription(PropertiesLoader.CUSTOM_COMMAND_PAGE_DESCRIPTION);
-    model = new CustomCommandModel();
-    controller = new CustomCommandTableController(model, this);
+    this.setDescription(PropertiesLoader.CUSTOM_COMMAND_PAGE_DESCRIPTION);
+    this.model = new CustomCommandModel();
+    this.controller = new CustomCommandTableController(this.model, this);
   }
 
   @Override
@@ -64,13 +69,13 @@ public class CustomCommandTableView extends AbstractPreferencePage {
     this.setComposite(new Composite(parent, parent.getStyle()));
     this.setCCLayout(this.getComposite());
 
-    model = new CustomCommandModel();
-    controller = new CustomCommandTableController(model, this);
+    this.model = new CustomCommandModel();
+    this.controller = new CustomCommandTableController(this.model, this);
 
     // create the command table and the buttons
     this.customCommandsTable = createCommandTable(this.getComposite());
     this.createButtons(this.getComposite());
-    controller.loadTable();
+    this.controller.loadTable();
     this.refresh();
 
     return this.getComposite();
@@ -97,11 +102,14 @@ public class CustomCommandTableView extends AbstractPreferencePage {
     this.importButton = createButton(buttonGroup, "Import");
     this.exportButton = createButton(buttonGroup, "Export");
 
-    this.addButton.addSelectionListener(controller.getNewAddCustomCommandButtonListener());
-    this.editButton.addSelectionListener(controller.getNewEditCustomCommandButtonListener());
-    this.removeButton.addSelectionListener(controller.getNewRemoveCustomCommandButtonListener());
-    this.importButton.addSelectionListener(controller.getNewImportCustomCommandButtonListener());
-    this.exportButton.addSelectionListener(controller.getNewExportCustomCommandButtonListener());
+    this.addButton.addSelectionListener(this.controller.getNewAddCustomCommandButtonListener());
+    this.editButton.addSelectionListener(this.controller.getNewEditCustomCommandButtonListener());
+    this.removeButton
+        .addSelectionListener(this.controller.getNewRemoveCustomCommandButtonListener());
+    this.importButton
+        .addSelectionListener(this.controller.getNewImportCustomCommandButtonListener());
+    this.exportButton
+        .addSelectionListener(this.controller.getNewExportCustomCommandButtonListener());
   }
 
   /**
@@ -138,47 +146,54 @@ public class CustomCommandTableView extends AbstractPreferencePage {
     table.setLinesVisible(true);
     table.setHeaderVisible(true);
     table.setToolTipText("Custom commands' table");
-    for (String s : titles) {
-      TableColumn col = new TableColumn(table, SWT.NONE);
-      col.setText(s);
+
+    for (String title : titles) {
+      TableColumn column = new TableColumn(table, SWT.NONE);
+      column.setText(title);
     }
+
     return table;
   }
 
+  /**
+   * The addition follows a wizard style implementation, divided into 3 pages : a Command Page where
+   * the user can specify the newly added command's name, the command itself, and the shell's
+   * starting directory for the command. The user also gets the command's description and an auto
+   * complete feature to help him/her choose from the command prototypes. The second page is an
+   * Argument page, where the user can select from the available arguments for the command, and
+   * finally, the third page is a Resource page, where the user can attach an input file to the
+   * command or add a pipe. If the user chooses to pipe the wizard starts all over again, showing in
+   * the first page the state of the command so far. NOTE : When piping , the shell's directory path
+   * and the command's nickname, are extracted from the last part of the pipe i.e from the last
+   * wizard that pops up.
+   */
   public CustomCommand handleAddButton() {
-    /**
-     * The addition follows a wizard style implementation, divided into 3 pages : a Command Page
-     * where the user can specify the newly added command's name, the command itself, and the
-     * shell's starting directory for the command. The user also gets the command's description and
-     * an auto complete feature to help him/her choose from the command prototypes. The second page
-     * is an Argument page, where the user can select from the available arguments for the command,
-     * and finally, the third page is a Resource page, where the user can attach an input file to
-     * the command or add a pipe. If the user chooses to pipe the wizard starts all over again,
-     * showing in the first page the state of the command so far. NOTE : When piping , the shell's
-     * directory path and the command's nickname, are extracted from the last part of the pipe i.e
-     * from the last wizard that pops up.
-     */
-    CustomCommand cc = null;
-    CustomCommandCreationWizard cw = new CustomCommandCreationWizard();
-    cw.setNeedsProgressMonitor(true);
-    cw.setShell(CustomCommandTableView.this.getComposite().getShell());
+    CustomCommand commandToAdd = null;
+    CustomCommandCreationWizard wizard = new CustomCommandCreationWizard();
+    wizard.setNeedsProgressMonitor(true);
+    wizard.setShell(CustomCommandTableView.this.getComposite().getShell());
     WizardDialog wizardDialog =
-        new WizardDialog(CustomCommandTableView.this.getComposite().getShell(), cw);
+        new WizardDialog(CustomCommandTableView.this.getComposite().getShell(), wizard);
+
     if (wizardDialog.open() == WizardDialog.OK) {
-      cc = new CustomCommand();
-      cc.setCommand(cw.getActualCommand());
-      cc.setDescription(cw.getNickname());
-      cc.setShellDirectory(cw.getShellDir());
-      if (cw.getOutputFile().isEmpty() || cw.getOutputFile().length() == 0) {
-        cc.setOutputToConsole(true);
+      commandToAdd = new CustomCommand();
+      commandToAdd.setCommand(wizard.getActualCommand());
+      commandToAdd.setDescription(wizard.getNickname());
+      commandToAdd.setShellDirectory(wizard.getShellDirectory());
+
+      if (wizard.getOutputFile().isEmpty() || wizard.getOutputFile().length() == 0) {
+        commandToAdd.setHasConsoleOutput(true);
       } else {
-        cc.setOutputToConsole(false);
-        cc.setOutputFilename(cw.getOutputFile());
+        commandToAdd.setHasConsoleOutput(false);
+        commandToAdd.setOutputFilename(wizard.getOutputFile());
       }
+
       this.changed = true;
     }
+
     CustomCommandCreationWizard.clearValues();
-    return cc;
+
+    return commandToAdd;
   }
 
   /**
@@ -193,17 +208,19 @@ public class CustomCommandTableView extends AbstractPreferencePage {
       // no command selected so we just return
       MessageDialog.openInformation(this.getShell(), "Please be careful!!",
           "Choose a command to edit!");
+
       return null;
     }
 
     if (this.customCommandsTable.getSelectionIndices().length > 1) {
       MessageDialog.openInformation(this.getShell(), "Please be careful!!",
           "One command can be edited at a time!");
+
       return null;
     }
 
-    Shell s = this.getShell();
-    CustomCommandEditDialogView dialog = new CustomCommandEditDialogView(s);
+    Shell shell = this.getShell();
+    CustomCommandEditDialogView dialog = new CustomCommandEditDialogView(shell);
     dialog.create();
 
     dialog.setDefaultValues(this.customCommandsTable.getItem(selection).getText(0),
@@ -232,52 +249,35 @@ public class CustomCommandTableView extends AbstractPreferencePage {
   public int[] handleRemoveButton() {
     int[] selectedItems = this.customCommandsTable.getSelectionIndices();
     this.changed = true;
-    // if no command was selected we cannot remove
-    if (selectedItems.length == 0) {
-      MessageDialog.openInformation(this.getShell(), "Please be careful!!",
-          "Please select the command you want o be removed!");
-      return null;
-    }
-    // ask the user for confirmation to avoid unwanted mistakes
-    MessageDialog dg = new MessageDialog(this.getShell(), "Command removal", null,
-        "Are you sure you want to remove the selected commands?",
-        MessageDialog.QUESTION_WITH_CANCEL, new String[] {IDialogConstants.YES_LABEL,
-            IDialogConstants.NO_LABEL, IDialogConstants.CANCEL_LABEL},
-        0);
-    if (dg.open() == MessageDialog.OK) {
-      return selectedItems;
-    }
-    return null;
+
+    return ((selectedItems.length > 0) ? selectedItems : null);
   }
 
   public String handleImportButton() {
-    String fn = null;
+    String filename = null;
     // ask the user if he/she wants to overwrite the existing table
-    MessageDialog dg = new MessageDialog(getShell(), "Import commands", null,
+    MessageDialog messageDialog = new MessageDialog(getShell(), "Import commands", null,
         PropertiesLoader.CUSTOM_COMMAND_PAGE_IMPORT_MESSAGE, MessageDialog.QUESTION_WITH_CANCEL,
         new String[] {IDialogConstants.YES_LABEL, IDialogConstants.NO_LABEL,
             IDialogConstants.CANCEL_LABEL},
         0);
 
-    if (dg.open() == MessageDialog.OK) {
+    if (messageDialog.open() == MessageDialog.OK) {
       // User has selected to open a single file
-      FileDialog dlg = new FileDialog(getShell(), SWT.OPEN);
-      // dlg.setFilterNames(new String[] {"Yaml storage file (*.yml)"});
-      // dlg.setFilterExtensions(new String[] {".yml"});
-      fn = dlg.open();
+      FileDialog fileDialog = new FileDialog(getShell(), SWT.OPEN);
+      filename = fileDialog.open();
     }
-    return fn;
+
+    return filename;
   }
 
   public String handleExportButton() {
-    String fn = null;
+    String filename = null;
     // User has selected to open a single file
-    FileDialog dlg = new FileDialog(getShell(), SWT.SAVE);
-    dlg.setFilterNames(new String[] {"Yaml storage file (*.yml)"});
-    dlg.setFilterExtensions(new String[] {".yml"});
-    fn = dlg.open();
+    FileDialog dialog = new FileDialog(getShell(), SWT.SAVE);
+    filename = dialog.open();
 
-    return fn;
+    return filename;
   }
 
   /**
@@ -291,7 +291,7 @@ public class CustomCommandTableView extends AbstractPreferencePage {
 
   @Override
   public void refresh() {
-    controller.refresh();
+    this.controller.refresh();
   }
 
   /**
@@ -300,32 +300,38 @@ public class CustomCommandTableView extends AbstractPreferencePage {
    * @return
    */
   public CustomCommandModel getModel() {
-    return model;
+    return this.model;
   }
 
   @Override
   public boolean performOk() {
-    controller.save();
+    this.controller.save();
+
     if (changed) {
       // override the previous command list
       TableItem[] items = this.customCommandsTable.getItems();
       ArrayList<CustomCommand> newCommands = new ArrayList<CustomCommand>();
+
       for (int i = 0; i < items.length; ++i) {
-        CustomCommand cc = new CustomCommand();
-        cc.setCommand(items[i].getText(0));
-        cc.setDescription(items[i].getText(1));
-        cc.setShellDirectory(items[i].getText(2));
+        CustomCommand customCommand = new CustomCommand();
+        customCommand.setCommand(items[i].getText(0));
+        customCommand.setDescription(items[i].getText(1));
+        customCommand.setShellDirectory(items[i].getText(2));
+
         if (items[i].getText(3).isEmpty()) {
-          cc.setOutputToConsole(true);
+          customCommand.setHasConsoleOutput(true);
         } else {
-          cc.setOutputToConsole(false);
-          cc.setOutputFilename(items[i].getText(3));
+          customCommand.setHasConsoleOutput(false);
+          customCommand.setOutputFilename(items[i].getText(3));
         }
-        newCommands.add(cc);
+
+        newCommands.add(customCommand);
       }
-      model.setCommands(newCommands);
-      changed = false;
+
+      this.model.setCommands(newCommands);
+      this.changed = false;
     }
+
     return true;
   }
 

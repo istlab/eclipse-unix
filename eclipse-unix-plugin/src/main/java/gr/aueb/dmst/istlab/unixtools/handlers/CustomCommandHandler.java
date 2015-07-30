@@ -2,6 +2,7 @@
  * Copyright 2015 The ISTLab. Use of this source code is governed by a GNU AFFERO GPL 3.0 license
  * that can be found in the LICENSE file.
  */
+
 package gr.aueb.dmst.istlab.unixtools.handlers;
 
 import java.io.BufferedReader;
@@ -26,16 +27,17 @@ import gr.aueb.dmst.istlab.unixtools.factories.ActionFactorySingleton;
 
 public class CustomCommandHandler extends AbstractHandler {
 
-  private CustomCommand cc;
+  private CustomCommand customCommand;
 
-  public CustomCommandHandler(CustomCommand cc) {
-    this.cc = cc;
+  public CustomCommandHandler(CustomCommand customCommand) {
+    this.customCommand = customCommand;
   }
 
   @Override
   public Object execute(ExecutionEvent event) throws ExecutionException {
     ExecuteCustomCommandAction action = (ExecuteCustomCommandAction) ActionFactorySingleton.INSTANCE
-        .createCustomCommandExecuteAction(cc);
+        .createCustomCommandExecuteAction(this.customCommand);
+
     try {
       action.execute(new ActionExecutionCallback<DataActionResult<InputStream>>() {
 
@@ -44,36 +46,45 @@ public class CustomCommandHandler extends AbstractHandler {
           BufferedReader br = null;
           BufferedWriter bw = null;
           String line = null;
+
           try {
             br = new BufferedReader(new InputStreamReader(result.getData()));
-            if (cc.isOutputToConsole()) {
+
+            if (customCommand.getHasConsoleOutput()) {
               while ((line = br.readLine()) != null) {
                 System.out.println(line);
               }
             } else {
-              File outputFile = new File(cc.getOutputFilename());
+              File outputFile = new File(customCommand.getOutputFilename());
+
               // if file doesn't exists, then create it
               if (!outputFile.exists()) {
                 outputFile.createNewFile();
               }
+
               bw = new BufferedWriter(new FileWriter(outputFile));
 
               while ((line = br.readLine()) != null) {
                 bw.write(line);
-                if (SystemUtils.IS_OS_WINDOWS)
+
+                if (SystemUtils.IS_OS_WINDOWS) {
                   bw.write("\r\n");
-                if (SystemUtils.IS_OS_LINUX)
+                } else if (SystemUtils.IS_OS_LINUX) {
                   bw.write("\n");
+                }
               }
             }
           } catch (IOException io) {
             io.printStackTrace();
           } finally {
             try {
-              if (br != null)
+              if (br != null) {
                 br.close();
-              if (bw != null)
+              }
+
+              if (bw != null) {
                 bw.close();
+              }
             } catch (IOException e) {
               e.printStackTrace();
             }
@@ -85,8 +96,11 @@ public class CustomCommandHandler extends AbstractHandler {
     } catch (InterruptedException e) {
       e.printStackTrace();
     }
+
     // finally add the executed command to the recently used list
-    UnixToolsRecentlyUsedController.addCommand(this.cc);
+    UnixToolsRecentlyUsedController.addCommand(this.customCommand);
+
     return null;
   }
+
 }

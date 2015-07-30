@@ -2,6 +2,7 @@
  * Copyright 2015 The ISTLab. Use of this source code is governed by a GNU AFFERO GPL 3.0 license
  * that can be found in the LICENSE file.
  */
+
 package gr.aueb.dmst.istlab.unixtools.controllers;
 
 import java.util.List;
@@ -23,24 +24,24 @@ import gr.aueb.dmst.istlab.unixtools.handlers.CustomCommandHandler;
 
 public abstract class AbstractUnixToolsController {
 
+  private static final Logger logger = Logger.getLogger(AbstractUnixToolsController.class);
   protected String category;
   protected String identity;
   protected static int commandID;
   protected static List<Command> commands;
   protected static List<IHandlerActivation> handlers;
   private Category customCommandCategory;
-  private static final Logger logger = Logger.getLogger(AbstractUnixToolsController.class);
-
-  protected static int increaseID() {
-    return commandID++;
-  }
 
   public abstract IContributionItem[] getContributionItems();
 
   protected abstract IContributionItem[] createCustomCommandArray();
 
+  protected static int increaseID() {
+    return commandID++;
+  }
+
   /**
-   * Undefines eclipse commands and deactivates handlers
+   * Undo eclipse commands and deactivates handlers
    */
   protected void reInitialize() {
     if (commands != null) {
@@ -50,6 +51,7 @@ public abstract class AbstractUnixToolsController {
         deactivateHandler(handlers.get(i));
       }
     }
+
     handlers = null;
     commands = null;
     commandID = 0;
@@ -58,22 +60,24 @@ public abstract class AbstractUnixToolsController {
   /**
    * Create an eclipse command using a custom command handler
    *
-   * @param cc
+   * @param customCommand
    * @return
    */
-  protected Command createEclipseCommand(CustomCommand cc) {
+  protected Command createEclipseCommand(CustomCommand customCommand) {
     int id = increaseID();
+
     ICommandService commandService = this.getCommandService(getServiceLocator());
     Command command = commandService.getCommand(this.identity + id);
-    command.define(cc.getCommand(), cc.getDescription(),
+    command.define(customCommand.getCommand(), customCommand.getDescription(),
         this.getLazyInitCategory(this.getCommandService(this.getServiceLocator())));
-    this.activateHandler(cc, this.identity + id);
+    this.activateHandler(customCommand, this.identity + id);
     commands.add(command);
+
     return command;
   }
 
   /**
-   * Undefine the given eclipse command
+   * Undo the given eclipse command
    *
    * @param command
    */
@@ -84,6 +88,7 @@ public abstract class AbstractUnixToolsController {
       } catch (SWTException e) {
         logger.fatal("Error undefining eclipse command " + command);
       }
+
       command = null;
     }
   }
@@ -91,12 +96,12 @@ public abstract class AbstractUnixToolsController {
   /**
    * Activate a handler with the given parameters
    *
-   * @param cc
+   * @param customCommand
    * @param commandId
    */
-  protected void activateHandler(CustomCommand cc, String commandId) {
+  protected void activateHandler(CustomCommand customCommand, String commandId) {
     IHandlerService handlerService = getHandlerService(getServiceLocator());
-    IHandler handler = new CustomCommandHandler(cc);
+    IHandler handler = new CustomCommandHandler(customCommand);
     IHandlerActivation handlerActivation = handlerService.activateHandler(commandId, handler);
     handlers.add(handlerActivation);
   }
@@ -109,6 +114,7 @@ public abstract class AbstractUnixToolsController {
   protected void deactivateHandler(IHandlerActivation handlerActivation) {
     if (handlerActivation != null) {
       IHandlerService handlerService = this.getHandlerService(this.getServiceLocator());
+
       if (handlerService != null) {
         handlerService.deactivateHandler(handlerActivation);
       }
@@ -124,6 +130,7 @@ public abstract class AbstractUnixToolsController {
     if (this.customCommandCategory == null) {
       this.customCommandCategory = commandService.getCategory(this.category);
     }
+
     return this.customCommandCategory;
   }
 

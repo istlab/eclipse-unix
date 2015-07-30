@@ -45,48 +45,49 @@ public class CustomCommandResourcePageView extends WizardPage {
    */
   public CustomCommandResourcePageView() {
     super("Input resource and shell start directory");
-    setTitle(PropertiesLoader.WIZARD_RESOURCE_PAGE_TITLE);
-    setDescription(PropertiesLoader.WIZARD_RESOURCE_PAGE_DESCRIPTION);
-    controller = new CustomCommandWizardResourcePageController(this);
+    this.setTitle(PropertiesLoader.WIZARD_RESOURCE_PAGE_TITLE);
+    this.setDescription(PropertiesLoader.WIZARD_RESOURCE_PAGE_DESCRIPTION);
+    this.controller = new CustomCommandWizardResourcePageController(this);
   }
 
   @Override
   public void createControl(Composite arg0) {
-    container = new Composite(arg0, SWT.NONE);
+    this.container = new Composite(arg0, SWT.NONE);
     GridLayout layout = new GridLayout();
-    container.setLayout(layout);
+    this.container.setLayout(layout);
     layout.numColumns = 1;
 
-    info = new Label(container, SWT.NONE);
-    info.setText(labelText);
+    this.info = new Label(this.container, SWT.NONE);
+    this.info.setText(this.labelText);
 
-    label = new Label(container, SWT.NONE);
-    label.setText("Input file's path : ");
+    this.label = new Label(this.container, SWT.NONE);
+    this.label.setText("Input file's path : ");
 
-    inputFileName = new Text(container, SWT.BORDER);
+    this.inputFileName = new Text(this.container, SWT.BORDER);
     GridData data = new GridData(GridData.FILL_HORIZONTAL);
     data.horizontalSpan = 4;
-    inputFileName.setLayoutData(data);
+    this.inputFileName.setLayoutData(data);
 
-    button = new Button(container, SWT.PUSH);
-    button.setText("Browse");
-    button.addSelectionListener(controller.getNewAddInputResourceSelectionListener());
+    this.button = new Button(this.container, SWT.PUSH);
+    this.button.setText("Browse");
+    this.button.addSelectionListener(controller.getNewAddInputResourceSelectionListener());
 
-    output = new Label(container, SWT.NONE);
-    output.setText("Output file's path : ");
+    this.output = new Label(this.container, SWT.NONE);
+    this.output.setText("Output file's path : ");
 
-    outputFileName = new Text(container, SWT.BORDER);
+    this.outputFileName = new Text(this.container, SWT.BORDER);
     GridData gd = new GridData(GridData.FILL_HORIZONTAL);
     gd.horizontalSpan = 4;
-    inputFileName.setLayoutData(gd);
+    this.inputFileName.setLayoutData(gd);
 
-    outputButton = new Button(container, SWT.PUSH);
-    outputButton.setText("Browse");
-    outputButton.addSelectionListener(controller.getNewAddOutputResourceSelectionListener());
+    this.outputButton = new Button(this.container, SWT.PUSH);
+    this.outputButton.setText("Browse");
+    this.outputButton
+        .addSelectionListener(this.controller.getNewAddOutputResourceSelectionListener());
 
-    pipe = new Button(container, SWT.CHECK);
-    pipe.setText("Click to add pipe");
-    setControl(container);
+    this.pipe = new Button(this.container, SWT.CHECK);
+    this.pipe.setText("Click to add pipe");
+    this.setControl(this.container);
   }
 
   /**
@@ -113,10 +114,7 @@ public class CustomCommandResourcePageView extends WizardPage {
    * @return
    */
   public boolean pipe() {
-    if (this.pipe != null)
-      return this.pipe.getSelection();
-    else
-      return false;
+    return ((this.pipe != null) ? this.pipe.getSelection() : false);
   }
 
   /**

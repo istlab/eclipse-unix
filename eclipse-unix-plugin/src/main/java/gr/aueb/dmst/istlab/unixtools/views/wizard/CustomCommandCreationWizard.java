@@ -2,6 +2,7 @@
  * Copyright 2015 The ISTLab. Use of this source code is governed by a GNU AFFERO GPL 3.0 license
  * that can be found in the LICENSE file.
  */
+
 package gr.aueb.dmst.istlab.unixtools.views.wizard;
 
 import org.eclipse.jface.wizard.IWizardPage;
@@ -25,9 +26,9 @@ import org.eclipse.swt.widgets.Shell;
 public class CustomCommandCreationWizard extends Wizard {
 
   private Shell shell;
-  private CustomCommandMainPageView cp;
-  private CustomCommandArgumentPageView ap;
-  private CustomCommandResourcePageView rp;
+  private CustomCommandMainPageView mainPageView;
+  private CustomCommandArgumentPageView argurmentPageView;
+  private CustomCommandResourcePageView resourcePageView;
   private static boolean piped = false;
   private static String command = "";
   private static String actualCommand;
@@ -43,16 +44,16 @@ public class CustomCommandCreationWizard extends Wizard {
 
   @Override
   public void addPages() {
-    cp = new CustomCommandMainPageView(command);
-    addPage(cp);
-    ap = new CustomCommandArgumentPageView();
+    mainPageView = new CustomCommandMainPageView(command);
+    addPage(mainPageView);
+    argurmentPageView = new CustomCommandArgumentPageView();
     // the Argument page is not added here but in the getNextPage
     // to ensure that we have the command from the first page
     // in order to present the available arguments to the user
     // works well for now will change it to PageChangeListeners
     // in the future
-    rp = new CustomCommandResourcePageView();
-    addPage(rp);
+    resourcePageView = new CustomCommandResourcePageView();
+    addPage(resourcePageView);
   }
 
   /**
@@ -66,43 +67,48 @@ public class CustomCommandCreationWizard extends Wizard {
 
   @Override
   public IWizardPage getNextPage(IWizardPage current) {
-    if (current == cp) {
-      // the Argument page is added here
-      // to ensure that we get the command
-      // from the first page and not a null value
-      // reinitialization occurs here to cover the situation
-      // where the user chose a command, pressed next,
-      // but then pressed back cause he/she decided to change
-      // the prototype command used
-      ap = new CustomCommandArgumentPageView();
-      ap.setCommand(cp.getCommand());
-      addPage(ap);
-      return ap;
-    } else if (current == ap) {
-      return rp;
-    } else if (current == rp) {
+    if (current == this.mainPageView) {
+      /*
+       * The Argument page is added here to ensure that we get the command from the first page and
+       * not a null value reinitialization occurs here to cover the situation where the user chose a
+       * command, pressed next, but then pressed back cause he/she decided to change the prototype
+       * command used
+       */
+      this.argurmentPageView = new CustomCommandArgumentPageView();
+      this.argurmentPageView.setCommand(mainPageView.getCommand());
+      addPage(this.argurmentPageView);
+
+      return this.argurmentPageView;
+    } else if (current == argurmentPageView) {
+      return this.resourcePageView;
+    } else if (current == resourcePageView) {
       return null;
     }
+
     return null;
   }
 
   @Override
   public boolean performFinish() {
-    command += cp.getCommand() + " ";
-    command += ap.getSelectedArgs() + " ";
-    if (rp.getInputFile().length() != 0) {
-      command += " > " + rp.getInputFile();
+    command += mainPageView.getCommand() + " ";
+    command += argurmentPageView.getSelectedArguments() + " ";
+
+    if (resourcePageView.getInputFile().length() != 0) {
+      command += " > " + resourcePageView.getInputFile();
     }
-    if (cp.pipe() || ap.pipe() || rp.pipe()) {
+
+    if (mainPageView.pipe() || argurmentPageView.pipe() || resourcePageView.pipe()) {
       piped = true;
       command += " | ";
       WizardDialog wizardDialog =
           new WizardDialog(this.getShell(), new CustomCommandCreationWizard());
       wizardDialog.open();
     } else {
-      save(ap.getSelectedArgs(), cp.getNickname(), cp.getShellStartDir(), rp.getInputFile(),
-          rp.getOutputFile());
+      save(this.argurmentPageView.getSelectedArguments(), this.mainPageView.getNickname(),
+          this.mainPageView.getShellStartDir(), this.resourcePageView.getInputFile(),
+          this.resourcePageView.getOutputFile());
     }
+
     return true;
   }
 
@@ -143,10 +149,7 @@ public class CustomCommandCreationWizard extends Wizard {
 
   @Override
   public boolean canFinish() {
-    if (!cp.canFlipToNextPage())
-      return false;
-    else
-      return true;
+    return (!this.mainPageView.canFlipToNextPage() ? false : true);
   }
 
   /**
@@ -158,73 +161,35 @@ public class CustomCommandCreationWizard extends Wizard {
     this.shell = shell;
   }
 
-  /**
-   * Get the working shell
-   */
   @Override
   public Shell getShell() {
     return this.shell;
   }
 
-  /**
-   * Get the command
-   *
-   * @return
-   */
   public String getActualCommand() {
     return actualCommand;
   }
 
-  /**
-   * Get the arguments
-   *
-   * @return
-   */
   public String getArguments() {
     return arguments;
   }
 
-  /**
-   * Get the input file
-   *
-   * @return
-   */
   public String getResource() {
     return resources;
   }
 
-  /**
-   * Get the shell start dir
-   *
-   * @return
-   */
-  public String getShellDir() {
+  public String getShellDirectory() {
     return shellDir;
   }
 
-  /**
-   * Get the nickname
-   *
-   * @return
-   */
   public String getNickname() {
     return nickname;
   }
 
-  /**
-   * Get the output file
-   *
-   * @return
-   */
   public String getOutputFile() {
     return output;
   }
 
-  /**
-   * Get if the user piped or not
-   *
-   * @return
-   */
   public boolean piped() {
     return piped;
   }

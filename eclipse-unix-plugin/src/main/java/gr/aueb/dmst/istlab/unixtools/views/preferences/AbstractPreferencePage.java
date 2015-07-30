@@ -2,6 +2,7 @@
  * Copyright 2015 The ISTLab. Use of this source code is governed by a GNU AFFERO GPL 3.0 license
  * that can be found in the LICENSE file.
  */
+
 package gr.aueb.dmst.istlab.unixtools.views.preferences;
 
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
@@ -15,11 +16,9 @@ import gr.aueb.dmst.istlab.unixtools.plugin.Activator;
 import gr.aueb.dmst.istlab.unixtools.util.PropertiesLoader;
 
 /**
- *
  * This class represents an abstract preference page. It extends FieldEditorPreferencePage instead
  * of PreferencePage to add more options in the newly created Preference Page, since the field
  * editors are really useful.
- *
  */
 public abstract class AbstractPreferencePage extends FieldEditorPreferencePage
     implements IWorkbenchPreferencePage {
@@ -28,7 +27,7 @@ public abstract class AbstractPreferencePage extends FieldEditorPreferencePage
 
   @Override
   public void init(IWorkbench arg0) {
-    setPreferenceStore(this.doGetPreferenceStore());
+    this.setPreferenceStore(this.doGetPreferenceStore());
   }
 
   /**
@@ -41,7 +40,6 @@ public abstract class AbstractPreferencePage extends FieldEditorPreferencePage
   /**
    * This method is responsible for refreshing the components of the preference page when an event
    * happens
-   *
    */
   protected abstract void refresh();
 
@@ -108,4 +106,5 @@ public abstract class AbstractPreferencePage extends FieldEditorPreferencePage
   public Composite getComposite() {
     return this.parent;
   }
+
 }

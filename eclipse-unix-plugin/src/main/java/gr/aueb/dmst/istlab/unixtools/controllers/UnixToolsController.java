@@ -2,6 +2,7 @@
  * Copyright 2015 The ISTLab. Use of this source code is governed by a GNU AFFERO GPL 3.0 license
  * that can be found in the LICENSE file.
  */
+
 package gr.aueb.dmst.istlab.unixtools.controllers;
 
 import java.util.ArrayList;
@@ -21,17 +22,19 @@ import gr.aueb.dmst.istlab.unixtools.factories.RepositoryFactorySingleton;
 
 public class UnixToolsController extends AbstractUnixToolsController {
 
-  private List<CustomCommand> ccList;
+  private List<CustomCommand> customCommands;
   private CustomCommandModel model;
-  private final CustomCommandRepository cpr =
-      RepositoryFactorySingleton.INSTANCE.createCustomCommandRepository();
+  private final CustomCommandRepository repository;
 
   public UnixToolsController() {
+    this.repository = RepositoryFactorySingleton.INSTANCE.createCustomCommandRepository();
+
     try {
-      model = cpr.getModel();
+      this.model = this.repository.getModel();
     } catch (DataAccessException e) {
       e.printStackTrace();
     }
+
     category = "gr.cs.aueb.dmst.istlab.unixtools.CustomCommandCategory";
     identity = "gr.cs.aueb.dmst.istlab.unixtools.CustomCommand";
     commandID = 0;
@@ -40,10 +43,11 @@ public class UnixToolsController extends AbstractUnixToolsController {
   @Override
   public IContributionItem[] getContributionItems() {
     this.reInitialize();
-    this.ccList = model.getCommands();
+    this.customCommands = model.getCommands();
     commands = new ArrayList<Command>();
     handlers = new ArrayList<IHandlerActivation>();
     IContributionItem[] items = createCustomCommandArray();
+
     return items;
   }
 
@@ -51,7 +55,7 @@ public class UnixToolsController extends AbstractUnixToolsController {
   protected IContributionItem[] createCustomCommandArray() {
     List<IContributionItem> contributionItemList = new ArrayList<IContributionItem>();
 
-    for (CustomCommand cc : ccList) {
+    for (CustomCommand cc : customCommands) {
       Command command = createEclipseCommand(cc);
       CommandContributionItemParameter commandContributionItemParameter =
           new CommandContributionItemParameter(this.getServiceLocator(), command.getId(),
@@ -66,6 +70,7 @@ public class UnixToolsController extends AbstractUnixToolsController {
   @Override
   protected void reInitialize() {
     super.reInitialize();
-    this.ccList = null;
+    this.customCommands = null;
   }
+
 }

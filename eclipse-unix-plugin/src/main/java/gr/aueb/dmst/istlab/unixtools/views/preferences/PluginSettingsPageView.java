@@ -2,6 +2,7 @@
  * Copyright 2015 The ISTLab. Use of this source code is governed by a GNU AFFERO GPL 3.0 license
  * that can be found in the LICENSE file.
  */
+
 package gr.aueb.dmst.istlab.unixtools.views.preferences;
 
 import org.eclipse.jface.preference.DirectoryFieldEditor;
@@ -26,11 +27,11 @@ import gr.aueb.dmst.istlab.unixtools.util.PropertiesLoader;
 public class PluginSettingsPageView extends AbstractPreferencePage {
 
   // instance variables
-  private DirectoryFieldEditor dfe;
-  private FileFieldEditor ffe;
-  private RadioGroupFieldEditor rgfe;
+  private DirectoryFieldEditor directoryFieldEditor;
+  private FileFieldEditor fileFieldEditor;
+  private RadioGroupFieldEditor radioGroupFieldEditor;
   private Composite newParent;
-  private boolean fileDirEnabled = false;
+  private boolean fileDirectoryEnabled = false;
 
   @Override
   public void init(IWorkbench arg0) {
@@ -57,9 +58,10 @@ public class PluginSettingsPageView extends AbstractPreferencePage {
    */
   private void savePreferences() {
     IPreferenceStore store = this.doGetPreferenceStore();
-    store.setValue(PropertiesLoader.SHELL_PATH_KEY, dfe.getStringValue());
-    if (this.fileDirEnabled) {
-      store.setValue(PropertiesLoader.OUTPUT_KEY, ffe.getStringValue());
+    store.setValue(PropertiesLoader.SHELL_PATH_KEY, directoryFieldEditor.getStringValue());
+
+    if (this.fileDirectoryEnabled) {
+      store.setValue(PropertiesLoader.OUTPUT_KEY, fileFieldEditor.getStringValue());
     } else {
       store.setValue(PropertiesLoader.OUTPUT_KEY, "screen");
     }
@@ -68,34 +70,37 @@ public class PluginSettingsPageView extends AbstractPreferencePage {
   @Override
   protected void createFieldEditors() {
     this.newParent = this.getFieldEditorParent();
-    this.dfe = new DirectoryFieldEditor("bash", "Enter cygwin's path : ", this.newParent);
+    this.directoryFieldEditor =
+        new DirectoryFieldEditor("bash", "Enter cygwin's path : ", this.newParent);
     String[][] choices = {{"Screen", "screen"}, {"File", "file"}};
-    this.rgfe = new RadioGroupFieldEditor(PropertiesLoader.OUTPUT_KEY,
+    this.radioGroupFieldEditor = new RadioGroupFieldEditor(PropertiesLoader.OUTPUT_KEY,
         "Choose the output you would like : ", 1, choices, this.newParent);
-    this.ffe = new FileFieldEditor("file", "Enter the file's path  : ", this.newParent);
-    this.ffe.setEnabled(false, this.newParent);
-    this.addField(dfe);
-    this.addField(rgfe);
-    this.addField(ffe);
+    this.fileFieldEditor = new FileFieldEditor("file", "Enter the file's path  : ", this.newParent);
+    this.fileFieldEditor.setEnabled(false, this.newParent);
+    this.addField(directoryFieldEditor);
+    this.addField(radioGroupFieldEditor);
+    this.addField(fileFieldEditor);
   }
 
   @Override
   public void propertyChange(PropertyChangeEvent event) {
     super.propertyChange(event);
     Object source = event.getSource();
-    if (source == this.rgfe) {
+    if (source == this.radioGroupFieldEditor) {
       switch ((String) event.getNewValue()) {
         case "file":
-          if (!this.fileDirEnabled) {
-            this.ffe.setEnabled(true, this.newParent);
-            this.fileDirEnabled = true;
+          if (!this.fileDirectoryEnabled) {
+            this.fileFieldEditor.setEnabled(true, this.newParent);
+            this.fileDirectoryEnabled = true;
           }
+
           break;
         case "screen":
-          if (this.fileDirEnabled) {
-            this.ffe.setEnabled(false, newParent);
-            this.fileDirEnabled = false;
+          if (this.fileDirectoryEnabled) {
+            this.fileFieldEditor.setEnabled(false, newParent);
+            this.fileDirectoryEnabled = false;
           }
+
           break;
       }
     }
