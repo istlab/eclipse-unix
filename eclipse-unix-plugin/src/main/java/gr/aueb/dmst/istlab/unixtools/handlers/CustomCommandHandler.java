@@ -14,6 +14,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 
 import org.apache.commons.lang3.SystemUtils;
+import org.apache.log4j.Logger;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
@@ -27,6 +28,7 @@ import gr.aueb.dmst.istlab.unixtools.factories.ActionFactorySingleton;
 
 public class CustomCommandHandler extends AbstractHandler {
 
+  private static final Logger logger = Logger.getLogger(CustomCommandHandler.class);
   private CustomCommand customCommand;
 
   public CustomCommandHandler(CustomCommand customCommand) {
@@ -75,7 +77,8 @@ public class CustomCommandHandler extends AbstractHandler {
               }
             }
           } catch (IOException io) {
-            io.printStackTrace();
+            logger.fatal(
+                "Error in command's " + customCommand.getDescription() + " output redirection");
           } finally {
             try {
               if (br != null) {
@@ -86,15 +89,16 @@ public class CustomCommandHandler extends AbstractHandler {
                 bw.close();
               }
             } catch (IOException e) {
-              e.printStackTrace();
+              logger.fatal("Failed to close reader/writer when executing command "
+                  + customCommand.getDescription());
             }
           }
         }
       });
     } catch (IOException e) {
-      e.printStackTrace();
+      logger.fatal("IOException when executing command " + customCommand.getDescription());
     } catch (InterruptedException e) {
-      e.printStackTrace();
+      logger.fatal("Command " + customCommand.getDescription() + " execution was interrupted");
     }
 
     // finally add the executed command to the recently used list
