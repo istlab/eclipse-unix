@@ -10,19 +10,19 @@ import java.beans.ConstructorProperties;
 public final class CustomCommand {
 
   private String command;
-  private String description;
+  private String name;
   private String shellDirectory;
   private boolean hasConsoleOutput;
   private String outputFilename;
 
   public CustomCommand() {}
 
-  @ConstructorProperties({"command", "description", "shellDirectory", "hasConsoleOutput",
+  @ConstructorProperties({"command", "name", "shellDirectory", "hasConsoleOutput",
       "outputFilename"})
-  public CustomCommand(String command, String description, String shellDirectory,
-      boolean hasConsoleOutput, String outputFilename) {
+  public CustomCommand(String command, String name, String shellDirectory, boolean hasConsoleOutput,
+      String outputFilename) {
     this.setCommand(command);
-    this.setDescription(description);
+    this.setName(name);
     this.setShellDirectory(shellDirectory);
     this.setHasConsoleOutput(hasConsoleOutput);
     this.setOutputFilename(outputFilename);
@@ -36,12 +36,12 @@ public final class CustomCommand {
     this.command = command;
   }
 
-  public String getDescription() {
-    return description;
+  public String getName() {
+    return name;
   }
 
-  public void setDescription(String description) {
-    this.description = description;
+  public void setName(String name) {
+    this.name = name;
   }
 
   public String getShellDirectory() {
