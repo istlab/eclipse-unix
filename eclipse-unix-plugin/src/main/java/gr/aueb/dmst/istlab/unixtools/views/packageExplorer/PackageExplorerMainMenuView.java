@@ -3,7 +3,7 @@
  * that can be found in the LICENSE file.
  */
 
-package gr.aueb.dmst.istlab.unixtools.controllers;
+package gr.aueb.dmst.istlab.unixtools.views.packageExplorer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,38 +14,29 @@ import org.eclipse.ui.handlers.IHandlerActivation;
 import org.eclipse.ui.menus.CommandContributionItem;
 import org.eclipse.ui.menus.CommandContributionItemParameter;
 
+import gr.aueb.dmst.istlab.unixtools.controllers.PackageExplorerMainMenuController;
 import gr.aueb.dmst.istlab.unixtools.core.model.CustomCommand;
-import gr.aueb.dmst.istlab.unixtools.core.model.CustomCommandModel;
-import gr.aueb.dmst.istlab.unixtools.dal.CustomCommandRepository;
-import gr.aueb.dmst.istlab.unixtools.dal.DataAccessException;
-import gr.aueb.dmst.istlab.unixtools.factories.RepositoryFactorySingleton;
 
-public class UnixToolsController extends AbstractUnixToolsController {
+public class PackageExplorerMainMenuView extends AbstactPackageExplorerView {
 
   private List<CustomCommand> customCommands;
-  private CustomCommandModel model;
-  private final CustomCommandRepository repository;
+  private PackageExplorerMainMenuController controller;
 
-  public UnixToolsController() {
-    this.repository = RepositoryFactorySingleton.INSTANCE.createCustomCommandRepository();
+  public PackageExplorerMainMenuView() {
+    super();
+    this.controller = new PackageExplorerMainMenuController();
 
-    try {
-      this.model = this.repository.getModel();
-    } catch (DataAccessException e) {
-      e.printStackTrace();
-    }
-
-    category = "gr.cs.aueb.dmst.istlab.unixtools.CustomCommandCategory";
-    identity = "gr.cs.aueb.dmst.istlab.unixtools.CustomCommand";
-    commandID = 0;
+    this.setCategory("gr.cs.aueb.dmst.istlab.unixtools.CustomCommandCategory");
+    this.setIdentity("gr.cs.aueb.dmst.istlab.unixtools.CustomCommand");
+    setCommandID(0);
   }
 
   @Override
-  public IContributionItem[] getContributionItems() {
+  protected IContributionItem[] getContributionItems() {
     this.reInitialize();
-    this.customCommands = model.getCommands();
-    commands = new ArrayList<Command>();
-    handlers = new ArrayList<IHandlerActivation>();
+    this.customCommands = controller.getCustomCommands();
+    setCommands(new ArrayList<Command>());
+    setHandlers(new ArrayList<IHandlerActivation>());
     IContributionItem[] items = createCustomCommandArray();
 
     return items;
@@ -60,7 +51,7 @@ public class UnixToolsController extends AbstractUnixToolsController {
       CommandContributionItemParameter commandContributionItemParameter =
           new CommandContributionItemParameter(this.getServiceLocator(), command.getId(),
               command.getId(), CommandContributionItem.STYLE_PUSH);
-      commandContributionItemParameter.label = cc.getDescription();
+      commandContributionItemParameter.label = cc.getName();
       contributionItemList.add(new CommandContributionItem(commandContributionItemParameter));
     }
 

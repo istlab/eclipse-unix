@@ -1,9 +1,4 @@
-/*
- * Copyright 2015 The ISTLab. Use of this source code is governed by a GNU AFFERO GPL 3.0 license
- * that can be found in the LICENSE file.
- */
-
-package gr.aueb.dmst.istlab.unixtools.controllers;
+package gr.aueb.dmst.istlab.unixtools.views.packageExplorer;
 
 import java.util.List;
 
@@ -14,6 +9,7 @@ import org.eclipse.core.commands.IHandler;
 import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.swt.SWTException;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.actions.CompoundContributionItem;
 import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.handlers.IHandlerActivation;
 import org.eclipse.ui.handlers.IHandlerService;
@@ -22,22 +18,87 @@ import org.eclipse.ui.services.IServiceLocator;
 import gr.aueb.dmst.istlab.unixtools.core.model.CustomCommand;
 import gr.aueb.dmst.istlab.unixtools.handlers.CustomCommandHandler;
 
-public abstract class AbstractUnixToolsController {
+public abstract class AbstactPackageExplorerView extends CompoundContributionItem {
 
-  private static final Logger logger = Logger.getLogger(AbstractUnixToolsController.class);
-  protected String category;
-  protected String identity;
-  protected static int commandID;
-  protected static List<Command> commands;
-  protected static List<IHandlerActivation> handlers;
+  private static final Logger logger = Logger.getLogger(AbstactPackageExplorerView.class);
+  private String category;
+  private String identity;
   private Category customCommandCategory;
-
-  public abstract IContributionItem[] getContributionItems();
+  private static int commandID;
+  private static List<Command> commands;
+  private static List<IHandlerActivation> handlers;
 
   protected abstract IContributionItem[] createCustomCommandArray();
 
+  public String getCategory() {
+    return category;
+  }
+
+  public void setCategory(String category) {
+    this.category = category;
+  }
+
+  public String getIdentity() {
+    return identity;
+  }
+
+  public void setIdentity(String identity) {
+    this.identity = identity;
+  }
+
+  public Category getCustomCommandCategory() {
+    return customCommandCategory;
+  }
+
+  public void setCustomCommandCategory(Category customCommandCategory) {
+    this.customCommandCategory = customCommandCategory;
+  }
+
+  public static int getCommandID() {
+    return commandID;
+  }
+
+  public static void setCommandID(int commandID) {
+    AbstactPackageExplorerView.commandID = commandID;
+  }
+
+  public static List<Command> getCommands() {
+    return commands;
+  }
+
+  public static void setCommands(List<Command> commands) {
+    AbstactPackageExplorerView.commands = commands;
+  }
+
+  public static List<IHandlerActivation> getHandlers() {
+    return handlers;
+  }
+
+  public static void setHandlers(List<IHandlerActivation> handlers) {
+    AbstactPackageExplorerView.handlers = handlers;
+  }
+
   protected static int increaseID() {
     return commandID++;
+  }
+
+  /**
+   * Create an eclipse command using a custom command handler
+   *
+   * @param customCommand
+   * @return
+   */
+  protected Command createEclipseCommand(CustomCommand customCommand) {
+    int id = increaseID();
+
+    ICommandService commandService = this.getCommandService(getServiceLocator());
+    Command command = commandService.getCommand(this.identity + id);
+    command.define(customCommand.getCommand(), customCommand.getName(),
+        this.getLazyInitCategory(this.getCommandService(this.getServiceLocator())));
+    this.activateHandler(customCommand, this.identity + id);
+    commands.add(command);
+
+    return command;
   }
 
   /**
@@ -55,25 +116,6 @@ public abstract class AbstractUnixToolsController {
     handlers = null;
     commands = null;
     commandID = 0;
-  }
-
-  /**
-   * Create an eclipse command using a custom command handler
-   *
-   * @param customCommand
-   * @return
-   */
-  protected Command createEclipseCommand(CustomCommand customCommand) {
-    int id = increaseID();
-
-    ICommandService commandService = this.getCommandService(getServiceLocator());
-    Command command = commandService.getCommand(this.identity + id);
-    command.define(customCommand.getCommand(), customCommand.getDescription(),
-        this.getLazyInitCategory(this.getCommandService(this.getServiceLocator())));
-    this.activateHandler(customCommand, this.identity + id);
-    commands.add(command);
-
-    return command;
   }
 
   /**
@@ -162,4 +204,5 @@ public abstract class AbstractUnixToolsController {
   protected IServiceLocator getServiceLocator() {
     return PlatformUI.getWorkbench();
   }
+
 }

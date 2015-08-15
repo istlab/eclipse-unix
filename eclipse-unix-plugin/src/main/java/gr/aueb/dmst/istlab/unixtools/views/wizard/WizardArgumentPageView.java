@@ -16,21 +16,18 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
-import gr.aueb.dmst.istlab.unixtools.controllers.CustomCommandWizardArgumentPageController;
+import gr.aueb.dmst.istlab.unixtools.controllers.WizardArgumentPageController;
 import gr.aueb.dmst.istlab.unixtools.core.model.CommandPrototypeOption;
 import gr.aueb.dmst.istlab.unixtools.util.PropertiesLoader;
 
-
 /**
- *
  * This class represents the Argument wizard page . In this page the user can choose one or more
  * from the arguments available for the command he chose. To make the process easier for the
  * experienced users we provide a text field where the user can type the desired arguments.
  * Otherwise the user can check multiple check buttons , each one having an argument, and the
  * argument's description as a tool tip text.
- *
  */
-public class CustomCommandArgumentPageView extends WizardPage {
+public class WizardArgumentPageView extends WizardPage {
 
   private String givenCommand;
   private Button[] buttons;
@@ -39,15 +36,17 @@ public class CustomCommandArgumentPageView extends WizardPage {
   private Label textLabel;
   private Text text;
   private Button pipeButton;
-  private ArrayList<CommandPrototypeOption> arguments = new ArrayList<CommandPrototypeOption>();
-  private CustomCommandWizardArgumentPageController controller;
-  private final String labelText = PropertiesLoader.WIZARD_ARG_PAGE_LABEL;
+  private ArrayList<CommandPrototypeOption> arguments;
+  private WizardArgumentPageController controller;
+  private final String labelText;
 
-  public CustomCommandArgumentPageView() {
+  public WizardArgumentPageView() {
     super("Command's arguments");
-    this.controller = new CustomCommandWizardArgumentPageController();
+    this.controller = new WizardArgumentPageController();
     this.setTitle(PropertiesLoader.WIZARD_ARG_PAGE_TITLE);
     this.setDescription(PropertiesLoader.WIZARD_ARG_PAGE_DESCRIPTION);
+    this.labelText = PropertiesLoader.WIZARD_ARG_PAGE_LABEL;
+    this.arguments = new ArrayList<CommandPrototypeOption>();
   }
 
   @Override
@@ -90,7 +89,7 @@ public class CustomCommandArgumentPageView extends WizardPage {
    *
    * @return
    */
-  public String getGivenCommand() {
+  public String getCommand() {
     return this.givenCommand;
   }
 

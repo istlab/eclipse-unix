@@ -11,7 +11,6 @@ import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Shell;
 
 /**
- *
  * This class represents the wizard used to guide the user through the custom command creation
  * process . It has 3 pages : a Command Page where the user can specify the newly added command's
  * name, the command itself, and the shell's starting directory for the command. The user also gets
@@ -23,36 +22,36 @@ import org.eclipse.swt.widgets.Shell;
  * the shell's directory path and the command's nickname, are extracted from the last part of the
  * pipe i.e from the last wizard that pops up.
  */
-public class CustomCommandCreationWizard extends Wizard {
+public class WizardCreationPageView extends Wizard {
 
   private Shell shell;
-  private CustomCommandMainPageView mainPageView;
-  private CustomCommandArgumentPageView argumentPageView;
-  private CustomCommandResourcePageView resourcePageView;
+  private WizardMainPageView mainPageView;
+  private WizardArgumentPageView argumentPageView;
+  private WizardResourcePageView resourcePageView;
   private static boolean piped = false;
   private static String command = "";
   private static String actualCommand;
   private static String arguments;
-  private static String nickname;
-  private static String shellDir;
+  private static String name;
+  private static String shellDirectory;
   private static String resources;
   private static String output;
 
-  public CustomCommandCreationWizard() {
+  public WizardCreationPageView() {
     super();
   }
 
   @Override
   public void addPages() {
-    mainPageView = new CustomCommandMainPageView(command, nickname, shellDir);
+    mainPageView = new WizardMainPageView(command, name, shellDirectory);
     addPage(mainPageView);
-    argumentPageView = new CustomCommandArgumentPageView();
-    // the Argument page is not added here but in the getNextPage
-    // to ensure that we have the command from the first page
-    // in order to present the available arguments to the user
-    // works well for now will change it to PageChangeListeners
-    // in the future
-    resourcePageView = new CustomCommandResourcePageView();
+    argumentPageView = new WizardArgumentPageView();
+    /*
+     * the Argument page is not added here but in the getNextPage to ensure that we have the command
+     * from the first page in order to present the available arguments to the user works well for
+     * now will change it to PageChangeListeners in the future
+     */
+    resourcePageView = new WizardResourcePageView();
     addPage(resourcePageView);
   }
 
@@ -70,11 +69,11 @@ public class CustomCommandCreationWizard extends Wizard {
     if (current == this.mainPageView) {
       /*
        * The Argument page is added here to ensure that we get the command from the first page and
-       * not a null value reinitialization occurs here to cover the situation where the user chose a
-       * command, pressed next, but then pressed back cause he/she decided to change the prototype
-       * command used
+       * not a null value re-initialization occurs here to cover the situation where the user chose
+       * a command, pressed next, but then pressed back cause he/she decided to change the prototype
+       * command used.
        */
-      this.argumentPageView = new CustomCommandArgumentPageView();
+      this.argumentPageView = new WizardArgumentPageView();
       this.argumentPageView.setCommand(mainPageView.getCommand());
       addPage(this.argumentPageView);
 
@@ -100,10 +99,9 @@ public class CustomCommandCreationWizard extends Wizard {
     if (mainPageView.pipe() || argumentPageView.pipe() || resourcePageView.pipe()) {
       piped = true;
       command += " | ";
-      nickname = mainPageView.getNickname();
-      shellDir = mainPageView.getShellStartDir();
-      WizardDialog wizardDialog =
-          new WizardDialog(this.getShell(), new CustomCommandCreationWizard());
+      name = mainPageView.getNickname();
+      shellDirectory = mainPageView.getShellStartDir();
+      WizardDialog wizardDialog = new WizardDialog(this.getShell(), new WizardCreationPageView());
       wizardDialog.open();
     } else {
       save(this.argumentPageView.getSelectedArguments(), this.mainPageView.getNickname(),
@@ -121,7 +119,7 @@ public class CustomCommandCreationWizard extends Wizard {
     command = "";
     actualCommand = "";
     arguments = "";
-    shellDir = "";
+    shellDirectory = "";
     resources = "";
     output = "";
     piped = false;
@@ -129,23 +127,23 @@ public class CustomCommandCreationWizard extends Wizard {
 
   /**
    * Save the values we want to export NOTE : This method HAS to be static in order to support
-   * piping. The only downside is that the user has to input names equal to the number of pipes but
+   * piping. The only drawback is that the user has to input names equal to the number of pipes but
    * only the last is taken into consideration. Same goes with shell directory.
    */
-  private static void save(String args, String nick, String shell, String resource,
-      String outputerino) {
+  private static void save(String args, String customCommandName,
+      String customCommandShellDirectory, String resource, String customCommandOutputFilename) {
     if (!piped) {
       actualCommand = command;
       arguments = args;
-      nickname = nick;
-      shellDir = shell;
+      name = customCommandName;
+      shellDirectory = customCommandShellDirectory;
       resources = resource;
-      output = outputerino;
+      output = customCommandOutputFilename;
     } else {
       actualCommand = command;
-      nickname = nick;
-      shellDir = shell;
-      output = outputerino;
+      name = customCommandName;
+      shellDirectory = customCommandShellDirectory;
+      output = customCommandOutputFilename;
     }
   }
 
@@ -181,11 +179,11 @@ public class CustomCommandCreationWizard extends Wizard {
   }
 
   public String getShellDirectory() {
-    return shellDir;
+    return shellDirectory;
   }
 
   public String getNickname() {
-    return nickname;
+    return name;
   }
 
   public String getOutputFile() {

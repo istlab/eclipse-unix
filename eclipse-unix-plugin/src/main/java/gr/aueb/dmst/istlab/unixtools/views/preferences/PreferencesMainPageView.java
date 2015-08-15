@@ -16,31 +16,33 @@ import org.eclipse.ui.IWorkbench;
 import gr.aueb.dmst.istlab.unixtools.util.PropertiesLoader;
 
 /**
- *
  * This class represents the settings' preference page we use for this plugin. This page has two
  * fields : First off we have a directory dialog determining where the bash is located. It could be
  * the default bash for linux or the cygwin's path for windows. Then we have a field determining
  * where the user wants to output the results of his/her used commands. It could be the screen or a
  * file. All the values are saved in the Preference Store.
- *
  */
-public class PluginSettingsPageView extends AbstractPreferencePage {
+public class PreferencesMainPageView extends AbstractPreferencesPageView {
 
   // instance variables
   private DirectoryFieldEditor directoryFieldEditor;
   private FileFieldEditor fileFieldEditor;
   private RadioGroupFieldEditor radioGroupFieldEditor;
   private Composite newParent;
-  private boolean fileDirectoryEnabled = false;
-
-  @Override
-  public void init(IWorkbench arg0) {
-    super.init(arg0);
-    setDescription("Unix plugin settings page");
-  }
+  private boolean fileDirectoryEnabled;
 
   @Override
   protected void refresh() {}
+
+  public PreferencesMainPageView() {
+    this.fileDirectoryEnabled = false;
+  }
+
+  @Override
+  public void init(IWorkbench workbench) {
+    super.init(workbench);
+    setDescription("Unix plugin settings page");
+  }
 
   @Override
   protected void performApply() {
@@ -53,7 +55,7 @@ public class PluginSettingsPageView extends AbstractPreferencePage {
     return true;
   }
 
-  /**
+  /*
    * This method saves the preferences
    */
   private void savePreferences() {
@@ -74,8 +76,8 @@ public class PluginSettingsPageView extends AbstractPreferencePage {
         new DirectoryFieldEditor("bash", "Enter cygwin's path : ", this.newParent);
     String[][] choices = {{"Screen", "screen"}, {"File", "file"}};
     this.radioGroupFieldEditor = new RadioGroupFieldEditor(PropertiesLoader.OUTPUT_KEY,
-        "Choose the output you would like : ", 1, choices, this.newParent);
-    this.fileFieldEditor = new FileFieldEditor("file", "Enter the file's path  : ", this.newParent);
+        "Choose the output you would like: ", 1, choices, this.newParent);
+    this.fileFieldEditor = new FileFieldEditor("file", "Enter the file's path: ", this.newParent);
     this.fileFieldEditor.setEnabled(false, this.newParent);
     this.addField(directoryFieldEditor);
     this.addField(radioGroupFieldEditor);

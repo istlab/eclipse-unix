@@ -7,17 +7,21 @@ package gr.aueb.dmst.istlab.unixtools.controllers;
 
 import java.util.ArrayList;
 
+import org.apache.log4j.Logger;
+
 import gr.aueb.dmst.istlab.unixtools.core.model.CommandPrototype;
 import gr.aueb.dmst.istlab.unixtools.core.model.CommandPrototypeOption;
 import gr.aueb.dmst.istlab.unixtools.dal.CommandPrototypeRepository;
 import gr.aueb.dmst.istlab.unixtools.dal.DataAccessException;
 import gr.aueb.dmst.istlab.unixtools.factories.RepositoryFactorySingleton;
 
-public class CustomCommandWizardArgumentPageController {
+public class WizardArgumentPageController {
 
+  private static final Logger logger =
+      Logger.getLogger(WizardArgumentPageController.class);
   private final CommandPrototypeRepository repository;
 
-  public CustomCommandWizardArgumentPageController() {
+  public WizardArgumentPageController() {
     this.repository = RepositoryFactorySingleton.INSTANCE.createCommandPrototypeRepository();
   }
 
@@ -41,7 +45,7 @@ public class CustomCommandWizardArgumentPageController {
         }
       }
     } catch (DataAccessException e) {
-      e.printStackTrace();
+      logger.fatal("Error getting command arguments " + command);
     }
 
     return arguments;

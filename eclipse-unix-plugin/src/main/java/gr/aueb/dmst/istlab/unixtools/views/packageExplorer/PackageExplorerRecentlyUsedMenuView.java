@@ -2,7 +2,8 @@
  * Copyright 2015 The ISTLab. Use of this source code is governed by a GNU AFFERO GPL 3.0 license
  * that can be found in the LICENSE file.
  */
-package gr.aueb.dmst.istlab.unixtools.controllers;
+
+package gr.aueb.dmst.istlab.unixtools.views.packageExplorer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,28 +14,25 @@ import org.eclipse.ui.handlers.IHandlerActivation;
 import org.eclipse.ui.menus.CommandContributionItem;
 import org.eclipse.ui.menus.CommandContributionItemParameter;
 
-import gr.aueb.dmst.istlab.unixtools.core.model.CustomCommand;
+import gr.aueb.dmst.istlab.unixtools.controllers.PackageExplorerRecentlyUsedMenuController;
 
-public class UnixToolsRecentlyUsedController extends AbstractUnixToolsController {
+public class PackageExplorerRecentlyUsedMenuView extends AbstactPackageExplorerView {
 
-  private static List<CustomCommand> recentlyUsed = new ArrayList<CustomCommand>();
+  public PackageExplorerRecentlyUsedMenuView() {
+    super();
 
-  public UnixToolsRecentlyUsedController() {
-    category = "gr.cs.aueb.dmst.istlab.unixtools.recentlyUsedCategory";
-    identity = "gr.cs.aueb.dmst.istlab.unixtools.recentlyUsed";
-    commandID = 0;
-  }
-
-  public static void addCommand(CustomCommand cc) {
-    recentlyUsed.add(cc);
+    this.setCategory("gr.cs.aueb.dmst.istlab.unixtools.recentlyUsedCategory");
+    this.setIdentity("gr.cs.aueb.dmst.istlab.unixtools.recentlyUsed");
+    setCommandID(0);
   }
 
   @Override
-  public IContributionItem[] getContributionItems() {
+  protected IContributionItem[] getContributionItems() {
     this.reInitialize();
-    commands = new ArrayList<Command>();
-    handlers = new ArrayList<IHandlerActivation>();
+    setCommands(new ArrayList<Command>());
+    setHandlers(new ArrayList<IHandlerActivation>());
     IContributionItem[] items = createCustomCommandArray();
+
     return items;
   }
 
@@ -42,12 +40,15 @@ public class UnixToolsRecentlyUsedController extends AbstractUnixToolsController
   protected IContributionItem[] createCustomCommandArray() {
     List<IContributionItem> contributionItemList = new ArrayList<IContributionItem>();
 
-    for (int i = recentlyUsed.size() - 1; i > -1; --i) {
-      Command command = createEclipseCommand(recentlyUsed.get(i));
+    for (int i =
+        PackageExplorerRecentlyUsedMenuController.getRecentlyUsed().size() - 1; i > -1; --i) {
+      Command command =
+          createEclipseCommand(PackageExplorerRecentlyUsedMenuController.getRecentlyUsed().get(i));
       CommandContributionItemParameter commandContributionItemParameter =
           new CommandContributionItemParameter(this.getServiceLocator(), command.getId(),
               command.getId(), CommandContributionItem.STYLE_PUSH);
-      commandContributionItemParameter.label = recentlyUsed.get(i).getDescription();
+      commandContributionItemParameter.label =
+          PackageExplorerRecentlyUsedMenuController.getRecentlyUsed().get(i).getName();
 
       contributionItemList.add(new CommandContributionItem(commandContributionItemParameter));
     }

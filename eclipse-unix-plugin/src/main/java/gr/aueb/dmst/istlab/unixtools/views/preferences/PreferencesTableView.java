@@ -12,11 +12,14 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
@@ -25,15 +28,14 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.ui.IWorkbench;
 
-import gr.aueb.dmst.istlab.unixtools.controllers.CustomCommandTableController;
+import gr.aueb.dmst.istlab.unixtools.controllers.PreferencesTableController;
+import gr.aueb.dmst.istlab.unixtools.controllers.WizardMainPageController;
 import gr.aueb.dmst.istlab.unixtools.core.model.CustomCommand;
-import gr.aueb.dmst.istlab.unixtools.core.model.CustomCommandModel;
 import gr.aueb.dmst.istlab.unixtools.util.PropertiesLoader;
-import gr.aueb.dmst.istlab.unixtools.views.wizard.CustomCommandCreationWizard;
-import gr.aueb.dmst.istlab.unixtools.views.wizard.CustomCommandEditDialogView;
+import gr.aueb.dmst.istlab.unixtools.views.wizard.EditDialogView;
+import gr.aueb.dmst.istlab.unixtools.views.wizard.WizardCreationPageView;
 
 /**
- *
  * This class represents the custom commands' page we use for this plugin. It has a table with 4
  * columns (command, name, shell, output) holding the custom commands. It also has 5 buttons that
  * help with the table's management : Add : adds a new command to the table, following a wizard
@@ -41,36 +43,32 @@ import gr.aueb.dmst.istlab.unixtools.views.wizard.CustomCommandEditDialogView;
  * command entries from the table. Import : imports a yaml file containing custom commands
  * overwriting the existing ones in the table. Might add appending option. Export : exports the
  * custom commands from the table to a yaml file.
- *
  */
-public class CustomCommandTableView extends AbstractPreferencePage {
+public class PreferencesTableView extends AbstractPreferencesPageView {
 
-  private Table customCommandsTable;
   private Button addButton;
   private Button editButton;
   private Button removeButton;
   private Button importButton;
   private Button exportButton;
-  private CustomCommandModel model;
-  private CustomCommandTableController controller;
+  private Table customCommandsTable;
   private boolean changed;
+  private PreferencesTableController controller;
 
   @Override
-  public void init(IWorkbench arg0) {
-    super.init(arg0);
+  public void init(IWorkbench workbench) {
+    super.init(workbench);
     this.setDescription(PropertiesLoader.CUSTOM_COMMAND_PAGE_DESCRIPTION);
-    this.model = new CustomCommandModel();
-    this.controller = new CustomCommandTableController(this.model, this);
+    this.controller = new PreferencesTableController();
   }
 
   @Override
   protected Control createContents(Composite parent) {
+    this.controller = new PreferencesTableController();
+
     // set the layout
     this.setComposite(new Composite(parent, parent.getStyle()));
     this.setCCLayout(this.getComposite());
-
-    this.model = new CustomCommandModel();
-    this.controller = new CustomCommandTableController(this.model, this);
 
     // create the command table and the buttons
     this.customCommandsTable = createCommandTable(this.getComposite());
@@ -102,14 +100,11 @@ public class CustomCommandTableView extends AbstractPreferencePage {
     this.importButton = createButton(buttonGroup, "Import");
     this.exportButton = createButton(buttonGroup, "Export");
 
-    this.addButton.addSelectionListener(this.controller.getNewAddCustomCommandButtonListener());
-    this.editButton.addSelectionListener(this.controller.getNewEditCustomCommandButtonListener());
-    this.removeButton
-        .addSelectionListener(this.controller.getNewRemoveCustomCommandButtonListener());
-    this.importButton
-        .addSelectionListener(this.controller.getNewImportCustomCommandButtonListener());
-    this.exportButton
-        .addSelectionListener(this.controller.getNewExportCustomCommandButtonListener());
+    this.addButton.addSelectionListener(new AddCustomCommandButtonListener());
+    this.editButton.addSelectionListener(new EditCustomCommandButtonListener());
+    this.removeButton.addSelectionListener(new RemoveCustomCommandButtonListener());
+    this.importButton.addSelectionListener(new ImportCustomCommandButtonListener());
+    this.exportButton.addSelectionListener(new ExportCustomCommandButtonListener());
   }
 
   /**
@@ -117,7 +112,7 @@ public class CustomCommandTableView extends AbstractPreferencePage {
    *
    * @param buttonGroup
    * @param buttonLabel
-   * @return
+   * @return a button
    */
   private Button createButton(Composite buttonGroup, String buttonLabel) {
     Button button = new Button(buttonGroup, SWT.PUSH);
@@ -130,7 +125,7 @@ public class CustomCommandTableView extends AbstractPreferencePage {
    * Creates a table for the custom commands stored in this preference page
    *
    * @param composite
-   * @return
+   * @return a table of custom commands
    */
   private Table createCommandTable(Composite composite) {
     Label label = new Label(composite, SWT.NONE);
@@ -169,16 +164,16 @@ public class CustomCommandTableView extends AbstractPreferencePage {
    */
   public CustomCommand handleAddButton() {
     CustomCommand commandToAdd = null;
-    CustomCommandCreationWizard wizard = new CustomCommandCreationWizard();
+    WizardCreationPageView wizard = new WizardCreationPageView();
     wizard.setNeedsProgressMonitor(true);
-    wizard.setShell(CustomCommandTableView.this.getComposite().getShell());
+    wizard.setShell(PreferencesTableView.this.getComposite().getShell());
     WizardDialog wizardDialog =
-        new WizardDialog(CustomCommandTableView.this.getComposite().getShell(), wizard);
+        new WizardDialog(PreferencesTableView.this.getComposite().getShell(), wizard);
 
     if (wizardDialog.open() == WizardDialog.OK) {
       commandToAdd = new CustomCommand();
       commandToAdd.setCommand(wizard.getActualCommand());
-      commandToAdd.setDescription(wizard.getNickname());
+      commandToAdd.setName(wizard.getNickname());
       commandToAdd.setShellDirectory(wizard.getShellDirectory());
 
       if (wizard.getOutputFile().isEmpty() || wizard.getOutputFile().length() == 0) {
@@ -191,7 +186,7 @@ public class CustomCommandTableView extends AbstractPreferencePage {
       this.changed = true;
     }
 
-    CustomCommandCreationWizard.clearValues();
+    WizardCreationPageView.clearValues();
 
     return commandToAdd;
   }
@@ -205,10 +200,6 @@ public class CustomCommandTableView extends AbstractPreferencePage {
     int selection = this.customCommandsTable.getSelectionIndex();
 
     if (selection == -1) {
-      // no command selected so we just return
-      MessageDialog.openInformation(this.getShell(), "Please be careful!!",
-          "Choose a command to edit!");
-
       return null;
     }
 
@@ -220,7 +211,7 @@ public class CustomCommandTableView extends AbstractPreferencePage {
     }
 
     Shell shell = this.getShell();
-    CustomCommandEditDialogView dialog = new CustomCommandEditDialogView(shell);
+    EditDialogView dialog = new EditDialogView(shell);
     dialog.create();
 
     dialog.setDefaultValues(this.customCommandsTable.getItem(selection).getText(0),
@@ -255,6 +246,7 @@ public class CustomCommandTableView extends AbstractPreferencePage {
 
   public String handleImportButton() {
     String filename = null;
+
     // ask the user if he/she wants to overwrite the existing table
     MessageDialog messageDialog = new MessageDialog(getShell(), "Import commands", null,
         PropertiesLoader.CUSTOM_COMMAND_PAGE_IMPORT_MESSAGE, MessageDialog.QUESTION_WITH_CANCEL,
@@ -280,29 +272,6 @@ public class CustomCommandTableView extends AbstractPreferencePage {
     return filename;
   }
 
-  /**
-   * Access to the command table
-   *
-   * @return
-   */
-  public Table getCommandTable() {
-    return this.customCommandsTable;
-  }
-
-  @Override
-  public void refresh() {
-    this.controller.refresh();
-  }
-
-  /**
-   * Get the current model
-   *
-   * @return
-   */
-  public CustomCommandModel getModel() {
-    return this.model;
-  }
-
   @Override
   public boolean performOk() {
     this.controller.save();
@@ -315,7 +284,7 @@ public class CustomCommandTableView extends AbstractPreferencePage {
       for (int i = 0; i < items.length; ++i) {
         CustomCommand customCommand = new CustomCommand();
         customCommand.setCommand(items[i].getText(0));
-        customCommand.setDescription(items[i].getText(1));
+        customCommand.setName(items[i].getText(1));
         customCommand.setShellDirectory(items[i].getText(2));
 
         if (items[i].getText(3).isEmpty()) {
@@ -328,7 +297,7 @@ public class CustomCommandTableView extends AbstractPreferencePage {
         newCommands.add(customCommand);
       }
 
-      this.model.setCommands(newCommands);
+      this.controller.saveCustomCommands(newCommands);
       this.changed = false;
     }
 
@@ -337,4 +306,141 @@ public class CustomCommandTableView extends AbstractPreferencePage {
 
   @Override
   protected void createFieldEditors() {}
+
+
+  @Override
+  public void refresh() {
+    // refresh the custom commands
+    this.customCommandsTable.clearAll();
+    this.customCommandsTable.removeAll();
+
+    for (CustomCommand customCommand : this.controller.getCustomCommands()) {
+      TableItem item = new TableItem(this.customCommandsTable, SWT.NONE);
+
+      item.setText(0, customCommand.getCommand());
+      item.setForeground(0, Display.getCurrent().getSystemColor(SWT.COLOR_BLACK));
+      item.setText(1, customCommand.getName());
+      item.setForeground(1, Display.getCurrent().getSystemColor(SWT.COLOR_BLACK));
+      item.setText(2, customCommand.getShellDirectory());
+      item.setForeground(2, Display.getCurrent().getSystemColor(SWT.COLOR_BLACK));
+
+      if (customCommand.getHasConsoleOutput()) {
+        item.setText(3, "");
+        item.setForeground(3, Display.getCurrent().getSystemColor(SWT.COLOR_BLACK));
+      } else {
+        item.setText(3, customCommand.getOutputFilename());
+        item.setForeground(3, Display.getCurrent().getSystemColor(SWT.COLOR_BLACK));
+      }
+    }
+
+    for (int i = 0; i < this.customCommandsTable.getColumnCount(); ++i) {
+      TableColumn column = this.customCommandsTable.getColumn(i);
+      column.pack();
+
+      if (column.getWidth() > PropertiesLoader.MAX_COLUMN_WIDTH) {
+        column.setWidth(PropertiesLoader.MAX_COLUMN_WIDTH);
+      }
+    }
+  }
+
+  private class AddCustomCommandButtonListener implements SelectionListener {
+    @Override
+    public void widgetDefaultSelected(SelectionEvent arg0) {}
+
+    @Override
+    public void widgetSelected(SelectionEvent arg0) {
+      CustomCommand commandToAdd = handleAddButton();
+
+      if (commandToAdd != null) {
+        controller.addCustomCommand(commandToAdd);
+
+        refresh();
+        WizardMainPageController.getCustomCommandsNames().add(commandToAdd.getName());
+      }
+    }
+  }
+
+  private class EditCustomCommandButtonListener implements SelectionListener {
+    @Override
+    public void widgetDefaultSelected(SelectionEvent arg0) {}
+
+    @Override
+    public void widgetSelected(SelectionEvent arg0) {
+      String[] editedInfo = handleEditButton();
+
+      if (editedInfo != null) {
+        int index = Integer.parseInt(editedInfo[0]);
+
+        CustomCommand customCommand = controller.getCustomCommands().get(index);
+        WizardMainPageController.getCustomCommandsNames().remove(customCommand.getName());
+        customCommand.setCommand(editedInfo[1]);
+        customCommand.setName(editedInfo[2]);
+        customCommand.setShellDirectory(editedInfo[3]);
+
+        if (editedInfo[4].isEmpty()) {
+          customCommand.setHasConsoleOutput(true);
+        } else {
+          customCommand.setHasConsoleOutput(false);
+          customCommand.setOutputFilename(editedInfo[4]);
+        }
+
+        WizardMainPageController.getCustomCommandsNames().add(customCommand.getName());
+        controller.editCustomCommand(controller.getCustomCommands().get(index), customCommand);
+
+        refresh();
+      }
+    }
+  }
+
+  private class RemoveCustomCommandButtonListener implements SelectionListener {
+    @Override
+    public void widgetDefaultSelected(SelectionEvent arg0) {}
+
+    @Override
+    public void widgetSelected(SelectionEvent arg0) {
+      int[] selectedItems = handleRemoveButton();
+
+      if (selectedItems != null) {
+        CustomCommand[] selectedCommands = new CustomCommand[selectedItems.length];
+        for (int i = 0; i < selectedCommands.length; ++i) {
+          selectedCommands[i] = controller.getCustomCommands().get(selectedItems[i]);
+        }
+
+        controller.removeCustomCommand(selectedCommands);
+
+        refresh();
+      }
+    }
+  }
+
+  private class ImportCustomCommandButtonListener implements SelectionListener {
+    @Override
+    public void widgetDefaultSelected(SelectionEvent arg0) {}
+
+    @Override
+    public void widgetSelected(SelectionEvent arg0) {
+      String filename = handleImportButton();
+
+      if (filename != null) {
+        controller.importCustomCommand();
+
+        refresh();
+      }
+    }
+  }
+
+  private class ExportCustomCommandButtonListener implements SelectionListener {
+    @Override
+    public void widgetDefaultSelected(SelectionEvent arg0) {}
+
+    @Override
+    public void widgetSelected(SelectionEvent arg0) {
+      String file = handleExportButton();
+
+      if (file != null) {
+        controller.exportCustomCommand();
+      }
+    }
+  }
+
 }

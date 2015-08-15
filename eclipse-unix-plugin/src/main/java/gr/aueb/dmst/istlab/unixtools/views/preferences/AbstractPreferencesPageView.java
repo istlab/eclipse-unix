@@ -20,20 +20,15 @@ import gr.aueb.dmst.istlab.unixtools.util.PropertiesLoader;
  * of PreferencePage to add more options in the newly created Preference Page, since the field
  * editors are really useful.
  */
-public abstract class AbstractPreferencePage extends FieldEditorPreferencePage
+public abstract class AbstractPreferencesPageView extends FieldEditorPreferencePage
     implements IWorkbenchPreferencePage {
 
   private Composite parent;
 
-  @Override
-  public void init(IWorkbench arg0) {
-    this.setPreferenceStore(this.doGetPreferenceStore());
-  }
-
   /**
    * Invoking super class constructor to set grid layout
    */
-  public AbstractPreferencePage() {
+  public AbstractPreferencesPageView() {
     super(GRID);
   }
 
@@ -43,16 +38,21 @@ public abstract class AbstractPreferencePage extends FieldEditorPreferencePage
    */
   protected abstract void refresh();
 
-  @Override
   /**
    * This method handles what happens when the user presses the ok button
    */
+  @Override
   public abstract boolean performOk();
 
   @Override
+  public void init(IWorkbench workbench) {
+    this.setPreferenceStore(this.doGetPreferenceStore());
+  }
+
   /**
    * Initialize default values
    */
+  @Override
   protected void performDefaults() {
     super.performDefaults();
     this.initiliaze();
@@ -94,7 +94,7 @@ public abstract class AbstractPreferencePage extends FieldEditorPreferencePage
    *
    * @param parent
    */
-  public void setComposite(Composite parent) {
+  protected void setComposite(Composite parent) {
     this.parent = parent;
   }
 
@@ -103,7 +103,7 @@ public abstract class AbstractPreferencePage extends FieldEditorPreferencePage
    *
    * @return
    */
-  public Composite getComposite() {
+  protected Composite getComposite() {
     return this.parent;
   }
 

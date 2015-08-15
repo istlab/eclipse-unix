@@ -2,30 +2,30 @@
  * Copyright 2015 The ISTLab. Use of this source code is governed by a GNU AFFERO GPL 3.0 license
  * that can be found in the LICENSE file.
  */
+
 package gr.aueb.dmst.istlab.unixtools.views.wizard;
 
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
-import gr.aueb.dmst.istlab.unixtools.controllers.CustomCommandWizardResourcePageController;
 import gr.aueb.dmst.istlab.unixtools.util.PropertiesLoader;
 
 /**
- *
  * This class represents the Resource wizard page . In this page the user can choose an input file
  * through a File Dialog to accompany the selected command. The user also has the choice to pipe the
  * current command, in which case the wizard starts from the beginning.
- *
  */
-public class CustomCommandResourcePageView extends WizardPage {
+public class WizardResourcePageView extends WizardPage {
 
-  // instance variables
   private Label label;
   private Label output;
   private Label info;
@@ -33,21 +33,15 @@ public class CustomCommandResourcePageView extends WizardPage {
   private Button outputButton;
   private Button pipe;
   private Composite container;
-  private final String labelText = PropertiesLoader.WIZARD_RESOURCE_PAGE_LABEL;
+  private final String labelText;
   private Text inputFileName;
   private Text outputFileName;
-  private CustomCommandWizardResourcePageController controller;
 
-  /**
-   * Constructor
-   *
-   * @param command
-   */
-  public CustomCommandResourcePageView() {
+  public WizardResourcePageView() {
     super("Input resource and shell start directory");
     this.setTitle(PropertiesLoader.WIZARD_RESOURCE_PAGE_TITLE);
     this.setDescription(PropertiesLoader.WIZARD_RESOURCE_PAGE_DESCRIPTION);
-    this.controller = new CustomCommandWizardResourcePageController(this);
+    this.labelText = PropertiesLoader.WIZARD_RESOURCE_PAGE_LABEL;
   }
 
   @Override
@@ -70,7 +64,7 @@ public class CustomCommandResourcePageView extends WizardPage {
 
     this.button = new Button(this.container, SWT.PUSH);
     this.button.setText("Browse");
-    this.button.addSelectionListener(controller.getNewAddInputResourceSelectionListener());
+    this.button.addSelectionListener(new AddInputResourceSelectionListener());
 
     this.output = new Label(this.container, SWT.NONE);
     this.output.setText("Output file's path : ");
@@ -82,8 +76,7 @@ public class CustomCommandResourcePageView extends WizardPage {
 
     this.outputButton = new Button(this.container, SWT.PUSH);
     this.outputButton.setText("Browse");
-    this.outputButton
-        .addSelectionListener(this.controller.getNewAddOutputResourceSelectionListener());
+    this.outputButton.addSelectionListener(new AddOutputResourceSelectionListener());
 
     this.pipe = new Button(this.container, SWT.CHECK);
     this.pipe.setText("Click to add pipe");
@@ -118,24 +111,6 @@ public class CustomCommandResourcePageView extends WizardPage {
   }
 
   /**
-   * Get access to the input file name's text
-   *
-   * @return
-   */
-  public Text getInputFileNameText() {
-    return this.inputFileName;
-  }
-
-  /**
-   * Get access to the output file name's text
-   *
-   * @return
-   */
-  public Text getOutputFileNameText() {
-    return this.outputFileName;
-  }
-
-  /**
    * Get access to the view's container
    *
    * @return
@@ -143,4 +118,37 @@ public class CustomCommandResourcePageView extends WizardPage {
   public Composite getViewContainer() {
     return this.container;
   }
+
+  private class AddInputResourceSelectionListener implements SelectionListener {
+    @Override
+    public void widgetDefaultSelected(SelectionEvent e) {}
+
+    @Override
+    public void widgetSelected(SelectionEvent event) {
+      // User has selected to open a single file
+      FileDialog fileDialog = new FileDialog(getViewContainer().getShell(), SWT.OPEN);
+      String filename = fileDialog.open();
+
+      if (filename != null) {
+        inputFileName.setText(filename);
+      }
+    }
+  }
+
+  private class AddOutputResourceSelectionListener implements SelectionListener {
+    @Override
+    public void widgetDefaultSelected(SelectionEvent e) {}
+
+    @Override
+    public void widgetSelected(SelectionEvent event) {
+      // User has selected to open a single file
+      FileDialog fileDialog = new FileDialog(getViewContainer().getShell(), SWT.OPEN);
+      String filename = fileDialog.open();
+
+      if (filename != null) {
+        outputFileName.setText(filename);
+      }
+    }
+  }
+
 }

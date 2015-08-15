@@ -29,22 +29,21 @@ import gr.aueb.dmst.istlab.unixtools.util.PropertiesLoader;
  * command. A text area used to modify the given command's name. A text area used to modify the
  * given command's arguments. A Directory Dialog used to modify the shell's starting directory. A
  * File Dialog used to modify the input resource file.
- *
  */
-public class CustomCommandEditDialogView extends TitleAreaDialog {
+public class EditDialogView extends TitleAreaDialog {
 
-  private String command;
-  private String name;
-  private String shellPath;
-  private String output;
   private Text commandText;
   private Text nameText;
-  private Text shellText;
-  private Text outputText;
+  private Text shellDirectoryText;
+  private Text outputFilenameText;
   private Button shellButton;
   private Button outputButton;
+  private String command;
+  private String name;
+  private String shellDirectory;
+  private String outputFilename;
 
-  public CustomCommandEditDialogView(Shell parentShell) {
+  public EditDialogView(Shell parentShell) {
     super(parentShell);
   }
 
@@ -67,8 +66,8 @@ public class CustomCommandEditDialogView extends TitleAreaDialog {
   private void saveInput() {
     this.command = commandText.getText();
     this.name = nameText.getText();
-    this.shellPath = shellText.getText();
-    this.output = outputText.getText();
+    this.shellDirectory = shellDirectoryText.getText();
+    this.outputFilename = outputFilenameText.getText();
   }
 
   @Override
@@ -105,24 +104,12 @@ public class CustomCommandEditDialogView extends TitleAreaDialog {
     data.grabExcessHorizontalSpace = true;
     data.horizontalAlignment = GridData.FILL;
 
-    outputText = new Text(container, SWT.BORDER);
-    outputText.setLayoutData(data);
+    outputFilenameText = new Text(container, SWT.BORDER);
+    outputFilenameText.setLayoutData(data);
     outputButton = new Button(container, SWT.PUSH);
     outputButton.setText("Browse");
 
-    outputButton.addSelectionListener(new SelectionAdapter() {
-      @Override
-      public void widgetSelected(SelectionEvent event) {
-        // User has selected to open a single file
-        FileDialog dlg = new FileDialog(getShell(), SWT.OPEN);
-        String dir = dlg.open();
-
-        if (dir != null) {
-          // Set the text box to the new selection
-          outputText.setText(dir);
-        }
-      }
-    });
+    outputButton.addSelectionListener(new AddOutputButtonSelectionListener());
   }
 
   /**
@@ -138,36 +125,12 @@ public class CustomCommandEditDialogView extends TitleAreaDialog {
     data.grabExcessHorizontalSpace = true;
     data.horizontalAlignment = GridData.FILL;
 
-    this.shellText = new Text(container, SWT.BORDER);
-    this.shellText.setLayoutData(data);
+    this.shellDirectoryText = new Text(container, SWT.BORDER);
+    this.shellDirectoryText.setLayoutData(data);
     this.shellButton = new Button(container, SWT.PUSH);
     this.shellButton.setText("Browse");
 
-    this.shellButton.addSelectionListener(new SelectionAdapter() {
-      @Override
-      public void widgetSelected(SelectionEvent event) {
-        DirectoryDialog dlg = new DirectoryDialog(container.getShell());
-
-        // Set the initial filter path according
-        // to anything they've selected or typed in
-        dlg.setFilterPath(shellText.getText());
-
-        // Change the title bar text
-        dlg.setText("Select shell's starting directory");
-
-        // Customizable message displayed in the dialog
-        dlg.setMessage("Select a directory");
-
-        // Calling open() will open and run the dialog.
-        // It will return the selected directory, or
-        // null if user cancels
-        String dir = dlg.open();
-        if (dir != null) {
-          // Set the text box to the new selection
-          shellText.setText(dir);
-        }
-      }
-    });
+    this.shellButton.addSelectionListener(new AddShellButtonSelectionListener(container));
   }
 
   /**
@@ -213,11 +176,12 @@ public class CustomCommandEditDialogView extends TitleAreaDialog {
    * @param value3
    * @param value4
    */
-  public void setDefaultValues(String value1, String value2, String value3, String value4) {
-    this.commandText.setText(value1);
-    this.nameText.setText(value2);
-    this.shellText.setText(value3);
-    this.outputText.setText(value4);
+  public void setDefaultValues(String command, String name, String shellDirectory,
+      String outputFilename) {
+    this.commandText.setText(command);
+    this.nameText.setText(name);
+    this.shellDirectoryText.setText(shellDirectory);
+    this.outputFilenameText.setText(outputFilename);
   }
 
   /**
@@ -244,7 +208,7 @@ public class CustomCommandEditDialogView extends TitleAreaDialog {
    * @return
    */
   public String getShellPath() {
-    return this.shellPath;
+    return this.shellDirectory;
   }
 
   /**
@@ -253,6 +217,53 @@ public class CustomCommandEditDialogView extends TitleAreaDialog {
    * @return
    */
   public String getOutputFile() {
-    return this.output;
+    return this.outputFilename;
+  }
+
+  private class AddOutputButtonSelectionListener extends SelectionAdapter {
+    @Override
+    public void widgetSelected(SelectionEvent event) {
+      // User has selected to open a single file
+      FileDialog dlg = new FileDialog(getShell(), SWT.OPEN);
+      String dir = dlg.open();
+
+      if (dir != null) {
+        // Set the text box to the new selection
+        outputFilenameText.setText(dir);
+      }
+    }
+  }
+
+  private class AddShellButtonSelectionListener extends SelectionAdapter {
+
+    private Composite container;
+
+    public AddShellButtonSelectionListener(Composite container) {
+      this.container = container;
+    }
+
+    @Override
+    public void widgetSelected(SelectionEvent event) {
+      DirectoryDialog dlg = new DirectoryDialog(container.getShell());
+
+      // Set the initial filter path according
+      // to anything they've selected or typed in
+      dlg.setFilterPath(shellDirectoryText.getText());
+
+      // Change the title bar text
+      dlg.setText("Select shell's starting directory");
+
+      // Customizable message displayed in the dialog
+      dlg.setMessage("Select a directory");
+
+      // Calling open() will open and run the dialog.
+      // It will return the selected directory, or
+      // null if user cancels
+      String dir = dlg.open();
+      if (dir != null) {
+        // Set the text box to the new selection
+        shellDirectoryText.setText(dir);
+      }
+    }
   }
 }

@@ -22,7 +22,7 @@ import org.eclipse.core.commands.ExecutionException;
 import gr.aueb.dmst.istlab.unixtools.actions.ActionExecutionCallback;
 import gr.aueb.dmst.istlab.unixtools.actions.DataActionResult;
 import gr.aueb.dmst.istlab.unixtools.actions.impl.ExecuteCustomCommandAction;
-import gr.aueb.dmst.istlab.unixtools.controllers.UnixToolsRecentlyUsedController;
+import gr.aueb.dmst.istlab.unixtools.controllers.PackageExplorerRecentlyUsedMenuController;
 import gr.aueb.dmst.istlab.unixtools.core.model.CustomCommand;
 import gr.aueb.dmst.istlab.unixtools.factories.ActionFactorySingleton;
 
@@ -78,7 +78,7 @@ public class CustomCommandHandler extends AbstractHandler {
             }
           } catch (IOException io) {
             logger.fatal(
-                "Error in command's " + customCommand.getDescription() + " output redirection");
+                "Error in command's " + customCommand.getName() + " output redirection");
           } finally {
             try {
               if (br != null) {
@@ -90,19 +90,19 @@ public class CustomCommandHandler extends AbstractHandler {
               }
             } catch (IOException e) {
               logger.fatal("Failed to close reader/writer when executing command "
-                  + customCommand.getDescription());
+                  + customCommand.getName());
             }
           }
         }
       });
     } catch (IOException e) {
-      logger.fatal("IOException when executing command " + customCommand.getDescription());
+      logger.fatal("IOException when executing command " + customCommand.getName());
     } catch (InterruptedException e) {
-      logger.fatal("Command " + customCommand.getDescription() + " execution was interrupted");
+      logger.fatal("Command " + customCommand.getName() + " execution was interrupted");
     }
 
     // finally add the executed command to the recently used list
-    UnixToolsRecentlyUsedController.addCommand(this.customCommand);
+    PackageExplorerRecentlyUsedMenuController.addCommand(this.customCommand);
 
     return null;
   }

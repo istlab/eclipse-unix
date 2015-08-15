@@ -13,90 +13,31 @@ import org.eclipse.jface.fieldassist.ComboContentAdapter;
 import org.eclipse.jface.fieldassist.ContentProposalAdapter;
 import org.eclipse.jface.fieldassist.SimpleContentProposalProvider;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.ModifyEvent;
-import org.eclipse.swt.events.ModifyListener;
-import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.DirectoryDialog;
 
 import gr.aueb.dmst.istlab.unixtools.core.model.CommandPrototype;
 import gr.aueb.dmst.istlab.unixtools.dal.CommandPrototypeRepository;
 import gr.aueb.dmst.istlab.unixtools.dal.DataAccessException;
 import gr.aueb.dmst.istlab.unixtools.factories.RepositoryFactorySingleton;
-import gr.aueb.dmst.istlab.unixtools.views.wizard.CustomCommandMainPageView;
 
-public class CustomCommandWizardMainPageController {
+public class WizardMainPageController {
 
-  public static ArrayList<String> nicknames = new ArrayList<String>();
-  private CustomCommandMainPageView view;
-  private final String lowerCaseLetters = "abcdefghijklmnopqrstuvwxyz";
-  private final String upperCaseLetters = lowerCaseLetters.toUpperCase();
-  private final String numbers = "0123456789";
-  private final CommandPrototypeRepository repository =
-      RepositoryFactorySingleton.INSTANCE.createCommandPrototypeRepository();
+  private final String lowerCaseLetters;
+  private final String upperCaseLetters;
+  private final String numbers;
+  private static ArrayList<String> customCommandsNames = new ArrayList<String>();
+  private final CommandPrototypeRepository repository;
 
-  public CustomCommandWizardMainPageController(CustomCommandMainPageView view) {
-    this.view = view;
+  public WizardMainPageController() {
+    this.lowerCaseLetters = "abcdefghijklmnopqrstuvwxyz";
+    this.upperCaseLetters = lowerCaseLetters.toUpperCase();
+    this.numbers = "0123456789";
+    this.repository = RepositoryFactorySingleton.INSTANCE.createCommandPrototypeRepository();
   }
 
-  class AddCommandModifyListener implements ModifyListener {
-    @Override
-    public void modifyText(ModifyEvent event) {
-      view.canFlipToNextPage();
-      view.getWizard().getContainer().updateButtons();
-    }
-  }
-
-  class AddDescriptionModifyListener implements ModifyListener {
-    @Override
-    public void modifyText(ModifyEvent event) {
-      if (event.getSource() == view.getCommandCombo()) {
-        view.getDescriptionCombo().setText(getDescription(view.getCommandCombo().getText()));
-      }
-    }
-  }
-
-  class AddShellDirSelectionListener implements SelectionListener {
-    @Override
-    public void widgetDefaultSelected(SelectionEvent e) {}
-
-    @Override
-    public void widgetSelected(SelectionEvent event) {
-      DirectoryDialog dlg = new DirectoryDialog(view.getViewContainer().getShell());
-
-      // Set the initial filter path according to anything they've selected or typed in
-      dlg.setFilterPath(view.getShellDirText().getText());
-
-      // Change the title bar text
-      dlg.setText("Select shell's starting directory");
-
-      // Customizable message displayed in the dialog
-      dlg.setMessage("Select a directory");
-
-      /*
-       * Calling open() will open and run the dialog. It will return the selected directory, or null
-       * if user cancels
-       */
-      String directory = dlg.open();
-      if (directory != null) {
-        // Set the text box to the new selection
-        view.getShellDirText().setText(directory);
-      }
-    }
-  }
-
-  public ModifyListener getNewAddCommandModifyListener() {
-    return new AddCommandModifyListener();
-  }
-
-  public ModifyListener getNewAddDescriptionModifyListener() {
-    return new AddDescriptionModifyListener();
-  }
-
-  public SelectionListener getNewAddShellDirSelectionListener() {
-    return new AddShellDirSelectionListener();
+  public static ArrayList<String> getCustomCommandsNames() {
+    return customCommandsNames;
   }
 
   /**
@@ -131,6 +72,7 @@ public class CustomCommandWizardMainPageController {
     // To enable content proposal on deleting a char
     String delete = new String(new char[] {8});
     String allChars = this.lowerCaseLetters + this.upperCaseLetters + this.numbers + delete;
+
     return allChars.toCharArray();
   }
 
@@ -140,10 +82,17 @@ public class CustomCommandWizardMainPageController {
    * @return
    */
   private KeyStroke getActivationKeystroke() {
-    KeyStroke instance =
-        KeyStroke.getInstance(new Integer(SWT.CTRL).intValue(), new Integer(' ').intValue());
+    return KeyStroke.getInstance(new Integer(SWT.CTRL).intValue(), new Integer(' ').intValue());
+  }
 
-    return instance;
+  /**
+   * Check if the given string is valid to be used as a command nickname
+   *
+   * @param s
+   * @return
+   */
+  public boolean isValidNickname(String s) {
+    return (!s.isEmpty() && !customCommandsNames.contains(s));
   }
 
   /**
@@ -157,7 +106,7 @@ public class CustomCommandWizardMainPageController {
     try {
       list = repository.getModel().getCommands();
     } catch (DataAccessException ex) {
-      ex.printStackTrace();
+
     }
 
     String[] commands = new String[list.size()];
@@ -179,7 +128,7 @@ public class CustomCommandWizardMainPageController {
     try {
       commandPrototypes = repository.getModel().getCommands();
     } catch (DataAccessException ex) {
-      ex.printStackTrace();
+
     }
 
     for (CommandPrototype command : commandPrototypes) {
@@ -191,13 +140,4 @@ public class CustomCommandWizardMainPageController {
     return "";
   }
 
-  /**
-   * Check if the given string is valid to be used as a command nickname
-   *
-   * @param s
-   * @return
-   */
-  public boolean isValidNickname(String s) {
-    return (!s.isEmpty() && !nicknames.contains(s));
-  }
 }
