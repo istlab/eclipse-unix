@@ -5,12 +5,12 @@
     <page
       id="unixtoolspreferences"
       name="Unix tools"
-      class="gr.aueb.dmst.istlab.unixtools.views.preferences.PluginSettingsPageView" 
+      class="gr.aueb.dmst.istlab.unixtools.views.preferences.PreferencesMainPageView" 
     />
     <page
       id="customCommands"
       name="Custom Commands"
-      class="gr.aueb.dmst.istlab.unixtools.views.preferences.CustomCommandTableView" 
+      class="gr.aueb.dmst.istlab.unixtools.views.preferences.PreferencesTableView" 
       category="unixtoolspreferences"
     />
   </extension>
@@ -25,16 +25,16 @@
           id="submenuCustomCommands"
           label="Custom Commands">
           <dynamic
-            class="gr.aueb.dmst.istlab.unixtools.views.explorer.UnixToolsMenu"
-            id="gr.aueb.dmst.istlab.unixtools.views.explorer.UnixToolsMenu">
+            class="gr.aueb.dmst.istlab.unixtools.views.explorer.PackageExplorerMainMenuView"
+            id="gr.aueb.dmst.istlab.unixtools.views.explorer.PackageExplorerMainMenuView">
           </dynamic>
         </menu>
         <menu
           id="submenuRecentlyUsed"
           label="Recently Used Commands">
           <dynamic
-            class="gr.aueb.dmst.istlab.unixtools.views.explorer.UnixToolsRecentlyUsed"
-            id="gr.aueb.dmst.istlab.unixtools.views.explorer.UnixToolsRecentlyUsed">
+            class="gr.aueb.dmst.istlab.unixtools.views.explorer.PackageExplorerRecentlyUsedMenuView"
+            id="gr.aueb.dmst.istlab.unixtools.views.explorer.PackageExplorerRecentlyUsedMenuView">
           </dynamic>
         </menu>
       </menu>
