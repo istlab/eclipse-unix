@@ -4,7 +4,9 @@ Eclipse plug-in for working with Unix tools
 Development
 ----------
 
-If you want to contribute, you need Eclipse with PDE (Plugin Development Environment).
+### Requirements
+- Eclipse Mars with PDE (Plugin Development Environment).
+- Java JDK 8
 
 Also in Eclipse, you should have at least two projects, the plug-in project and the feature project:
 * The plug-in project should point to the plugin subfolder of this git repository,
