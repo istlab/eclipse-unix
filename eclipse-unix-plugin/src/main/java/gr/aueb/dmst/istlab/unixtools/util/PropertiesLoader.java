@@ -17,7 +17,7 @@ public class PropertiesLoader {
   private static final Properties properties = new Properties();
   private static final Logger logger = Logger.getLogger(PropertiesLoader.class);
   private static final String PROPERTIES_FILE_NAME = "src/main/resources/config/config.properties";
-  public static final String[] titles = {"Command", "Name", "Shell start dir", "Output"};
+  public static final String[] titles = {"Command", "Name", "Shell start directory", "Output"};
   public static String SHELL_PATH_KEY = "shellpath";
   public static String OUTPUT_KEY = "output";
 
