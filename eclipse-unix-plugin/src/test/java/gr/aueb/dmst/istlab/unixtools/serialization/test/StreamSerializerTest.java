@@ -21,7 +21,6 @@ import gr.aueb.dmst.istlab.unixtools.core.model.CommandPrototypeOption;
 import gr.aueb.dmst.istlab.unixtools.core.model.CustomCommand;
 import gr.aueb.dmst.istlab.unixtools.core.model.CustomCommandModel;
 import gr.aueb.dmst.istlab.unixtools.io.IOStreamProvider;
-import gr.aueb.dmst.istlab.unixtools.io.impl.FileStreamProvider;
 import gr.aueb.dmst.istlab.unixtools.serialization.SerializationException;
 import gr.aueb.dmst.istlab.unixtools.serialization.Serializer;
 import gr.aueb.dmst.istlab.unixtools.serialization.SerializerFactory;
@@ -49,13 +48,13 @@ public class StreamSerializerTest {
     assertEquals(expected.size(), actual.size());
 
     assertEquals(expected.get(0).getCommand(), actual.get(0).getCommand());
-    assertEquals(expected.get(0).getDescription(), actual.get(0).getDescription());
+    assertEquals(expected.get(0).getName(), actual.get(0).getName());
     assertEquals(expected.get(0).getShellDirectory(), actual.get(0).getShellDirectory());
     assertEquals(expected.get(0).getHasConsoleOutput(), actual.get(0).getHasConsoleOutput());
     assertEquals(expected.get(0).getOutputFilename(), actual.get(0).getOutputFilename());
 
     assertEquals(expected.get(1).getCommand(), actual.get(1).getCommand());
-    assertEquals(expected.get(1).getDescription(), actual.get(1).getDescription());
+    assertEquals(expected.get(1).getName(), actual.get(1).getName());
     assertEquals(expected.get(1).getShellDirectory(), actual.get(1).getShellDirectory());
     assertEquals(expected.get(1).getHasConsoleOutput(), actual.get(1).getHasConsoleOutput());
     assertEquals(expected.get(1).getOutputFilename(), actual.get(1).getOutputFilename());
@@ -98,7 +97,10 @@ public class StreamSerializerTest {
 
   @Test(expected = gr.aueb.dmst.istlab.unixtools.serialization.SerializationException.class)
   public void testBadSerializedFormat() throws SerializationException {
-    this.streamProvider = new FileStreamProvider("custom_commands_test.yml");
+    String invalidStr = "!gr.aueb.dmst.istlab.unixtools.core.model.CustomCommandModel";
+    ByteArrayOutputStream out = new ByteArrayOutputStream();
+    out.write(invalidStr.getBytes(), 0, invalidStr.length());
+    this.streamProvider = new MemoryStreamProvider(out);
     Serializer<CustomCommandModel> serializer = this.serializerFactory.createSerializer();
     StreamSerializer<CustomCommandModel> streamSerializer =
         new StreamSerializer<>(serializer, this.streamProvider);
@@ -107,6 +109,7 @@ public class StreamSerializerTest {
 
     assertEquals(deserializedModel, null);
   }
+
 
   private CustomCommandModel executeCustomCommandModelSerialization()
       throws SerializationException {
