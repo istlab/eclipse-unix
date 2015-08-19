@@ -31,12 +31,13 @@ import gr.aueb.dmst.istlab.unixtools.util.PropertiesLoader;
 public class PreferencesTableController {
 
   private static final Logger logger = Logger.getLogger(PreferencesTableController.class);
-  private CustomCommandImportExportHandler importExportHandler;
+  private CustomCommandImportExportHandler importExportDefaultHandler;
+  private CustomCommandImportExportHandler importExportButtonsHandler;
   private CustomCommandModel model;
 
   public PreferencesTableController() {
     this.model = new CustomCommandModel();
-    this.importExportHandler =
+    this.importExportDefaultHandler =
         new CustomCommandImportExportHandlerImpl(new YamlSerializer<CustomCommandModel>(),
             new FileStreamProvider(PropertiesLoader.DEFAULT_CUSTOM_COMMAND_PATH));
   }
@@ -47,7 +48,7 @@ public class PreferencesTableController {
     if (file.exists()) {
       ImportCustomCommandsFileAction action =
           (ImportCustomCommandsFileAction) ActionFactorySingleton.INSTANCE
-              .createImportCustomCommandsFileAction(importExportHandler, model);
+              .createImportCustomCommandsFileAction(importExportDefaultHandler, model);
 
       try {
         action.execute(new ActionExecutionCallback<VoidActionResult>() {
@@ -69,7 +70,7 @@ public class PreferencesTableController {
   public void save() {
     ExportCustomCommandsFileAction action =
         (ExportCustomCommandsFileAction) ActionFactorySingleton.INSTANCE
-            .createExportCustomCommandsFileAction(this.importExportHandler, this.model);
+            .createExportCustomCommandsFileAction(this.importExportDefaultHandler, this.model);
 
     try {
       action.execute(new ActionExecutionCallback<VoidActionResult>() {
@@ -123,10 +124,12 @@ public class PreferencesTableController {
     }
   }
 
-  public void importCustomCommand() {
+  public void importCustomCommand(String filename) {
+    this.importExportButtonsHandler = new CustomCommandImportExportHandlerImpl(
+        new YamlSerializer<CustomCommandModel>(), new FileStreamProvider(filename));
     ImportCustomCommandsFileAction action =
         (ImportCustomCommandsFileAction) ActionFactorySingleton.INSTANCE
-            .createImportCustomCommandsFileAction(this.importExportHandler, this.model);
+            .createImportCustomCommandsFileAction(this.importExportButtonsHandler, this.model);
 
     try {
       action.execute(new ActionExecutionCallback<VoidActionResult>() {
@@ -134,14 +137,16 @@ public class PreferencesTableController {
         public void onCommandExecuted(VoidActionResult result) {}
       });
     } catch (ImportExportException e) {
-      logger.fatal("Failed to load " + PropertiesLoader.DEFAULT_CUSTOM_COMMAND_PATH);
+      logger.fatal("Failed to load " + filename);
     }
   }
 
-  public void exportCustomCommand() {
+  public void exportCustomCommand(String filename) {
+    this.importExportButtonsHandler = new CustomCommandImportExportHandlerImpl(
+        new YamlSerializer<CustomCommandModel>(), new FileStreamProvider(filename));
     ExportCustomCommandsFileAction action =
         (ExportCustomCommandsFileAction) ActionFactorySingleton.INSTANCE
-            .createExportCustomCommandsFileAction(this.importExportHandler, this.model);
+            .createExportCustomCommandsFileAction(this.importExportButtonsHandler, this.model);
 
     try {
       action.execute(new ActionExecutionCallback<VoidActionResult>() {
@@ -149,7 +154,7 @@ public class PreferencesTableController {
         public void onCommandExecuted(VoidActionResult result) {}
       });
     } catch (ImportExportException e) {
-      logger.fatal("Failed to export " + PropertiesLoader.DEFAULT_CUSTOM_COMMAND_PATH);
+      logger.fatal("Failed to export " + filename);
     }
   }
 }

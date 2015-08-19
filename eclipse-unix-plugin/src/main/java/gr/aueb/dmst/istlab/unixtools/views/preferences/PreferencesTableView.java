@@ -422,7 +422,7 @@ public class PreferencesTableView extends AbstractPreferencesPageView {
       String filename = handleImportButton();
 
       if (filename != null) {
-        controller.importCustomCommand();
+        controller.importCustomCommand(filename);
 
         refresh();
       }
@@ -438,7 +438,7 @@ public class PreferencesTableView extends AbstractPreferencesPageView {
       String file = handleExportButton();
 
       if (file != null) {
-        controller.exportCustomCommand();
+        controller.exportCustomCommand(file);
       }
     }
   }
