@@ -25,16 +25,16 @@
           id="submenuCustomCommands"
           label="Custom Commands">
           <dynamic
-            class="gr.aueb.dmst.istlab.unixtools.views.explorer.PackageExplorerMainMenuView"
-            id="gr.aueb.dmst.istlab.unixtools.views.explorer.PackageExplorerMainMenuView">
+            class="gr.aueb.dmst.istlab.unixtools.views.packageExplorer.PackageExplorerMainMenuView"
+            id="gr.aueb.dmst.istlab.unixtools.views.packageExplorer.PackageExplorerMainMenuView">
           </dynamic>
         </menu>
         <menu
           id="submenuRecentlyUsed"
           label="Recently Used Commands">
           <dynamic
-            class="gr.aueb.dmst.istlab.unixtools.views.explorer.PackageExplorerRecentlyUsedMenuView"
-            id="gr.aueb.dmst.istlab.unixtools.views.explorer.PackageExplorerRecentlyUsedMenuView">
+            class="gr.aueb.dmst.istlab.unixtools.views.packageExplorer.PackageExplorerRecentlyUsedMenuView"
+            id="gr.aueb.dmst.istlab.unixtools.views.packageExplorer.PackageExplorerRecentlyUsedMenuView">
           </dynamic>
         </menu>
       </menu>

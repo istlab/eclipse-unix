@@ -152,3 +152,4 @@ Export-Package: com.esotericsoftware.yamlbeans,
  org.mockito.verification
 Require-Bundle: org.eclipse.core.runtime;bundle-version="3.11.0",
  org.eclipse.ui;bundle-version="3.107.0"
+Bundle-ActivationPolicy: lazy
