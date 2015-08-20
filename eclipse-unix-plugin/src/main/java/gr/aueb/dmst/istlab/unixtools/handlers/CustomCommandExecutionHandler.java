@@ -26,12 +26,12 @@ import gr.aueb.dmst.istlab.unixtools.controllers.PackageExplorerRecentlyUsedMenu
 import gr.aueb.dmst.istlab.unixtools.core.model.CustomCommand;
 import gr.aueb.dmst.istlab.unixtools.factories.ActionFactorySingleton;
 
-public class CustomCommandHandler extends AbstractHandler {
+public class CustomCommandExecutionHandler extends AbstractHandler {
 
-  private static final Logger logger = Logger.getLogger(CustomCommandHandler.class);
+  private static final Logger logger = Logger.getLogger(CustomCommandExecutionHandler.class);
   private CustomCommand customCommand;
 
-  public CustomCommandHandler(CustomCommand customCommand) {
+  public CustomCommandExecutionHandler(CustomCommand customCommand) {
     this.customCommand = customCommand;
   }
 
