@@ -16,7 +16,7 @@ import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.services.IServiceLocator;
 
 import gr.aueb.dmst.istlab.unixtools.core.model.CustomCommand;
-import gr.aueb.dmst.istlab.unixtools.handlers.CustomCommandHandler;
+import gr.aueb.dmst.istlab.unixtools.handlers.CustomCommandExecutionHandler;
 
 public abstract class AbstactPackageExplorerView extends CompoundContributionItem {
 
@@ -143,7 +143,7 @@ public abstract class AbstactPackageExplorerView extends CompoundContributionIte
    */
   protected void activateHandler(CustomCommand customCommand, String commandId) {
     IHandlerService handlerService = getHandlerService(getServiceLocator());
-    IHandler handler = new CustomCommandHandler(customCommand);
+    IHandler handler = new CustomCommandExecutionHandler(customCommand);
     IHandlerActivation handlerActivation = handlerService.activateHandler(commandId, handler);
     handlers.add(handlerActivation);
   }

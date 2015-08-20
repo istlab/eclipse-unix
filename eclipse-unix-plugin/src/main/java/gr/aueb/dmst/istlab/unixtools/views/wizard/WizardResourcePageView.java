@@ -110,15 +110,6 @@ public class WizardResourcePageView extends WizardPage {
     return ((this.pipe != null) ? this.pipe.getSelection() : false);
   }
 
-  /**
-   * Get access to the view's container
-   *
-   * @return
-   */
-  public Composite getViewContainer() {
-    return this.container;
-  }
-
   private class AddInputResourceSelectionListener implements SelectionListener {
     @Override
     public void widgetDefaultSelected(SelectionEvent e) {}
@@ -126,7 +117,7 @@ public class WizardResourcePageView extends WizardPage {
     @Override
     public void widgetSelected(SelectionEvent event) {
       // User has selected to open a single file
-      FileDialog fileDialog = new FileDialog(getViewContainer().getShell(), SWT.OPEN);
+      FileDialog fileDialog = new FileDialog(container.getShell(), SWT.OPEN);
       String filename = fileDialog.open();
 
       if (filename != null) {
@@ -142,7 +133,7 @@ public class WizardResourcePageView extends WizardPage {
     @Override
     public void widgetSelected(SelectionEvent event) {
       // User has selected to open a single file
-      FileDialog fileDialog = new FileDialog(getViewContainer().getShell(), SWT.OPEN);
+      FileDialog fileDialog = new FileDialog(container.getShell(), SWT.OPEN);
       String filename = fileDialog.open();
 
       if (filename != null) {

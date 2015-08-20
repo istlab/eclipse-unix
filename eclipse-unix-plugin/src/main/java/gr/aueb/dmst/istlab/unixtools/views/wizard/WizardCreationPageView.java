@@ -100,12 +100,12 @@ public class WizardCreationPageView extends Wizard {
       piped = true;
       command += " | ";
       name = mainPageView.getNickname();
-      shellDirectory = mainPageView.getShellStartDir();
+      shellDirectory = mainPageView.getShellStartDirectory();
       WizardDialog wizardDialog = new WizardDialog(this.getShell(), new WizardCreationPageView());
       wizardDialog.open();
     } else {
       save(this.argumentPageView.getSelectedArguments(), this.mainPageView.getNickname(),
-          this.mainPageView.getShellStartDir(), this.resourcePageView.getInputFile(),
+          this.mainPageView.getShellStartDirectory(), this.resourcePageView.getInputFile(),
           this.resourcePageView.getOutputFile());
     }
 
