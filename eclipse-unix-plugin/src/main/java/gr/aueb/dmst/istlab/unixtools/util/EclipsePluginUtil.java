@@ -1,15 +1,20 @@
 package gr.aueb.dmst.istlab.unixtools.util;
 
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang3.SystemUtils;
+import org.eclipse.core.runtime.FileLocator;
+import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Platform;
+import org.osgi.framework.Bundle;
 
 import gr.aueb.dmst.istlab.unixtools.plugin.Activator;
 
-public final class SystemInfo {
+public final class EclipsePluginUtil {
 
-  private SystemInfo() {}
+  private EclipsePluginUtil() {}
 
   public static List<String> getSystemShellInfo() {
     List<String> shellInfo = new ArrayList<>();
@@ -35,6 +40,14 @@ public final class SystemInfo {
     }
 
     return shellInfo;
+  }
+
+  public static URL getPluginResourcePath(String filename) {
+    Bundle bundle = Platform.getBundle("gr.aueb.dmst.istlab.unixtools.plugin");
+    Path path = new Path(filename);
+    URL fileURL = FileLocator.find(bundle, path, null);
+
+    return fileURL;
   }
 
   private static boolean path(String value) {

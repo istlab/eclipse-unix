@@ -14,7 +14,7 @@ import gr.aueb.dmst.istlab.unixtools.actions.Action;
 import gr.aueb.dmst.istlab.unixtools.actions.ActionExecutionCallback;
 import gr.aueb.dmst.istlab.unixtools.actions.DataActionResult;
 import gr.aueb.dmst.istlab.unixtools.core.model.CustomCommand;
-import gr.aueb.dmst.istlab.unixtools.util.SystemInfo;
+import gr.aueb.dmst.istlab.unixtools.util.EclipsePluginUtil;
 
 public final class ExecuteCustomCommandAction implements Action<DataActionResult<InputStream>> {
 
@@ -29,7 +29,7 @@ public final class ExecuteCustomCommandAction implements Action<DataActionResult
   public void execute(ActionExecutionCallback<DataActionResult<InputStream>> callback)
       throws IOException, InterruptedException {
     DataActionResult<InputStream> result;
-    List<String> arguments = SystemInfo.getSystemShellInfo();
+    List<String> arguments = EclipsePluginUtil.getSystemShellInfo();
     arguments.add(this.commandToExecute.getCommand());
 
     ProcessBuilder pb = new ProcessBuilder(arguments);
