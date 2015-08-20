@@ -31,7 +31,10 @@ public final class DeserializeCustomCommandsAction implements Action<VoidActionR
 
     try {
       CustomCommandModel deserializedModel = this.customCommandRepository.getModel();
-      this.model.setCommands(deserializedModel.getCommands());
+
+      if (deserializedModel != null) {
+        this.model.setCommands(deserializedModel.getCommands());
+      }
     } catch (DataAccessException ex) {
       result = new VoidActionResult(ex);
       throw new DataAccessException(ex);

@@ -31,7 +31,10 @@ public final class DeserializeCommandPrototypesAction implements Action<VoidActi
 
     try {
       CommandPrototypeModel deserializedModel = this.commandPrototypeRepository.getModel();
-      this.model.setCommands(deserializedModel.getCommands());
+
+      if (deserializedModel != null) {
+        this.model.setCommands(deserializedModel.getCommands());
+      }
     } catch (DataAccessException ex) {
       result = new VoidActionResult(ex);
       throw new DataAccessException(ex);
