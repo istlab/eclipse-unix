@@ -6,6 +6,7 @@
 package gr.aueb.dmst.istlab.unixtools.views.wizard;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
@@ -36,7 +37,7 @@ public class WizardArgumentPageView extends WizardPage {
   private Label textLabel;
   private Text text;
   private Button pipeButton;
-  private ArrayList<CommandPrototypeOption> arguments;
+  private List<CommandPrototypeOption> arguments;
   private WizardArgumentPageController controller;
   private final String labelText;
 
@@ -122,8 +123,9 @@ public class WizardArgumentPageView extends WizardPage {
     if (this.text != null) {
       if (this.text.getText().length() == 0) {
         for (int i = 0; i < this.buttons.length; i++) {
-          if (this.buttons[i].getSelection())
+          if (this.buttons[i].getSelection()) {
             arguments += this.buttons[i].getText() + " ";
+          }
         }
       } else {
         arguments = this.text.getText();

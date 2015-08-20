@@ -6,23 +6,27 @@
 package gr.aueb.dmst.istlab.unixtools.controllers;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.log4j.Logger;
 
+import gr.aueb.dmst.istlab.unixtools.actions.ActionExecutionCallback;
+import gr.aueb.dmst.istlab.unixtools.actions.VoidActionResult;
+import gr.aueb.dmst.istlab.unixtools.actions.impl.DeserializeCommandPrototypesAction;
 import gr.aueb.dmst.istlab.unixtools.core.model.CommandPrototype;
+import gr.aueb.dmst.istlab.unixtools.core.model.CommandPrototypeModel;
 import gr.aueb.dmst.istlab.unixtools.core.model.CommandPrototypeOption;
-import gr.aueb.dmst.istlab.unixtools.dal.CommandPrototypeRepository;
 import gr.aueb.dmst.istlab.unixtools.dal.DataAccessException;
-import gr.aueb.dmst.istlab.unixtools.factories.RepositoryFactorySingleton;
+import gr.aueb.dmst.istlab.unixtools.factories.ActionFactorySingleton;
+import gr.aueb.dmst.istlab.unixtools.util.PropertiesLoader;
 
 public class WizardArgumentPageController {
 
-  private static final Logger logger =
-      Logger.getLogger(WizardArgumentPageController.class);
-  private final CommandPrototypeRepository repository;
+  private static final Logger logger = Logger.getLogger(WizardArgumentPageController.class);
+  private CommandPrototypeModel model;
 
   public WizardArgumentPageController() {
-    this.repository = RepositoryFactorySingleton.INSTANCE.createCommandPrototypeRepository();
+    this.deserializeCommandPrototypes();
   }
 
   /**
@@ -31,11 +35,13 @@ public class WizardArgumentPageController {
    * @param command
    * @return
    */
-  public ArrayList<CommandPrototypeOption> getArguments(String command) {
-    ArrayList<CommandPrototypeOption> arguments = new ArrayList<CommandPrototypeOption>();
+  public List<CommandPrototypeOption> getArguments(String command) {
+    List<CommandPrototypeOption> arguments = new ArrayList<CommandPrototypeOption>();
 
-    try {
-      for (CommandPrototype commandPrototype : this.repository.getModel().getCommands()) {
+    if (this.model != null) {
+      List<CommandPrototype> commandPrototypes = this.model.getCommands();
+
+      for (CommandPrototype commandPrototype : commandPrototypes) {
         if (commandPrototype.getName().equals(command)) {
           for (CommandPrototypeOption option : commandPrototype.getOptions()) {
             arguments.add(option);
@@ -44,10 +50,23 @@ public class WizardArgumentPageController {
           break;
         }
       }
-    } catch (DataAccessException e) {
-      logger.fatal("Error getting command arguments " + command);
     }
 
     return arguments;
+  }
+
+  private void deserializeCommandPrototypes() {
+    DeserializeCommandPrototypesAction action =
+        (DeserializeCommandPrototypesAction) ActionFactorySingleton.INSTANCE
+            .createCommandPrototypesDeserializeAction(this.model);
+
+    try {
+      action.execute(new ActionExecutionCallback<VoidActionResult>() {
+        @Override
+        public void onCommandExecuted(VoidActionResult result) {}
+      });
+    } catch (DataAccessException ex) {
+      logger.fatal("Failed to deserialize " + PropertiesLoader.DEFAULT_PROTOTYPE_COMMAND_PATH);
+    }
   }
 }

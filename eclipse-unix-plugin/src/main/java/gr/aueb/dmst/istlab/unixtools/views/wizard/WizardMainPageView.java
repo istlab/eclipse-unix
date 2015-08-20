@@ -43,12 +43,12 @@ public class WizardMainPageView extends WizardPage {
   private Label shell;
   private Label currentCommand;
   private Label descriptionLabel;
-  private Combo combo;
-  private Combo description;
+  private Combo currentCommandCombo;
+  private Combo descriptionCombo;
   private Combo nickname;
-  private Combo commandCombo;
+  private Combo actualCommandCombo;
   private Composite container;
-  private Text shellDir;
+  private Text shellDirectory;
   private Button shellButton;
   private Button pipe;
   private String cc;
@@ -83,9 +83,9 @@ public class WizardMainPageView extends WizardPage {
     if (this.cc.length() > 0) {
       this.currentCommand = new Label(this.container, SWT.NONE);
       this.currentCommand.setText("Current command state : ");
-      this.commandCombo = new Combo(this.container, SWT.NONE);
-      this.commandCombo.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
-      this.commandCombo.setText(this.cc);
+      this.actualCommandCombo = new Combo(this.container, SWT.NONE);
+      this.actualCommandCombo.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
+      this.actualCommandCombo.setText(this.cc);
     }
 
     this.empty = new Label(this.container, SWT.NONE);
@@ -103,29 +103,29 @@ public class WizardMainPageView extends WizardPage {
     this.label = new Label(this.container, SWT.NONE);
     this.label.setText("Enter the desired command : ");
 
-    this.combo = new Combo(this.container, SWT.NONE);
-    this.combo.setItems(this.controller.getCommands());
-    this.combo.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
-    this.combo.addModifyListener(new AddDescriptionModifyListener());
+    this.currentCommandCombo = new Combo(this.container, SWT.NONE);
+    this.currentCommandCombo.setItems(this.controller.getCommandPrototypes());
+    this.currentCommandCombo.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
+    this.currentCommandCombo.addModifyListener(new AddDescriptionModifyListener());
 
-    this.controller.addAutocomplete(this.combo);
+    this.controller.addAutocomplete(this.currentCommandCombo);
 
     this.descriptionLabel = new Label(this.container, SWT.NONE);
     this.descriptionLabel.setText("Description : ");
 
-    this.description = new Combo(this.container, SWT.NONE);
-    this.description.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
+    this.descriptionCombo = new Combo(this.container, SWT.NONE);
+    this.descriptionCombo.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
 
     this.shell = new Label(this.container, SWT.NONE);
     this.shell.setText("Enter the shell's starting dir :");
 
-    this.shellDir = new Text(this.container, SWT.BORDER);
+    this.shellDirectory = new Text(this.container, SWT.BORDER);
     GridData dataShell = new GridData(GridData.FILL_HORIZONTAL);
     dataShell.horizontalSpan = 4;
     if (cc.length() > 0) {
-      this.shellDir.setText(this.pipedShellDir);
+      this.shellDirectory.setText(this.pipedShellDir);
     }
-    this.shellDir.setLayoutData(dataShell);
+    this.shellDirectory.setLayoutData(dataShell);
 
     this.shellButton = new Button(this.container, SWT.PUSH);
     this.shellButton.setText("Browse");
@@ -149,18 +149,19 @@ public class WizardMainPageView extends WizardPage {
     }
   }
 
+  @Override
+  public void performHelp() {
+    // TODO : Implement
+  }
+
+
   /**
    * Return the shell's starting directory
    *
    * @return
    */
-  public String getShellStartDir() {
-    return this.shellDir.getText();
-  }
-
-  @Override
-  public void performHelp() {
-    // TODO : Implement
+  public String getShellStartDirectory() {
+    return this.shellDirectory.getText();
   }
 
   /**
@@ -169,10 +170,11 @@ public class WizardMainPageView extends WizardPage {
    * @return
    */
   public boolean pipe() {
-    if (this.pipe != null)
+    if (this.pipe != null) {
       return this.pipe.getSelection();
-    else
+    } else {
       return false;
+    }
   }
 
   /**
@@ -181,7 +183,7 @@ public class WizardMainPageView extends WizardPage {
    * @return
    */
   public String getCommand() {
-    return this.combo.getText();
+    return this.currentCommandCombo.getText();
   }
 
   /**
@@ -192,43 +194,6 @@ public class WizardMainPageView extends WizardPage {
   public String getNickname() {
     return this.nickname.getText();
   }
-
-  /**
-   * Get access to the command combo
-   *
-   * @return
-   */
-  public Combo getCommandCombo() {
-    return this.combo;
-  }
-
-  /**
-   * Get access to the description combo
-   *
-   * @return
-   */
-  public Combo getDescriptionCombo() {
-    return this.description;
-  }
-
-  /**
-   * Get access to the shell's directory text
-   *
-   * @return
-   */
-  public Text getShellDirText() {
-    return this.shellDir;
-  }
-
-  /**
-   * Get access to the container
-   *
-   * @return
-   */
-  public Composite getViewContainer() {
-    return this.container;
-  }
-
 
   private class AddCommandModifyListener implements ModifyListener {
     @Override
@@ -241,8 +206,9 @@ public class WizardMainPageView extends WizardPage {
   private class AddDescriptionModifyListener implements ModifyListener {
     @Override
     public void modifyText(ModifyEvent event) {
-      if (event.getSource() == getCommandCombo()) {
-        getDescriptionCombo().setText(controller.getDescription(getCommandCombo().getText()));
+      if (event.getSource() == currentCommandCombo) {
+        descriptionCombo
+            .setText(controller.getCommandPrototypeDescription(currentCommandCombo.getText()));
       }
     }
   }
@@ -253,10 +219,10 @@ public class WizardMainPageView extends WizardPage {
 
     @Override
     public void widgetSelected(SelectionEvent event) {
-      DirectoryDialog dlg = new DirectoryDialog(getViewContainer().getShell());
+      DirectoryDialog dlg = new DirectoryDialog(container.getShell());
 
       // Set the initial filter path according to anything they've selected or typed in
-      dlg.setFilterPath(getShellDirText().getText());
+      dlg.setFilterPath(shellDirectory.getText());
 
       // Change the title bar text
       dlg.setText("Select shell's starting directory");
@@ -271,7 +237,7 @@ public class WizardMainPageView extends WizardPage {
       String directory = dlg.open();
       if (directory != null) {
         // Set the text box to the new selection
-        getShellDirText().setText(directory);
+        shellDirectory.setText(directory);
       }
     }
   }
