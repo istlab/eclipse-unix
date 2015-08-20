@@ -8,6 +8,7 @@ package gr.aueb.dmst.istlab.unixtools.plugin;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
+import gr.aueb.dmst.istlab.unixtools.util.LoggerUtil;
 import gr.aueb.dmst.istlab.unixtools.util.PropertiesLoader;
 
 /**
@@ -25,9 +26,10 @@ public class Activator extends AbstractUIPlugin {
   @Override
   public void start(BundleContext context) throws Exception {
     // load plugin's properties
-    PropertiesLoader.loadPropertiesFile();
     super.start(context);
     plugin = this;
+    LoggerUtil.configureLogger();
+    PropertiesLoader.loadPropertiesFile();
   }
 
   @Override
