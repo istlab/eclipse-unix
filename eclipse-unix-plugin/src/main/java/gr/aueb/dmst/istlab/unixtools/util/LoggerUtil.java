@@ -5,8 +5,8 @@
 
 package gr.aueb.dmst.istlab.unixtools.util;
 
-import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Properties;
 
 import org.apache.log4j.Logger;
@@ -15,7 +15,7 @@ import org.apache.log4j.PropertyConfigurator;
 public final class LoggerUtil {
 
   private static final Logger logger = Logger.getLogger(LoggerUtil.class);
-  private static final String log4JPropertyFile = PropertiesLoader.LOGGER_CONFIG_FILE_PATH;
+  private static final String log4JPropertyFile = "src/main/resources/log4j.properties";
 
   private LoggerUtil() {}
 
@@ -23,11 +23,14 @@ public final class LoggerUtil {
     Properties p = new Properties();
 
     try {
-      p.load(new FileInputStream(log4JPropertyFile));
+      InputStream in = EclipsePluginUtil.getPluginResourcePath(log4JPropertyFile).openStream();
+      p.load(in);
+
       PropertyConfigurator.configure(p);
+
       logger.info("Logger was configured successfully");
     } catch (IOException e) {
-      logger.error("Logger wasn't wconfigured successfully");
+      logger.error("Logger wasn't configured successfully");
     }
   }
 

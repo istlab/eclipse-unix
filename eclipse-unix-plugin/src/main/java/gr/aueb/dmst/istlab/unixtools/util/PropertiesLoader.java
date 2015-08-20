@@ -5,7 +5,6 @@
 
 package gr.aueb.dmst.istlab.unixtools.util;
 
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
@@ -16,12 +15,12 @@ public class PropertiesLoader {
 
   private static final Properties properties = new Properties();
   private static final Logger logger = Logger.getLogger(PropertiesLoader.class);
-  private static final String PROPERTIES_FILE_NAME = "src/main/resources/config/config.properties";
+  private static final String PROPERTIES_FILE_NAME = "src/main/resources/config.properties";
   public static final String[] titles = {"Command", "Name", "Shell start directory", "Output"};
   public static String SHELL_PATH_KEY = "shellpath";
   public static String OUTPUT_KEY = "output";
 
-  private static InputStream input;
+  private static InputStream in;
   // defaults
   public static String DEFAULT_SHELL_PATH;
   public static String DEFAULT_COMMAND_OUTPUT;
@@ -49,11 +48,11 @@ public class PropertiesLoader {
   private PropertiesLoader() {}
 
   public static void loadPropertiesFile() {
-    input = null;
+    in = null;
 
     try {
-      input = new FileInputStream(PROPERTIES_FILE_NAME);
-      properties.load(input);
+      in = EclipsePluginUtil.getPluginResourcePath(PROPERTIES_FILE_NAME).openStream();
+      properties.load(in);
 
       DEFAULT_SHELL_PATH = properties.getProperty("DefaultShellPath");
       DEFAULT_COMMAND_OUTPUT = properties.getProperty("DefaultOutput");
@@ -91,9 +90,9 @@ public class PropertiesLoader {
   }
 
   public static void closePropertiesFile() {
-    if (input != null) {
+    if (in != null) {
       try {
-        input.close();
+        in.close();
       } catch (IOException e) {
         logger.fatal("Failed to close properties file !!!");
       }

@@ -38,9 +38,6 @@ public abstract class AbstractPreferencesPageView extends FieldEditorPreferenceP
    */
   protected abstract void refresh();
 
-  /**
-   * This method handles what happens when the user presses the ok button
-   */
   @Override
   public abstract boolean performOk();
 
@@ -49,9 +46,6 @@ public abstract class AbstractPreferencesPageView extends FieldEditorPreferenceP
     this.setPreferenceStore(this.doGetPreferenceStore());
   }
 
-  /**
-   * Initialize default values
-   */
   @Override
   protected void performDefaults() {
     super.performDefaults();
@@ -81,9 +75,6 @@ public abstract class AbstractPreferencesPageView extends FieldEditorPreferenceP
     c.setLayout(grid);
   }
 
-  /**
-   * Get the preference store
-   */
   @Override
   protected IPreferenceStore doGetPreferenceStore() {
     return Activator.getDefault().getPreferenceStore();

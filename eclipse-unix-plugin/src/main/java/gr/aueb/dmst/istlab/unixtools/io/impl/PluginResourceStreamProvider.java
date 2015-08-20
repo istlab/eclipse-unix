@@ -5,30 +5,33 @@
 
 package gr.aueb.dmst.istlab.unixtools.io.impl;
 
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.URL;
+import java.net.URLConnection;
 
 import gr.aueb.dmst.istlab.unixtools.io.IOStreamProvider;
 
-public final class FileStreamProvider implements IOStreamProvider {
+public class PluginResourceStreamProvider implements IOStreamProvider {
 
-  private String filename;
+  private URL fileURL;
 
-  public FileStreamProvider(String filename) {
-    this.filename = filename;
+  public PluginResourceStreamProvider(URL fileURL) {
+    this.fileURL = fileURL;
   }
 
   @Override
   public InputStream createInputStream() throws IOException {
-    return new FileInputStream(filename);
+    return fileURL.openStream();
   }
 
   @Override
   public OutputStream createOutputStream() throws IOException {
-    return new FileOutputStream(filename);
+    URLConnection fileConnection = fileURL.openConnection();
+    fileConnection.setDoOutput(true);
+
+    return fileConnection.getOutputStream();
   }
 
 }

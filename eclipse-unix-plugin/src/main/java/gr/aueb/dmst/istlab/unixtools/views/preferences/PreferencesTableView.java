@@ -59,7 +59,6 @@ public class PreferencesTableView extends AbstractPreferencesPageView {
   public void init(IWorkbench workbench) {
     super.init(workbench);
     this.setDescription(PropertiesLoader.CUSTOM_COMMAND_PAGE_DESCRIPTION);
-    this.controller = new PreferencesTableController();
   }
 
   @Override
@@ -73,7 +72,7 @@ public class PreferencesTableView extends AbstractPreferencesPageView {
     // create the command table and the buttons
     this.customCommandsTable = createCommandTable(this.getComposite());
     this.createButtons(this.getComposite());
-    this.controller.loadTable();
+    this.controller.deserializeCustomCommands();
     this.refresh();
 
     return this.getComposite();
@@ -274,7 +273,7 @@ public class PreferencesTableView extends AbstractPreferencesPageView {
 
   @Override
   public boolean performOk() {
-    this.controller.save();
+    this.controller.serializeCustomCommands();
 
     if (changed) {
       // override the previous command list
@@ -435,10 +434,10 @@ public class PreferencesTableView extends AbstractPreferencesPageView {
 
     @Override
     public void widgetSelected(SelectionEvent arg0) {
-      String file = handleExportButton();
+      String filename = handleExportButton();
 
-      if (file != null) {
-        controller.exportCustomCommand(file);
+      if (filename != null) {
+        controller.exportCustomCommand(filename);
       }
     }
   }

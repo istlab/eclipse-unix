@@ -11,10 +11,11 @@ import gr.aueb.dmst.istlab.unixtools.dal.CommandPrototypeRepository;
 import gr.aueb.dmst.istlab.unixtools.dal.CustomCommandRepository;
 import gr.aueb.dmst.istlab.unixtools.dal.RepositoryFactory;
 import gr.aueb.dmst.istlab.unixtools.io.IOStreamProvider;
-import gr.aueb.dmst.istlab.unixtools.io.impl.FileStreamProvider;
+import gr.aueb.dmst.istlab.unixtools.io.impl.PluginResourceStreamProvider;
 import gr.aueb.dmst.istlab.unixtools.serialization.Serializer;
 import gr.aueb.dmst.istlab.unixtools.serialization.SerializerFactory;
 import gr.aueb.dmst.istlab.unixtools.serialization.yaml.YamlSerializerFactory;
+import gr.aueb.dmst.istlab.unixtools.util.EclipsePluginUtil;
 import gr.aueb.dmst.istlab.unixtools.util.PropertiesLoader;
 
 public final class RepositoryFactoryImpl implements RepositoryFactory {
@@ -36,7 +37,8 @@ public final class RepositoryFactoryImpl implements RepositoryFactory {
   @Override
   public CommandPrototypeRepository createCommandPrototypeRepository() {
     Serializer<CommandPrototypeModel> serializer = this.serializerFactory.createSerializer();
-    IOStreamProvider streamProvider = new FileStreamProvider(FILE_NAME_COMMAND_PROTOTYPES);
+    IOStreamProvider streamProvider = new PluginResourceStreamProvider(
+        EclipsePluginUtil.getPluginResourcePath(FILE_NAME_COMMAND_PROTOTYPES));
 
     return new CommandPrototypeRepositoryImpl(serializer, streamProvider);
   }
@@ -44,7 +46,8 @@ public final class RepositoryFactoryImpl implements RepositoryFactory {
   @Override
   public CustomCommandRepository createCustomCommandRepository() {
     Serializer<CustomCommandModel> serializer = this.serializerFactory.createSerializer();
-    IOStreamProvider streamProvider = new FileStreamProvider(FILE_NAME_CUSTOM_COMMANDS);
+    IOStreamProvider streamProvider = new PluginResourceStreamProvider(
+        EclipsePluginUtil.getPluginResourcePath(FILE_NAME_CUSTOM_COMMANDS));
 
     return new CustomCommandRepositoryImpl(serializer, streamProvider);
   }
