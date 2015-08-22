@@ -21,6 +21,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
 import gr.aueb.dmst.istlab.unixtools.controllers.WizardMainPageController;
+import gr.aueb.dmst.istlab.unixtools.plugin.PluginContext;
 import gr.aueb.dmst.istlab.unixtools.util.PropertiesLoader;
 
 /**
@@ -62,7 +63,6 @@ public class WizardMainPageView extends WizardPage {
     this.setTitle(PropertiesLoader.WIZARD_ADD_PAGE_TITLE);
     this.setDescription(PropertiesLoader.WIZARD_ADD_PAGE_DESCRIPTION);
     this.cc = command;
-    this.controller = new WizardMainPageController();
     this.pipedNickname = pipedNickname;
     this.pipedShellDir = pipedShellDir;
     this.infoText = PropertiesLoader.WIZARD_ADD_FIRST_PAGE_LABEL;
@@ -70,6 +70,9 @@ public class WizardMainPageView extends WizardPage {
 
   @Override
   public void createControl(Composite parent) {
+    PluginContext pluginContext = PluginContext.getInstance();
+    this.controller = pluginContext.getWizardMainPageController();
+
     this.container = new Composite(parent, SWT.NONE);
     GridLayout layout = new GridLayout();
     this.container.setLayout(layout);

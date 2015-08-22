@@ -8,7 +8,6 @@ package gr.aueb.dmst.istlab.unixtools.controllers;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.log4j.Logger;
 import org.eclipse.jface.bindings.keys.KeyStroke;
 import org.eclipse.jface.fieldassist.ComboContentAdapter;
 import org.eclipse.jface.fieldassist.ContentProposalAdapter;
@@ -17,29 +16,22 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Control;
 
-import gr.aueb.dmst.istlab.unixtools.actions.ActionExecutionCallback;
-import gr.aueb.dmst.istlab.unixtools.actions.VoidActionResult;
-import gr.aueb.dmst.istlab.unixtools.actions.impl.DeserializeCommandPrototypesAction;
 import gr.aueb.dmst.istlab.unixtools.core.model.CommandPrototype;
 import gr.aueb.dmst.istlab.unixtools.core.model.CommandPrototypeModel;
-import gr.aueb.dmst.istlab.unixtools.dal.DataAccessException;
-import gr.aueb.dmst.istlab.unixtools.factories.ActionFactorySingleton;
-import gr.aueb.dmst.istlab.unixtools.util.PropertiesLoader;
 
 public class WizardMainPageController {
 
-  private static final Logger logger = Logger.getLogger(WizardMainPageController.class);
   private final String lowerCaseLetters;
   private final String upperCaseLetters;
   private final String numbers;
   private static List<String> customCommandsNames = new ArrayList<String>();
   private CommandPrototypeModel model;
 
-  public WizardMainPageController() {
+  public WizardMainPageController(CommandPrototypeModel model) {
+    this.model = model;
     this.lowerCaseLetters = "abcdefghijklmnopqrstuvwxyz";
     this.upperCaseLetters = lowerCaseLetters.toUpperCase();
     this.numbers = "0123456789";
-    this.deserializeCommandPrototypes();
   }
 
   public static List<String> getCustomCommandsNames() {
@@ -146,21 +138,6 @@ public class WizardMainPageController {
     }
 
     return "";
-  }
-
-  private void deserializeCommandPrototypes() {
-    DeserializeCommandPrototypesAction action =
-        (DeserializeCommandPrototypesAction) ActionFactorySingleton.INSTANCE
-            .createCommandPrototypesDeserializeAction(this.model);
-
-    try {
-      action.execute(new ActionExecutionCallback<VoidActionResult>() {
-        @Override
-        public void onCommandExecuted(VoidActionResult result) {}
-      });
-    } catch (DataAccessException ex) {
-      logger.fatal("Failed to deserialize " + PropertiesLoader.DEFAULT_PROTOTYPE_COMMAND_PATH);
-    }
   }
 
 }

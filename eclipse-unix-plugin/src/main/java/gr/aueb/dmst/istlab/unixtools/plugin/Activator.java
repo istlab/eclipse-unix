@@ -20,6 +20,7 @@ public class Activator extends AbstractUIPlugin {
   public static final String PLUGIN_ID = "gr.aueb.dmst.istlab.unixtools.plugin";
   /** The shared instance */
   private static Activator plugin;
+  private PluginContext pluginContext;
 
   public Activator() {}
 
@@ -30,6 +31,8 @@ public class Activator extends AbstractUIPlugin {
     plugin = this;
     LoggerUtil.configureLogger();
     PropertiesLoader.loadPropertiesFile();
+    pluginContext = PluginContext.getInstance();
+    pluginContext.init();
   }
 
   @Override

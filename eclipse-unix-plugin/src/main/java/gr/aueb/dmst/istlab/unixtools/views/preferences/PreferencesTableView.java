@@ -31,6 +31,7 @@ import org.eclipse.ui.IWorkbench;
 import gr.aueb.dmst.istlab.unixtools.controllers.PreferencesTableController;
 import gr.aueb.dmst.istlab.unixtools.controllers.WizardMainPageController;
 import gr.aueb.dmst.istlab.unixtools.core.model.CustomCommand;
+import gr.aueb.dmst.istlab.unixtools.plugin.PluginContext;
 import gr.aueb.dmst.istlab.unixtools.util.PropertiesLoader;
 import gr.aueb.dmst.istlab.unixtools.views.wizard.EditDialogView;
 import gr.aueb.dmst.istlab.unixtools.views.wizard.WizardCreationPageView;
@@ -63,7 +64,8 @@ public class PreferencesTableView extends AbstractPreferencesPageView {
 
   @Override
   protected Control createContents(Composite parent) {
-    this.controller = new PreferencesTableController();
+    PluginContext pluginContext = PluginContext.getInstance();
+    this.controller = pluginContext.getPreferencesTableController();
 
     // set the layout
     this.setComposite(new Composite(parent, parent.getStyle()));

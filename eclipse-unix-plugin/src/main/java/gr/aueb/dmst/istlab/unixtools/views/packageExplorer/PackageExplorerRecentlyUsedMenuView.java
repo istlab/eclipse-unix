@@ -14,13 +14,16 @@ import org.eclipse.ui.handlers.IHandlerActivation;
 import org.eclipse.ui.menus.CommandContributionItem;
 import org.eclipse.ui.menus.CommandContributionItemParameter;
 
-import gr.aueb.dmst.istlab.unixtools.controllers.PackageExplorerRecentlyUsedMenuController;
+import gr.aueb.dmst.istlab.unixtools.controllers.PackageExplorerMainMenuController;
+import gr.aueb.dmst.istlab.unixtools.plugin.PluginContext;
 
-public class PackageExplorerRecentlyUsedMenuView extends AbstactPackageExplorerView {
+public class PackageExplorerRecentlyUsedMenuView extends PackageExplorerMainMenuView {
+
+  private PackageExplorerMainMenuController controller;
 
   public PackageExplorerRecentlyUsedMenuView() {
-    super();
-
+    PluginContext pluginContext = PluginContext.getInstance();
+    this.controller = pluginContext.getPackageExplorerMainMenuController();
     this.setCategory("gr.cs.aueb.dmst.istlab.unixtools.recentlyUsedCategory");
     this.setIdentity("gr.cs.aueb.dmst.istlab.unixtools.recentlyUsed");
     setCommandID(0);
@@ -40,15 +43,12 @@ public class PackageExplorerRecentlyUsedMenuView extends AbstactPackageExplorerV
   protected IContributionItem[] createCustomCommandArray() {
     List<IContributionItem> contributionItemList = new ArrayList<IContributionItem>();
 
-    for (int i =
-        PackageExplorerRecentlyUsedMenuController.getRecentlyUsed().size() - 1; i > -1; --i) {
-      Command command =
-          createEclipseCommand(PackageExplorerRecentlyUsedMenuController.getRecentlyUsed().get(i));
+    for (int i = this.controller.getRecentlyUsed().size() - 1; i > -1; --i) {
+      Command command = createEclipseCommand(this.controller.getRecentlyUsed().get(i));
       CommandContributionItemParameter commandContributionItemParameter =
           new CommandContributionItemParameter(this.getServiceLocator(), command.getId(),
               command.getId(), CommandContributionItem.STYLE_PUSH);
-      commandContributionItemParameter.label =
-          PackageExplorerRecentlyUsedMenuController.getRecentlyUsed().get(i).getName();
+      commandContributionItemParameter.label = this.controller.getRecentlyUsed().get(i).getName();
 
       contributionItemList.add(new CommandContributionItem(commandContributionItemParameter));
     }

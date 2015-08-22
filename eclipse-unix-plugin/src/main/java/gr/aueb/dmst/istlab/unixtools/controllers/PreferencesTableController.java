@@ -36,8 +36,8 @@ public class PreferencesTableController {
   private static final Logger logger = Logger.getLogger(PreferencesTableController.class);
   private CustomCommandModel model;
 
-  public PreferencesTableController() {
-    this.model = new CustomCommandModel();
+  public PreferencesTableController(CustomCommandModel model) {
+    this.model = model;
   }
 
   public void deserializeCustomCommands() {
@@ -77,14 +77,6 @@ public class PreferencesTableController {
     } catch (DataAccessException ex) {
       logger.fatal("Failed to serialize" + PropertiesLoader.DEFAULT_CUSTOM_COMMAND_PATH);
     }
-  }
-
-  public void saveCustomCommands(ArrayList<CustomCommand> newCommands) {
-    this.model.setCommands(newCommands);
-  }
-
-  public List<CustomCommand> getCustomCommands() {
-    return this.model.getCommands();
   }
 
   public void addCustomCommand(CustomCommand commandToAdd) {
@@ -158,4 +150,13 @@ public class PreferencesTableController {
       logger.fatal("Failed to export " + filename);
     }
   }
+
+  public void saveCustomCommands(ArrayList<CustomCommand> newCommands) {
+    this.model.setCommands(newCommands);
+  }
+
+  public List<CustomCommand> getCustomCommands() {
+    return this.model.getCommands();
+  }
+
 }

@@ -19,6 +19,7 @@ import org.eclipse.swt.widgets.Text;
 
 import gr.aueb.dmst.istlab.unixtools.controllers.WizardArgumentPageController;
 import gr.aueb.dmst.istlab.unixtools.core.model.CommandPrototypeOption;
+import gr.aueb.dmst.istlab.unixtools.plugin.PluginContext;
 import gr.aueb.dmst.istlab.unixtools.util.PropertiesLoader;
 
 /**
@@ -43,7 +44,6 @@ public class WizardArgumentPageView extends WizardPage {
 
   public WizardArgumentPageView() {
     super("Command's arguments");
-    this.controller = new WizardArgumentPageController();
     this.setTitle(PropertiesLoader.WIZARD_ARG_PAGE_TITLE);
     this.setDescription(PropertiesLoader.WIZARD_ARG_PAGE_DESCRIPTION);
     this.labelText = PropertiesLoader.WIZARD_ARG_PAGE_LABEL;
@@ -52,6 +52,9 @@ public class WizardArgumentPageView extends WizardPage {
 
   @Override
   public void createControl(Composite arg0) {
+    PluginContext pluginContext = PluginContext.getInstance();
+    this.controller = pluginContext.getWizardArgumentPageController();
+
     this.container = new Composite(arg0, SWT.NONE);
     this.arguments = controller.getArguments(this.givenCommand);
     GridLayout grid = new GridLayout();
