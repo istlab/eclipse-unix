@@ -1,0 +1,20 @@
+!gr.aueb.dmst.istlab.unixtools.core.model.CustomCommandModel
+commands: 
+- !gr.aueb.dmst.istlab.unixtools.core.model.CustomCommand
+   command: ls
+   name: List directory contents
+   outputFilename: 
+   hasConsoleOutput: true
+   shellDirectory: src/
+- !gr.aueb.dmst.istlab.unixtools.core.model.CustomCommand
+   command: uptime
+   name: Tell how long the system has been running
+   outputFilename: output.txt
+   hasConsoleOutput: false
+   shellDirectory: home/
+- !gr.aueb.dmst.istlab.unixtools.core.model.CustomCommand
+   command: grep
+   name: 
+   outputFilename: 
+   hasConsoleOutput: true
+   shellDirectory: 
