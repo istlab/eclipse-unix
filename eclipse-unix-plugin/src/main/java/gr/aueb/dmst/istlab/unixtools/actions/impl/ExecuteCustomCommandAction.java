@@ -10,6 +10,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
+import org.apache.log4j.Logger;
+
 import gr.aueb.dmst.istlab.unixtools.actions.Action;
 import gr.aueb.dmst.istlab.unixtools.actions.ActionExecutionCallback;
 import gr.aueb.dmst.istlab.unixtools.actions.DataActionResult;
@@ -18,6 +20,7 @@ import gr.aueb.dmst.istlab.unixtools.util.EclipsePluginUtil;
 
 public final class ExecuteCustomCommandAction implements Action<DataActionResult<InputStream>> {
 
+  private static final Logger logger = Logger.getLogger(ExecuteCustomCommandAction.class);
   private CustomCommand commandToExecute;
 
   public ExecuteCustomCommandAction(CustomCommand commandToExecute) {
@@ -42,11 +45,13 @@ public final class ExecuteCustomCommandAction implements Action<DataActionResult
       p.waitFor();
       InputStream cmdStream = p.getInputStream();
       result = new DataActionResult<>(cmdStream);
-    } catch (IOException ex) {
-      result = new DataActionResult<>(ex);
-      throw new IOException(ex);
-    } catch (InterruptedException ex) {
-      result = new DataActionResult<>(ex);
+    } catch (IOException e) {
+      logger.fatal("IO problem occurred while executing the command");
+      result = new DataActionResult<>(e);
+      throw new IOException(e);
+    } catch (InterruptedException e) {
+      logger.fatal("The current thread has been interrupted while executing the command");
+      result = new DataActionResult<>(e);
       throw new InterruptedException();
     }
 

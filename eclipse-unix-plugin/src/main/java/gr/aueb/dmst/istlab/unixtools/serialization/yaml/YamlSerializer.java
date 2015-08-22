@@ -12,6 +12,8 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.nio.charset.Charset;
 
+import org.apache.log4j.Logger;
+
 import com.esotericsoftware.yamlbeans.YamlException;
 import com.esotericsoftware.yamlbeans.YamlReader;
 import com.esotericsoftware.yamlbeans.YamlWriter;
@@ -21,6 +23,7 @@ import gr.aueb.dmst.istlab.unixtools.serialization.Serializer;
 
 public final class YamlSerializer<T> implements Serializer<T> {
 
+  private static final Logger logger = Logger.getLogger(YamlSerializer.class);
   private static final String ENCODING_NAME = "UTF-8";
 
   @Override
@@ -39,9 +42,9 @@ public final class YamlSerializer<T> implements Serializer<T> {
       } finally {
         ywriter.close();
       }
-    } catch (YamlException ex) {
-      throw new SerializationException(
-          "Problem occured while using the YamlWriter to serialize the data", ex);
+    } catch (YamlException e) {
+      logger.fatal("Problem occured while using the YamlWriter to serialize the data");
+      throw new SerializationException(e);
     }
   }
 
@@ -63,14 +66,15 @@ public final class YamlSerializer<T> implements Serializer<T> {
       } finally {
         yreader.close();
       }
-    } catch (ClassCastException ex) {
-      throw new SerializationException("Unexpected serialized type.", ex);
-    } catch (YamlException ex) {
-      throw new SerializationException(
-          "Problem occured while using the  YamlReader to deserialize the input data", ex);
-    } catch (IOException ex) {
-      throw new SerializationException(
-          "Problem occured while using the  YamlReader to access the serialized data", ex);
+    } catch (ClassCastException e) {
+      logger.fatal("Unexpected serialized type");
+      throw new SerializationException(e);
+    } catch (YamlException e) {
+      logger.fatal("Problem occured while using the  YamlReader to deserialize the input data");
+      throw new SerializationException(e);
+    } catch (IOException e) {
+      logger.fatal("Problem occured while using the  YamlReader to access the serialized data");
+      throw new SerializationException(e);
     }
   }
 

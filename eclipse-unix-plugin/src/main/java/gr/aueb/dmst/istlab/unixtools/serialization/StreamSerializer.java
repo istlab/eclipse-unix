@@ -9,10 +9,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+import org.apache.log4j.Logger;
+
 import gr.aueb.dmst.istlab.unixtools.io.IOStreamProvider;
 
 public final class StreamSerializer<T> {
 
+  private static final Logger logger = Logger.getLogger(StreamSerializer.class);
   private Serializer<T> serializer;
   private IOStreamProvider streamProvider;
 
@@ -33,8 +36,9 @@ public final class StreamSerializer<T> {
           out.close();
         }
       }
-    } catch (IOException ex) {
-      throw new SerializationException(ex);
+    } catch (IOException e) {
+      logger.fatal("Failed to deserialize the output stream");
+      throw new SerializationException(e);
     }
   }
 
@@ -44,15 +48,15 @@ public final class StreamSerializer<T> {
 
       try {
         in = this.streamProvider.createInputStream();
-
         return this.serializer.deserialize(in);
       } finally {
         if (in != null) {
           in.close();
         }
       }
-    } catch (IOException ex) {
-      throw new SerializationException(ex);
+    } catch (IOException e) {
+      logger.fatal("Failed to deserialize the input stream");
+      throw new SerializationException(e);
     }
   }
 }

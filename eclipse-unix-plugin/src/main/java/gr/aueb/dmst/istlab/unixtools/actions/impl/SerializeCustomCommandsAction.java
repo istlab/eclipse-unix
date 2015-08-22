@@ -5,6 +5,8 @@
 
 package gr.aueb.dmst.istlab.unixtools.actions.impl;
 
+import org.apache.log4j.Logger;
+
 import gr.aueb.dmst.istlab.unixtools.actions.Action;
 import gr.aueb.dmst.istlab.unixtools.actions.ActionExecutionCallback;
 import gr.aueb.dmst.istlab.unixtools.actions.VoidActionResult;
@@ -15,6 +17,7 @@ import gr.aueb.dmst.istlab.unixtools.dal.RepositoryFactory;
 
 public final class SerializeCustomCommandsAction implements Action<VoidActionResult> {
 
+  private static final Logger logger = Logger.getLogger(SerializeCustomCommandsAction.class);
   private CustomCommandModel model;
   private CustomCommandRepository customCommandRepository;
 
@@ -31,9 +34,10 @@ public final class SerializeCustomCommandsAction implements Action<VoidActionRes
 
     try {
       this.customCommandRepository.saveModel(model);
-    } catch (DataAccessException ex) {
-      result = new VoidActionResult(ex);
-      throw new DataAccessException(ex);
+    } catch (DataAccessException e) {
+      logger.fatal("Failed to serialize the custom commands");
+      result = new VoidActionResult(e);
+      throw new DataAccessException(e);
     }
 
     callback.onCommandExecuted(result);

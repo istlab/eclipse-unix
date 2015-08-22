@@ -5,6 +5,8 @@
 
 package gr.aueb.dmst.istlab.unixtools.actions.impl;
 
+import org.apache.log4j.Logger;
+
 import gr.aueb.dmst.istlab.unixtools.actions.Action;
 import gr.aueb.dmst.istlab.unixtools.actions.ActionExecutionCallback;
 import gr.aueb.dmst.istlab.unixtools.actions.VoidActionResult;
@@ -14,6 +16,7 @@ import gr.aueb.dmst.istlab.unixtools.importExport.ImportExportException;
 
 public final class ExportCustomCommandsFileAction implements Action<VoidActionResult> {
 
+  private static final Logger logger = Logger.getLogger(ExportCustomCommandsFileAction.class);
   private CustomCommandModel model;
   private CustomCommandImportExportHandler importExportHandler;
 
@@ -30,9 +33,10 @@ public final class ExportCustomCommandsFileAction implements Action<VoidActionRe
 
     try {
       this.importExportHandler.exportModel(model);
-    } catch (ImportExportException ex) {
-      result = new VoidActionResult(ex);
-      throw new ImportExportException(ex);
+    } catch (ImportExportException e) {
+      logger.fatal("Failed to export the custom commands");
+      result = new VoidActionResult(e);
+      throw new ImportExportException(e);
     }
 
     callback.onCommandExecuted(result);

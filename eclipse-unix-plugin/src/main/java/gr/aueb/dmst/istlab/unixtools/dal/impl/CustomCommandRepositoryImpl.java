@@ -5,6 +5,8 @@
 
 package gr.aueb.dmst.istlab.unixtools.dal.impl;
 
+import org.apache.log4j.Logger;
+
 import gr.aueb.dmst.istlab.unixtools.core.model.CustomCommandModel;
 import gr.aueb.dmst.istlab.unixtools.dal.CustomCommandRepository;
 import gr.aueb.dmst.istlab.unixtools.dal.DataAccessException;
@@ -15,6 +17,7 @@ import gr.aueb.dmst.istlab.unixtools.serialization.StreamSerializer;
 
 public final class CustomCommandRepositoryImpl implements CustomCommandRepository {
 
+  private static final Logger logger = Logger.getLogger(CustomCommandRepositoryImpl.class);
   private StreamSerializer<CustomCommandModel> streamSerializer;
 
   public CustomCommandRepositoryImpl(Serializer<CustomCommandModel> serializer,
@@ -26,8 +29,9 @@ public final class CustomCommandRepositoryImpl implements CustomCommandRepositor
   public CustomCommandModel getModel() throws DataAccessException {
     try {
       return this.streamSerializer.deserialize();
-    } catch (SerializationException ex) {
-      throw new DataAccessException(ex);
+    } catch (SerializationException e) {
+      logger.fatal("Failed to retrieve the custom command model");
+      throw new DataAccessException(e);
     }
   }
 
@@ -35,8 +39,9 @@ public final class CustomCommandRepositoryImpl implements CustomCommandRepositor
   public void saveModel(CustomCommandModel model) throws DataAccessException {
     try {
       this.streamSerializer.serialize(model);
-    } catch (SerializationException ex) {
-      throw new DataAccessException(ex);
+    } catch (SerializationException e) {
+      logger.fatal("Failed to save the custom command model");
+      throw new DataAccessException(e);
     }
   }
 

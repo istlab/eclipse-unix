@@ -5,6 +5,8 @@
 
 package gr.aueb.dmst.istlab.unixtools.dal.impl;
 
+import org.apache.log4j.Logger;
+
 import gr.aueb.dmst.istlab.unixtools.core.model.CommandPrototypeModel;
 import gr.aueb.dmst.istlab.unixtools.dal.CommandPrototypeRepository;
 import gr.aueb.dmst.istlab.unixtools.dal.DataAccessException;
@@ -15,6 +17,7 @@ import gr.aueb.dmst.istlab.unixtools.serialization.StreamSerializer;
 
 public final class CommandPrototypeRepositoryImpl implements CommandPrototypeRepository {
 
+  private static final Logger logger = Logger.getLogger(CommandPrototypeRepositoryImpl.class);
   private StreamSerializer<CommandPrototypeModel> streamSerializer;
 
   public CommandPrototypeRepositoryImpl(Serializer<CommandPrototypeModel> serializer,
@@ -26,8 +29,9 @@ public final class CommandPrototypeRepositoryImpl implements CommandPrototypeRep
   public CommandPrototypeModel getModel() throws DataAccessException {
     try {
       return this.streamSerializer.deserialize();
-    } catch (SerializationException ex) {
-      throw new DataAccessException(ex);
+    } catch (SerializationException e) {
+      logger.fatal("Failed to retrieve the command prototype model");
+      throw new DataAccessException(e);
     }
   }
 
@@ -35,8 +39,9 @@ public final class CommandPrototypeRepositoryImpl implements CommandPrototypeRep
   public void saveModel(CommandPrototypeModel model) throws DataAccessException {
     try {
       this.streamSerializer.serialize(model);
-    } catch (SerializationException ex) {
-      throw new DataAccessException(ex);
+    } catch (SerializationException e) {
+      logger.fatal("Failed to save the command prototype model");
+      throw new DataAccessException(e);
     }
   }
 
