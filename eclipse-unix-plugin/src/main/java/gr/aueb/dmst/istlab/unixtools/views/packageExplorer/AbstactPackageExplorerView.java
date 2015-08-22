@@ -276,8 +276,8 @@ public abstract class AbstactPackageExplorerView extends CompoundContributionIte
                   }
                 }
               }
-            } catch (IOException io) {
-              logger.fatal("Error in command's " + customCommand.getName() + " output redirection");
+            } catch (IOException e) {
+              logger.fatal("IO error while executing " + customCommand.getName());
             } finally {
               try {
                 if (br != null) {
@@ -294,10 +294,11 @@ public abstract class AbstactPackageExplorerView extends CompoundContributionIte
             }
           }
         });
-      } catch (IOException ex) {
-        logger.fatal("IOException when executing command " + customCommand.getName());
+      } catch (IOException e) {
+        logger.fatal("IO error  while executing command " + customCommand.getName());
       } catch (InterruptedException e) {
-        logger.fatal("Command " + customCommand.getName() + " execution was interrupted");
+        logger.fatal("The current thread has been interrupted while executing the command "
+            + customCommand.getName());
       }
 
       // finally add the executed command to the recently used list

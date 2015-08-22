@@ -81,7 +81,7 @@ public class PropertiesLoader {
       LOGGER_CONFIG_FILE_PATH = properties.getProperty("LoggerConfigFilePath");
 
     } catch (IOException e) {
-      logger.fatal("Failed to load properties file !!!");
+      logger.fatal("Failed to load properties file");
     }
   }
 
@@ -94,7 +94,7 @@ public class PropertiesLoader {
       try {
         in.close();
       } catch (IOException e) {
-        logger.fatal("Failed to close properties file !!!");
+        logger.fatal("Failed to close properties file");
       }
     }
   }

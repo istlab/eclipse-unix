@@ -19,7 +19,6 @@ import gr.aueb.dmst.istlab.unixtools.core.model.CommandPrototypeModel;
 import gr.aueb.dmst.istlab.unixtools.core.model.CustomCommandModel;
 import gr.aueb.dmst.istlab.unixtools.dal.DataAccessException;
 import gr.aueb.dmst.istlab.unixtools.factories.ActionFactorySingleton;
-import gr.aueb.dmst.istlab.unixtools.util.PropertiesLoader;
 
 public class PluginContext {
 
@@ -83,8 +82,8 @@ public class PluginContext {
         @Override
         public void onCommandExecuted(VoidActionResult result) {}
       });
-    } catch (DataAccessException ex) {
-      logger.fatal("Failed to deserialize " + PropertiesLoader.DEFAULT_PROTOTYPE_COMMAND_PATH);
+    } catch (DataAccessException e) {
+      logger.fatal("Failed to deserialize the command prototypes");
     }
   }
 
