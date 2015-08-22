@@ -351,13 +351,8 @@ public class PreferencesTableView extends AbstractPreferencesPageView {
     @Override
     public void widgetSelected(SelectionEvent arg0) {
       CustomCommand commandToAdd = handleAddButton();
-
-      if (commandToAdd != null) {
-        controller.addCustomCommand(commandToAdd);
-
-        refresh();
-        WizardMainPageController.getCustomCommandsNames().add(commandToAdd.getName());
-      }
+      controller.addCustomCommand(commandToAdd);
+      refresh();
     }
   }
 
@@ -421,12 +416,8 @@ public class PreferencesTableView extends AbstractPreferencesPageView {
     @Override
     public void widgetSelected(SelectionEvent arg0) {
       String filename = handleImportButton();
-
-      if (filename != null) {
-        controller.importCustomCommand(filename);
-
-        refresh();
-      }
+      controller.importCustomCommand(filename);
+      refresh();
     }
   }
 
@@ -437,10 +428,7 @@ public class PreferencesTableView extends AbstractPreferencesPageView {
     @Override
     public void widgetSelected(SelectionEvent arg0) {
       String filename = handleExportButton();
-
-      if (filename != null) {
-        controller.exportCustomCommand(filename);
-      }
+      controller.exportCustomCommand(filename);
     }
   }
 

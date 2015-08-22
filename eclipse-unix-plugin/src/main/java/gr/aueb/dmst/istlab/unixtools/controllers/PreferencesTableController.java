@@ -5,7 +5,6 @@
 
 package gr.aueb.dmst.istlab.unixtools.controllers;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -52,8 +51,8 @@ public class PreferencesTableController {
           @Override
           public void onCommandExecuted(VoidActionResult result) {}
         });
-      } catch (DataAccessException ex) {
-        logger.fatal("Failed to deserialize " + PropertiesLoader.DEFAULT_CUSTOM_COMMAND_PATH);
+      } catch (DataAccessException e) {
+        logger.fatal("Failed to deserialize the custom commands");
       }
 
       // we mustn't forget to load the nicknames in order to avoid duplicates
@@ -74,19 +73,23 @@ public class PreferencesTableController {
         @Override
         public void onCommandExecuted(VoidActionResult result) {}
       });
-    } catch (DataAccessException ex) {
-      logger.fatal("Failed to serialize" + PropertiesLoader.DEFAULT_CUSTOM_COMMAND_PATH);
+    } catch (DataAccessException e) {
+      logger.fatal("Failed to serialize the custom commands");
     }
   }
 
   public void addCustomCommand(CustomCommand commandToAdd) {
-    AddCustomCommandAction action = (AddCustomCommandAction) ActionFactorySingleton.INSTANCE
-        .createCustomCommandAddAction(this.model, commandToAdd);
+    if (commandToAdd != null) {
+      AddCustomCommandAction action = (AddCustomCommandAction) ActionFactorySingleton.INSTANCE
+          .createCustomCommandAddAction(this.model, commandToAdd);
 
-    action.execute(new ActionExecutionCallback<VoidActionResult>() {
-      @Override
-      public void onCommandExecuted(VoidActionResult result) {}
-    });
+      action.execute(new ActionExecutionCallback<VoidActionResult>() {
+        @Override
+        public void onCommandExecuted(VoidActionResult result) {}
+      });
+
+      WizardMainPageController.getCustomCommandsNames().add(commandToAdd.getName());
+    }
   }
 
   public void editCustomCommand(CustomCommand commandToUpdate, CustomCommand updatedCommand) {
@@ -114,44 +117,48 @@ public class PreferencesTableController {
   }
 
   public void importCustomCommand(String filename) {
-    CustomCommandImportExportHandler importButtonsHandler =
-        new CustomCommandImportExportHandlerImpl(new YamlSerializer<CustomCommandModel>(),
-            new FileStreamProvider(filename));
+    if (filename != null) {
+      CustomCommandImportExportHandler importButtonsHandler =
+          new CustomCommandImportExportHandlerImpl(new YamlSerializer<CustomCommandModel>(),
+              new FileStreamProvider(filename));
 
-    ImportCustomCommandsFileAction action =
-        (ImportCustomCommandsFileAction) ActionFactorySingleton.INSTANCE
-            .createImportCustomCommandsFileAction(importButtonsHandler, this.model);
+      ImportCustomCommandsFileAction action =
+          (ImportCustomCommandsFileAction) ActionFactorySingleton.INSTANCE
+              .createImportCustomCommandsFileAction(importButtonsHandler, this.model);
 
-    try {
-      action.execute(new ActionExecutionCallback<VoidActionResult>() {
-        @Override
-        public void onCommandExecuted(VoidActionResult result) {}
-      });
-    } catch (ImportExportException ex) {
-      logger.fatal("Failed to import " + filename);
+      try {
+        action.execute(new ActionExecutionCallback<VoidActionResult>() {
+          @Override
+          public void onCommandExecuted(VoidActionResult result) {}
+        });
+      } catch (ImportExportException e) {
+        logger.fatal("Failed to import the custom commands");
+      }
     }
   }
 
   public void exportCustomCommand(String filename) {
-    CustomCommandImportExportHandler exportButtonsHandler =
-        new CustomCommandImportExportHandlerImpl(new YamlSerializer<CustomCommandModel>(),
-            new FileStreamProvider(filename));
+    if (filename != null) {
+      CustomCommandImportExportHandler exportButtonsHandler =
+          new CustomCommandImportExportHandlerImpl(new YamlSerializer<CustomCommandModel>(),
+              new FileStreamProvider(filename));
 
-    ExportCustomCommandsFileAction action =
-        (ExportCustomCommandsFileAction) ActionFactorySingleton.INSTANCE
-            .createExportCustomCommandsFileAction(exportButtonsHandler, this.model);
+      ExportCustomCommandsFileAction action =
+          (ExportCustomCommandsFileAction) ActionFactorySingleton.INSTANCE
+              .createExportCustomCommandsFileAction(exportButtonsHandler, this.model);
 
-    try {
-      action.execute(new ActionExecutionCallback<VoidActionResult>() {
-        @Override
-        public void onCommandExecuted(VoidActionResult result) {}
-      });
-    } catch (ImportExportException ex) {
-      logger.fatal("Failed to export " + filename);
+      try {
+        action.execute(new ActionExecutionCallback<VoidActionResult>() {
+          @Override
+          public void onCommandExecuted(VoidActionResult result) {}
+        });
+      } catch (ImportExportException e) {
+        logger.fatal("Failed to export the custom commands");
+      }
     }
   }
 
-  public void saveCustomCommands(ArrayList<CustomCommand> newCommands) {
+  public void saveCustomCommands(List<CustomCommand> newCommands) {
     this.model.setCommands(newCommands);
   }
 
