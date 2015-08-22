@@ -8,6 +8,7 @@ package gr.aueb.dmst.istlab.unixtools.plugin;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
+import gr.aueb.dmst.istlab.unixtools.util.EclipsePluginUtil;
 import gr.aueb.dmst.istlab.unixtools.util.LoggerUtil;
 import gr.aueb.dmst.istlab.unixtools.util.PropertiesLoader;
 
@@ -29,7 +30,8 @@ public class Activator extends AbstractUIPlugin {
     // load plugin's properties
     super.start(context);
     plugin = this;
-    LoggerUtil.configureLogger();
+    LoggerUtil.configureLogger(
+        EclipsePluginUtil.getPluginResourcePath("src/main/resources/log4j.properties"));
     PropertiesLoader.loadPropertiesFile();
     pluginContext = PluginContext.getInstance();
     pluginContext.init();

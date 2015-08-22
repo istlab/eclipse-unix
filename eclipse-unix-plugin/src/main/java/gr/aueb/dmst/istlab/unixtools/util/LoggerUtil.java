@@ -5,8 +5,11 @@
 
 package gr.aueb.dmst.istlab.unixtools.util;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
 import java.util.Properties;
 
 import org.apache.log4j.Logger;
@@ -15,15 +18,37 @@ import org.apache.log4j.PropertyConfigurator;
 public final class LoggerUtil {
 
   private static final Logger logger = Logger.getLogger(LoggerUtil.class);
-  private static final String log4JPropertyFile = "src/main/resources/log4j.properties";
 
   private LoggerUtil() {}
 
-  public static void configureLogger() {
+  public static void configureLogger(String filename) {
+    InputStream in = null;
+
+    try {
+      in = new FileInputStream(filename);
+    } catch (FileNotFoundException e) {
+      logger.error("Log file can't be opened");
+    }
+
+    configureLogger(in);
+  }
+
+  public static void configureLogger(URL fileUrl) {
+    InputStream in = null;
+
+    try {
+      in = fileUrl.openStream();
+    } catch (IOException e) {
+      logger.error("Log file can't be opened");
+    }
+
+    configureLogger(in);
+  }
+
+  private static void configureLogger(InputStream in) {
     Properties p = new Properties();
 
     try {
-      InputStream in = EclipsePluginUtil.getPluginResourcePath(log4JPropertyFile).openStream();
       p.load(in);
 
       PropertyConfigurator.configure(p);
