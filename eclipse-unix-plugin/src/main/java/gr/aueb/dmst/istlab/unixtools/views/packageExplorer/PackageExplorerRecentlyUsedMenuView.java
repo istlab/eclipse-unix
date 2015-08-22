@@ -14,16 +14,16 @@ import org.eclipse.ui.handlers.IHandlerActivation;
 import org.eclipse.ui.menus.CommandContributionItem;
 import org.eclipse.ui.menus.CommandContributionItemParameter;
 
-import gr.aueb.dmst.istlab.unixtools.controllers.PackageExplorerMainMenuController;
+import gr.aueb.dmst.istlab.unixtools.controllers.PackageExplorerRecentlyUsedMenuController;
 import gr.aueb.dmst.istlab.unixtools.plugin.PluginContext;
 
-public class PackageExplorerRecentlyUsedMenuView extends PackageExplorerMainMenuView {
+public class PackageExplorerRecentlyUsedMenuView extends AbstactPackageExplorerView {
 
-  private PackageExplorerMainMenuController controller;
+  private PackageExplorerRecentlyUsedMenuController controller;
 
   public PackageExplorerRecentlyUsedMenuView() {
     PluginContext pluginContext = PluginContext.getInstance();
-    this.controller = pluginContext.getPackageExplorerMainMenuController();
+    this.controller = pluginContext.getPackageExplorerRecentlyUsedMenuController();
     this.setCategory("gr.cs.aueb.dmst.istlab.unixtools.recentlyUsedCategory");
     this.setIdentity("gr.cs.aueb.dmst.istlab.unixtools.recentlyUsed");
     setCommandID(0);
@@ -55,4 +55,5 @@ public class PackageExplorerRecentlyUsedMenuView extends PackageExplorerMainMenu
 
     return contributionItemList.toArray(new CommandContributionItem[contributionItemList.size()]);
   }
+
 }

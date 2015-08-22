@@ -11,6 +11,7 @@ import gr.aueb.dmst.istlab.unixtools.actions.ActionExecutionCallback;
 import gr.aueb.dmst.istlab.unixtools.actions.VoidActionResult;
 import gr.aueb.dmst.istlab.unixtools.actions.impl.DeserializeCommandPrototypesAction;
 import gr.aueb.dmst.istlab.unixtools.controllers.PackageExplorerMainMenuController;
+import gr.aueb.dmst.istlab.unixtools.controllers.PackageExplorerRecentlyUsedMenuController;
 import gr.aueb.dmst.istlab.unixtools.controllers.PreferencesTableController;
 import gr.aueb.dmst.istlab.unixtools.controllers.WizardArgumentPageController;
 import gr.aueb.dmst.istlab.unixtools.controllers.WizardMainPageController;
@@ -30,6 +31,7 @@ public class PluginContext {
   private WizardMainPageController wizardMainPageController;
   private WizardArgumentPageController wizardArgumentPageController;
   private PackageExplorerMainMenuController packageExplorerMainMenuController;
+  private PackageExplorerRecentlyUsedMenuController packageExplorerRecentlyUsedMenuController;
 
   private PluginContext() {}
 
@@ -47,6 +49,8 @@ public class PluginContext {
         new WizardArgumentPageController(this.commandPrototypeModel);
     this.packageExplorerMainMenuController =
         new PackageExplorerMainMenuController(this.customCommandModel);
+    this.packageExplorerRecentlyUsedMenuController =
+        new PackageExplorerRecentlyUsedMenuController();
   }
 
   public PreferencesTableController getPreferencesTableController() {
@@ -63,6 +67,10 @@ public class PluginContext {
 
   public PackageExplorerMainMenuController getPackageExplorerMainMenuController() {
     return packageExplorerMainMenuController;
+  }
+
+  public PackageExplorerRecentlyUsedMenuController getPackageExplorerRecentlyUsedMenuController() {
+    return packageExplorerRecentlyUsedMenuController;
   }
 
   private void deserializeCommandPrototypes() {
