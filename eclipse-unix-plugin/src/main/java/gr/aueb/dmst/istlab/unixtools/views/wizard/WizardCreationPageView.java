@@ -10,6 +10,8 @@ import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Shell;
 
+import gr.aueb.dmst.istlab.unixtools.util.ResourceFile;
+
 /**
  * This class represents the wizard used to guide the user through the custom command creation
  * process . It has 3 pages : a Command Page where the user can specify the newly added command's
@@ -34,8 +36,8 @@ public class WizardCreationPageView extends Wizard {
   private static String arguments;
   private static String name;
   private static String shellDirectory;
-  private static String resources;
-  private static String output;
+  private static boolean outputToScreen = true;
+  private static String lastOutputFilePath;
 
   public WizardCreationPageView() {
     super();
@@ -92,8 +94,10 @@ public class WizardCreationPageView extends Wizard {
     command += mainPageView.getCommand() + " ";
     command += argumentPageView.getSelectedArguments() + " ";
 
-    if (resourcePageView.getInputFile().length() != 0) {
-      command += " > " + resourcePageView.getInputFile();
+    if (resourcePageView.getResourceFiles().size() != 0) {
+      for (ResourceFile rf : resourcePageView.getResourceFiles()) {
+        command += rf.getBashRepresentation();
+      }
     }
 
     if (mainPageView.pipe() || argumentPageView.pipe() || resourcePageView.pipe()) {
@@ -104,9 +108,15 @@ public class WizardCreationPageView extends Wizard {
       WizardDialog wizardDialog = new WizardDialog(this.getShell(), new WizardCreationPageView());
       wizardDialog.open();
     } else {
+      for (int i = resourcePageView.getResourceFiles().size() - 1; i > -1; --i) {
+        if (!resourcePageView.getResourceFiles().get(i).isInput()) {
+          lastOutputFilePath = resourcePageView.getResourceFiles().get(i).getPath();
+          outputToScreen = false;
+          break;
+        }
+      }
       save(this.argumentPageView.getSelectedArguments(), this.mainPageView.getNickname(),
-          this.mainPageView.getShellStartDirectory(), this.resourcePageView.getInputFile(),
-          this.resourcePageView.getOutputFile());
+          this.mainPageView.getShellStartDirectory());
     }
 
     return true;
@@ -120,8 +130,6 @@ public class WizardCreationPageView extends Wizard {
     actualCommand = "";
     arguments = "";
     shellDirectory = "";
-    resources = "";
-    output = "";
     piped = false;
   }
 
@@ -131,19 +139,16 @@ public class WizardCreationPageView extends Wizard {
    * only the last is taken into consideration. Same goes with shell directory.
    */
   private static void save(String args, String customCommandName,
-      String customCommandShellDirectory, String resource, String customCommandOutputFilename) {
+      String customCommandShellDirectory) {
     if (!piped) {
       actualCommand = command;
       arguments = args;
       name = customCommandName;
       shellDirectory = customCommandShellDirectory;
-      resources = resource;
-      output = customCommandOutputFilename;
     } else {
       actualCommand = command;
       name = customCommandName;
       shellDirectory = customCommandShellDirectory;
-      output = customCommandOutputFilename;
     }
   }
 
@@ -174,10 +179,6 @@ public class WizardCreationPageView extends Wizard {
     return arguments;
   }
 
-  public String getResource() {
-    return resources;
-  }
-
   public String getShellDirectory() {
     return shellDirectory;
   }
@@ -186,11 +187,15 @@ public class WizardCreationPageView extends Wizard {
     return name;
   }
 
-  public String getOutputFile() {
-    return output;
-  }
-
   public boolean piped() {
     return piped;
+  }
+
+  public String getLastOutputFile() {
+    return lastOutputFilePath;
+  }
+
+  public boolean isOutputToScreen() {
+    return outputToScreen;
   }
 }

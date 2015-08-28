@@ -58,7 +58,6 @@ public abstract class AbstractPreferencesPageView extends FieldEditorPreferenceP
   protected void initiliaze() {
     IPreferenceStore store = this.doGetPreferenceStore();
     store.setDefault(PropertiesLoader.SHELL_PATH_KEY, PropertiesLoader.DEFAULT_SHELL_PATH);
-    store.setDefault(PropertiesLoader.OUTPUT_KEY, PropertiesLoader.DEFAULT_COMMAND_OUTPUT);
     this.refresh();
   }
 

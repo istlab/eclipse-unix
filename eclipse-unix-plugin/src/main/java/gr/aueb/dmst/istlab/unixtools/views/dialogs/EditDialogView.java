@@ -3,7 +3,7 @@
  * that can be found in the LICENSE file.
  */
 
-package gr.aueb.dmst.istlab.unixtools.views.wizard;
+package gr.aueb.dmst.istlab.unixtools.views.dialogs;
 
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
@@ -16,7 +16,6 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.DirectoryDialog;
-import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
@@ -35,13 +34,10 @@ public class EditDialogView extends TitleAreaDialog {
   private Text commandText;
   private Text nameText;
   private Text shellDirectoryText;
-  private Text outputFilenameText;
   private Button shellButton;
-  private Button outputButton;
   private String command;
   private String name;
   private String shellDirectory;
-  private String outputFilename;
 
   public EditDialogView(Shell parentShell) {
     super(parentShell);
@@ -67,7 +63,6 @@ public class EditDialogView extends TitleAreaDialog {
     this.command = commandText.getText();
     this.name = nameText.getText();
     this.shellDirectory = shellDirectoryText.getText();
-    this.outputFilename = outputFilenameText.getText();
   }
 
   @Override
@@ -86,30 +81,8 @@ public class EditDialogView extends TitleAreaDialog {
     Label label2 = new Label(container, SWT.NONE);
     label2.setText("");
     createShell(container);
-    createOutput(container);
 
     return area;
-  }
-
-  /**
-   * This method creates the shell's path field
-   *
-   * @param container
-   */
-  private void createOutput(final Composite container) {
-    Label output = new Label(container, SWT.NONE);
-    output.setText("Output path  : ");
-
-    GridData data = new GridData();
-    data.grabExcessHorizontalSpace = true;
-    data.horizontalAlignment = GridData.FILL;
-
-    outputFilenameText = new Text(container, SWT.BORDER);
-    outputFilenameText.setLayoutData(data);
-    outputButton = new Button(container, SWT.PUSH);
-    outputButton.setText("Browse");
-
-    outputButton.addSelectionListener(new AddOutputButtonSelectionListener());
   }
 
   /**
@@ -176,12 +149,10 @@ public class EditDialogView extends TitleAreaDialog {
    * @param value3
    * @param value4
    */
-  public void setDefaultValues(String command, String name, String shellDirectory,
-      String outputFilename) {
+  public void setDefaultValues(String command, String name, String shellDirectory) {
     this.commandText.setText(command);
     this.nameText.setText(name);
     this.shellDirectoryText.setText(shellDirectory);
-    this.outputFilenameText.setText(outputFilename);
   }
 
   /**
@@ -209,29 +180,6 @@ public class EditDialogView extends TitleAreaDialog {
    */
   public String getShellPath() {
     return this.shellDirectory;
-  }
-
-  /**
-   * Return the output file
-   *
-   * @return
-   */
-  public String getOutputFile() {
-    return this.outputFilename;
-  }
-
-  private class AddOutputButtonSelectionListener extends SelectionAdapter {
-    @Override
-    public void widgetSelected(SelectionEvent event) {
-      // User has selected to open a single file
-      FileDialog dlg = new FileDialog(getShell(), SWT.OPEN);
-      String dir = dlg.open();
-
-      if (dir != null) {
-        // Set the text box to the new selection
-        outputFilenameText.setText(dir);
-      }
-    }
   }
 
   private class AddShellButtonSelectionListener extends SelectionAdapter {

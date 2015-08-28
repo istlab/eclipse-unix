@@ -14,7 +14,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.List;
 
-import org.apache.commons.lang3.SystemUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.Category;
@@ -268,12 +267,7 @@ public abstract class AbstactPackageExplorerView extends CompoundContributionIte
 
                 while ((line = br.readLine()) != null) {
                   bw.write(line);
-
-                  if (SystemUtils.IS_OS_WINDOWS) {
-                    bw.write("\r\n");
-                  } else if (SystemUtils.IS_OS_LINUX) {
-                    bw.write("\n");
-                  }
+                  bw.write(System.getProperty("line.separator"));
                 }
               }
             } catch (IOException e) {

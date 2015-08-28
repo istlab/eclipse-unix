@@ -5,19 +5,23 @@
 
 package gr.aueb.dmst.istlab.unixtools.views.wizard;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
-import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Text;
 
 import gr.aueb.dmst.istlab.unixtools.util.PropertiesLoader;
+import gr.aueb.dmst.istlab.unixtools.util.ResourceFile;
+import gr.aueb.dmst.istlab.unixtools.views.dialogs.DisplayResourcesDialog;
+import gr.aueb.dmst.istlab.unixtools.views.dialogs.ResourceFileDialog;
 
 /**
  * This class represents the Resource wizard page . In this page the user can choose an input file
@@ -26,16 +30,13 @@ import gr.aueb.dmst.istlab.unixtools.util.PropertiesLoader;
  */
 public class WizardResourcePageView extends WizardPage {
 
-  private Label label;
-  private Label output;
   private Label info;
-  private Button button;
-  private Button outputButton;
+  private Button addFileButton;
+  private Button display;
   private Button pipe;
   private Composite container;
   private final String labelText;
-  private Text inputFileName;
-  private Text outputFileName;
+  private List<ResourceFile> files = new ArrayList<ResourceFile>();
 
   public WizardResourcePageView() {
     super("Input resource and shell start directory");
@@ -54,51 +55,17 @@ public class WizardResourcePageView extends WizardPage {
     this.info = new Label(this.container, SWT.NONE);
     this.info.setText(this.labelText);
 
-    this.label = new Label(this.container, SWT.NONE);
-    this.label.setText("Input file's path : ");
+    this.addFileButton = new Button(container, SWT.PUSH);
+    this.addFileButton.setText("Add Resource");
+    this.addFileButton.addSelectionListener(new AddResourceFileListener());
 
-    this.inputFileName = new Text(this.container, SWT.BORDER);
-    GridData data = new GridData(GridData.FILL_HORIZONTAL);
-    data.horizontalSpan = 4;
-    this.inputFileName.setLayoutData(data);
-
-    this.button = new Button(this.container, SWT.PUSH);
-    this.button.setText("Browse");
-    this.button.addSelectionListener(new AddInputResourceSelectionListener());
-
-    this.output = new Label(this.container, SWT.NONE);
-    this.output.setText("Output file's path : ");
-
-    this.outputFileName = new Text(this.container, SWT.BORDER);
-    GridData gd = new GridData(GridData.FILL_HORIZONTAL);
-    gd.horizontalSpan = 4;
-    this.inputFileName.setLayoutData(gd);
-
-    this.outputButton = new Button(this.container, SWT.PUSH);
-    this.outputButton.setText("Browse");
-    this.outputButton.addSelectionListener(new AddOutputResourceSelectionListener());
+    this.display = new Button(container, SWT.PUSH);
+    this.display.setText("View Resources");
+    this.display.addSelectionListener(new DisplayFilesListener());
 
     this.pipe = new Button(this.container, SWT.CHECK);
     this.pipe.setText("Click to add pipe");
     this.setControl(this.container);
-  }
-
-  /**
-   * Return the input file given from the user
-   *
-   * @return
-   */
-  public String getInputFile() {
-    return this.inputFileName.getText();
-  }
-
-  /**
-   * Return the output file given from the user
-   *
-   * @return
-   */
-  public String getOutputFile() {
-    return this.outputFileName.getText();
   }
 
   /**
@@ -110,36 +77,38 @@ public class WizardResourcePageView extends WizardPage {
     return ((this.pipe != null) ? this.pipe.getSelection() : false);
   }
 
-  private class AddInputResourceSelectionListener implements SelectionListener {
-    @Override
-    public void widgetDefaultSelected(SelectionEvent e) {}
-
-    @Override
-    public void widgetSelected(SelectionEvent event) {
-      // User has selected to open a single file
-      FileDialog fileDialog = new FileDialog(container.getShell(), SWT.OPEN);
-      String filename = fileDialog.open();
-
-      if (filename != null) {
-        inputFileName.setText(filename);
-      }
-    }
+  public List<ResourceFile> getResourceFiles() {
+    return this.files;
   }
 
-  private class AddOutputResourceSelectionListener implements SelectionListener {
-    @Override
-    public void widgetDefaultSelected(SelectionEvent e) {}
+  private class AddResourceFileListener implements SelectionListener {
 
     @Override
-    public void widgetSelected(SelectionEvent event) {
-      // User has selected to open a single file
-      FileDialog fileDialog = new FileDialog(container.getShell(), SWT.OPEN);
-      String filename = fileDialog.open();
-
-      if (filename != null) {
-        outputFileName.setText(filename);
+    public void widgetSelected(SelectionEvent e) {
+      ResourceFileDialog rfd = new ResourceFileDialog(WizardResourcePageView.this.getShell());
+      if (rfd.open() == Window.OK) {
+        files.add(new ResourceFile(rfd.getFilePath(), rfd.isInput()));
       }
     }
+
+    @Override
+    public void widgetDefaultSelected(SelectionEvent e) {}
+  }
+
+  private class DisplayFilesListener implements SelectionListener {
+
+    @Override
+    public void widgetSelected(SelectionEvent e) {
+      DisplayResourcesDialog drd =
+          new DisplayResourcesDialog(WizardResourcePageView.this.getShell(), files);
+      if (drd.open() == Window.OK) {
+        files.clear();
+        files.addAll(drd.getUpdatedFileList());
+      }
+    }
+
+    @Override
+    public void widgetDefaultSelected(SelectionEvent e) {}
   }
 
 }

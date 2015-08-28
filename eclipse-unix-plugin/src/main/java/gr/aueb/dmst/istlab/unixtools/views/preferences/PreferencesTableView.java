@@ -6,6 +6,7 @@
 package gr.aueb.dmst.istlab.unixtools.views.preferences;
 
 import java.util.ArrayList;
+import java.util.StringTokenizer;
 
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -33,7 +34,7 @@ import gr.aueb.dmst.istlab.unixtools.controllers.WizardMainPageController;
 import gr.aueb.dmst.istlab.unixtools.core.model.CustomCommand;
 import gr.aueb.dmst.istlab.unixtools.plugin.PluginContext;
 import gr.aueb.dmst.istlab.unixtools.util.PropertiesLoader;
-import gr.aueb.dmst.istlab.unixtools.views.wizard.EditDialogView;
+import gr.aueb.dmst.istlab.unixtools.views.dialogs.EditDialogView;
 import gr.aueb.dmst.istlab.unixtools.views.wizard.WizardCreationPageView;
 
 /**
@@ -176,13 +177,8 @@ public class PreferencesTableView extends AbstractPreferencesPageView {
       commandToAdd.setCommand(wizard.getActualCommand());
       commandToAdd.setName(wizard.getNickname());
       commandToAdd.setShellDirectory(wizard.getShellDirectory());
-
-      if (wizard.getOutputFile().isEmpty() || wizard.getOutputFile().length() == 0) {
-        commandToAdd.setHasConsoleOutput(true);
-      } else {
-        commandToAdd.setHasConsoleOutput(false);
-        commandToAdd.setOutputFilename(wizard.getOutputFile());
-      }
+      commandToAdd.setHasConsoleOutput(wizard.isOutputToScreen());
+      commandToAdd.setOutputFilename(wizard.getLastOutputFile());
 
       this.changed = true;
     }
@@ -217,8 +213,7 @@ public class PreferencesTableView extends AbstractPreferencesPageView {
 
     dialog.setDefaultValues(this.customCommandsTable.getItem(selection).getText(0),
         this.customCommandsTable.getItem(selection).getText(1),
-        this.customCommandsTable.getItem(selection).getText(2),
-        this.customCommandsTable.getItem(selection).getText(3));
+        this.customCommandsTable.getItem(selection).getText(2));
 
     if (dialog.open() == Window.OK) {
       editedInfo = new String[5];
@@ -226,7 +221,6 @@ public class PreferencesTableView extends AbstractPreferencesPageView {
       editedInfo[1] = dialog.getCommand();
       editedInfo[2] = dialog.getName();
       editedInfo[3] = dialog.getShellPath();
-      editedInfo[4] = dialog.getOutputFile();
 
       this.changed = true;
     }
@@ -288,11 +282,11 @@ public class PreferencesTableView extends AbstractPreferencesPageView {
         customCommand.setName(items[i].getText(1));
         customCommand.setShellDirectory(items[i].getText(2));
 
-        if (items[i].getText(3).isEmpty()) {
+        if (this.getEditedCommandsOutputFile(items[i].getText(0)).isEmpty()) {
           customCommand.setHasConsoleOutput(true);
         } else {
           customCommand.setHasConsoleOutput(false);
-          customCommand.setOutputFilename(items[i].getText(3));
+          customCommand.setOutputFilename(this.getEditedCommandsOutputFile(items[i].getText(0)));
         }
 
         newCommands.add(customCommand);
@@ -305,9 +299,37 @@ public class PreferencesTableView extends AbstractPreferencesPageView {
     return true;
   }
 
+  /**
+   * Return the last output file of the given command or an empty string if the command outputs to
+   * the screen
+   *
+   * @param actualCommand
+   * @return
+   */
+  private String getEditedCommandsOutputFile(String actualCommand) {
+    // get the command's pipes
+    StringTokenizer tokenizer = new StringTokenizer(actualCommand, "|");
+    String lastPipe = null;
+    // get the last pipe
+    while (tokenizer.hasMoreTokens()) {
+      lastPipe = tokenizer.nextToken();
+    }
+    tokenizer = new StringTokenizer(lastPipe, ">");
+    // if countTokens() == 1 means we dont have any output files
+    if (tokenizer.countTokens() == 1) {
+      return "";
+    } else {
+      String lastFile = null;
+      // otherwise get the last output file
+      while (tokenizer.hasMoreTokens()) {
+        lastFile = tokenizer.nextToken();
+      }
+      return lastFile.trim();
+    }
+  }
+
   @Override
   protected void createFieldEditors() {}
-
 
   @Override
   public void refresh() {
@@ -324,14 +346,6 @@ public class PreferencesTableView extends AbstractPreferencesPageView {
       item.setForeground(1, Display.getCurrent().getSystemColor(SWT.COLOR_BLACK));
       item.setText(2, customCommand.getShellDirectory());
       item.setForeground(2, Display.getCurrent().getSystemColor(SWT.COLOR_BLACK));
-
-      if (customCommand.getHasConsoleOutput()) {
-        item.setText(3, "");
-        item.setForeground(3, Display.getCurrent().getSystemColor(SWT.COLOR_BLACK));
-      } else {
-        item.setText(3, customCommand.getOutputFilename());
-        item.setForeground(3, Display.getCurrent().getSystemColor(SWT.COLOR_BLACK));
-      }
     }
 
     for (int i = 0; i < this.customCommandsTable.getColumnCount(); ++i) {
@@ -373,11 +387,11 @@ public class PreferencesTableView extends AbstractPreferencesPageView {
         customCommand.setName(editedInfo[2]);
         customCommand.setShellDirectory(editedInfo[3]);
 
-        if (editedInfo[4].isEmpty()) {
+        if (getEditedCommandsOutputFile(editedInfo[1]).isEmpty()) {
           customCommand.setHasConsoleOutput(true);
         } else {
           customCommand.setHasConsoleOutput(false);
-          customCommand.setOutputFilename(editedInfo[4]);
+          customCommand.setOutputFilename(getEditedCommandsOutputFile(editedInfo[1]));
         }
 
         WizardMainPageController.getCustomCommandsNames().add(customCommand.getName());
