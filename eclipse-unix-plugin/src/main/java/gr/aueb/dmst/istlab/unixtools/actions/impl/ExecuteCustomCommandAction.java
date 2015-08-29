@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
+import org.apache.commons.lang3.SystemUtils;
 import org.apache.log4j.Logger;
 
 import gr.aueb.dmst.istlab.unixtools.actions.Action;
@@ -33,11 +34,19 @@ public final class ExecuteCustomCommandAction implements Action<DataActionResult
       throws IOException, InterruptedException {
     DataActionResult<InputStream> result;
     List<String> arguments = EclipsePluginUtil.getSystemShellInfo();
-    arguments.add(this.commandToExecute.getCommand());
 
-    ProcessBuilder pb = new ProcessBuilder(arguments);
+    ProcessBuilder pb;
+
+    if (SystemUtils.IS_OS_WINDOWS) {
+      pb = new ProcessBuilder(arguments.get(0), arguments.get(1),
+          arguments.get(2) + "\"cd " + this.commandToExecute.getShellDirectory() + ";"
+              + this.commandToExecute.getCommand() + "\"");
+    } else {
+      arguments.add(this.commandToExecute.getCommand());
+      pb = new ProcessBuilder(arguments);
+      pb.directory(new File(this.commandToExecute.getShellDirectory()));
+    }
     pb.redirectErrorStream(true);
-    pb.directory(new File(this.commandToExecute.getShellDirectory()));
 
     Process p;
     try {

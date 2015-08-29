@@ -29,7 +29,7 @@ public final class CustomCommand {
   }
 
   public String getCommand() {
-    return command;
+    return command.replace("\\", "/");
   }
 
   public void setCommand(String command) {
@@ -45,7 +45,7 @@ public final class CustomCommand {
   }
 
   public String getShellDirectory() {
-    return shellDirectory;
+    return shellDirectory.replace("\\", "/");
   }
 
   public void setShellDirectory(String shellDirectory) {
@@ -61,7 +61,7 @@ public final class CustomCommand {
   }
 
   public String getOutputFilename() {
-    return outputFilename;
+    return outputFilename.replace("\\", "/");
   }
 
   public void setOutputFilename(String outputFilename) {

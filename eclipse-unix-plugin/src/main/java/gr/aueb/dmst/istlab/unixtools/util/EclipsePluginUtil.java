@@ -31,9 +31,7 @@ public final class EclipsePluginUtil {
       String cygwin = path(value) ? value + "bash.exe" : value + "/bash.exe";
       shellInfo.add("CMD");
       shellInfo.add("/C");
-      shellInfo.add(cygwin);
-      shellInfo.add("--login");
-      shellInfo.add("-c");
+      shellInfo.add(cygwin.replace("\\", "/") + " --login -c ");
     } else if (SystemUtils.IS_OS_MAC_OSX) {
       shellInfo.add("/bin/sh");
       shellInfo.add("-c");

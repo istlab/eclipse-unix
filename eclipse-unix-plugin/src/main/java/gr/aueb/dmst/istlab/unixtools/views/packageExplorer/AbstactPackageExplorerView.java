@@ -7,8 +7,6 @@ package gr.aueb.dmst.istlab.unixtools.views.packageExplorer;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -250,24 +248,11 @@ public abstract class AbstactPackageExplorerView extends CompoundContributionIte
 
             try {
               br = new BufferedReader(new InputStreamReader(result.getData()));
-
+              // since we gave full control to the bash we don't need to care
+              // about the times the user outputs to a file. The bash does the job itself
               if (customCommand.getHasConsoleOutput()) {
                 while ((line = br.readLine()) != null) {
                   System.out.println(line);
-                }
-              } else {
-                File outputFile = new File(customCommand.getOutputFilename());
-
-                // if file doesn't exists, then create it
-                if (!outputFile.exists()) {
-                  outputFile.createNewFile();
-                }
-
-                bw = new BufferedWriter(new FileWriter(outputFile));
-
-                while ((line = br.readLine()) != null) {
-                  bw.write(line);
-                  bw.write(System.getProperty("line.separator"));
                 }
               }
             } catch (IOException e) {
