@@ -14,7 +14,17 @@ public class PackageExplorerRecentlyUsedMenuController {
   }
 
   public void addCommand(CustomCommand cc) {
+    // hardcoded for now
+    // limit the number of recently used command appearing to 10
+    if (this.recentlyUsed.size() == 10) {
+      // remove the least recently used command to add the new one
+      this.recentlyUsed.remove(0);
+    }
     recentlyUsed.add(cc);
+  }
+
+  public boolean checkDuplicate(CustomCommand cc) {
+    return recentlyUsed.contains(cc);
   }
 
   public List<CustomCommand> getRecentlyUsed() {

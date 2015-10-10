@@ -68,4 +68,10 @@ public final class CustomCommand {
     this.outputFilename = outputFilename;
   }
 
+  @Override
+  public boolean equals(Object o) {
+    CustomCommand cc = (CustomCommand) o;
+    return this.name.equals(cc.name);
+  }
+
 }

@@ -282,7 +282,10 @@ public abstract class AbstactPackageExplorerView extends CompoundContributionIte
 
       // finally add the executed command to the recently used list
       PluginContext pluginContext = PluginContext.getInstance();
-      pluginContext.getPackageExplorerRecentlyUsedMenuController().addCommand(this.customCommand);
+      if (!pluginContext.getPackageExplorerRecentlyUsedMenuController()
+          .checkDuplicate(this.customCommand)) {
+        pluginContext.getPackageExplorerRecentlyUsedMenuController().addCommand(this.customCommand);
+      }
 
       return null;
     }
