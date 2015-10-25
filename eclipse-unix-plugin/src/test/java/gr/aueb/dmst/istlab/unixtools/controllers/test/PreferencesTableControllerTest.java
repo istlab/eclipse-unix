@@ -74,6 +74,7 @@ public class PreferencesTableControllerTest {
     this.controller.exportCustomCommand("src/test/resources/custom_commands_test_output.yml");
     File file1 = new File("src/test/resources/custom_commands_test_output.yml");
     assertEquals(true, file1.exists());
+    file1.delete();
   }
 
   private List<CustomCommand> createCustomCommands() {
