@@ -1,0 +1,25 @@
+# http://man.he.net/man1
+!gr.aueb.dmst.istlab.unixtools.core.model.CommandPrototypeModel
+commands:
+- !gr.aueb.dmst.istlab.unixtools.core.model.CommandPrototype
+   name: ls
+   description: List information about the FILEs (the current directory by default)
+   options:
+   - !gr.aueb.dmst.istlab.unixtools.core.model.CommandPrototypeOption
+      name: -a
+      description: do not ignore entries starting with .
+   - !gr.aueb.dmst.istlab.unixtools.core.model.CommandPrototypeOption
+      name: -A
+      description: do not list implied . and ..
+   - !gr.aueb.dmst.istlab.unixtools.core.model.CommandPrototypeOption
+      name: -c
+      description: >
+                   with -lt: sort by, and show, ctime (time of last modification of
+                   file  status  information) with -l: show ctime and sort by name
+                   otherwise: sort by ctime, newest first
+   - !gr.aueb.dmst.istlab.unixtools.core.model.CommandPrototypeOption
+      name: -R
+      description: list subdirectories recursively
+   - !gr.aueb.dmst.istlab.unixtools.core.model.CommandPrototypeOption
+      name: -l
+      description: use a long listing format
