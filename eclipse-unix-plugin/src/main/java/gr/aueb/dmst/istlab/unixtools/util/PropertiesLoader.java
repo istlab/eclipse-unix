@@ -16,7 +16,7 @@ public class PropertiesLoader {
   private static final Properties properties = new Properties();
   private static final Logger logger = Logger.getLogger(PropertiesLoader.class);
   private static final String PROPERTIES_FILE_NAME = "src/main/resources/config.properties";
-  public static final String[] titles = {"Command", "Name", "Shell start directory"};
+  public static final String[] titles = {"Command", "Name", "Shell starting directory"};
   public static String SHELL_PATH_KEY = "shellpath";
 
   private static InputStream in;
@@ -26,7 +26,6 @@ public class PropertiesLoader {
   // custom command table page
   public static int MAX_COLUMN_WIDTH;
   public static String CUSTOM_COMMAND_PAGE_DESCRIPTION;
-  public static String CUSTOM_COMMAND_PAGE_LABEL;
   public static String CUSTOM_COMMAND_PAGE_IMPORT_MESSAGE;
   // wizard pages
   public static String WIZARD_ARG_PAGE_LABEL;
@@ -58,18 +57,16 @@ public class PropertiesLoader {
 
       MAX_COLUMN_WIDTH = Integer.parseInt(properties.getProperty("MaxColumnWidth"));
       CUSTOM_COMMAND_PAGE_DESCRIPTION = properties.getProperty("CustomCommandPageDescr");
-      CUSTOM_COMMAND_PAGE_LABEL = properties.getProperty("CustomCommandPageLabel");
       CUSTOM_COMMAND_PAGE_IMPORT_MESSAGE = properties.getProperty("ImportMessage");
+
+      WIZARD_ADD_PAGE_TITLE = properties.getProperty("WizardAddPageTitle");
+      WIZARD_ADD_PAGE_DESCRIPTION = properties.getProperty("WizardAddPageDescr");
 
       WIZARD_ARG_PAGE_LABEL = properties.getProperty("WizardArgPageLabel");
       WIZARD_ARG_PAGE_TITLE = properties.getProperty("WizardArgPageTitle");
       WIZARD_ARG_PAGE_DESCRIPTION = properties.getProperty("WizardArgPageDescr");
 
       WIZARD_EDIT_DIALOG_TITLE = properties.getProperty("WizardEditDialogTitle");
-
-      WIZARD_ADD_FIRST_PAGE_LABEL = properties.getProperty("WizardAddFirstPageLabel");
-      WIZARD_ADD_PAGE_TITLE = properties.getProperty("WizardAddPageTitle");
-      WIZARD_ADD_PAGE_DESCRIPTION = properties.getProperty("WizardAddPageDescr");
 
       WIZARD_RESOURCE_PAGE_LABEL = properties.getProperty("WizardResourcePageLabel");
       WIZARD_RESOURCE_PAGE_TITLE = properties.getProperty("WizardResourcePageTitle");
@@ -97,4 +94,5 @@ public class PropertiesLoader {
       }
     }
   }
+
 }
