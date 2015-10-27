@@ -4,7 +4,7 @@
   <extension point="org.eclipse.ui.preferencePages">
     <page
       id="unixtoolspreferences"
-      name="Unix tools"
+      name="Unix Tools"
       class="gr.aueb.dmst.istlab.unixtools.views.preferences.PreferencesMainPageView" 
     />
     <page
