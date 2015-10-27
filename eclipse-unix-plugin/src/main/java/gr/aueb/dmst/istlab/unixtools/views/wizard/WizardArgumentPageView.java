@@ -10,6 +10,10 @@ import java.util.List;
 
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -64,16 +68,18 @@ public class WizardArgumentPageView extends WizardPage {
     data.horizontalAlignment = GridData.FILL;
     this.text = new Text(container, SWT.BORDER);
     this.text.setLayoutData(data);
-    this.pipeButton = new Button(container, SWT.CHECK);
-    this.pipeButton.setText("Click to add pipe");
-
+    this.text.addModifyListener(new ModifyListenerInstance());
     this.buttons = new Button[arguments.size()];
 
     for (int i = 0; i < arguments.size(); ++i) {
       this.buttons[i] = new Button(this.container, SWT.CHECK);
       this.buttons[i].setText(this.arguments.get(i).getName());
       this.buttons[i].setToolTipText(this.arguments.get(i).getDescription());
+      this.buttons[i].addSelectionListener(new SelectionListenerInstance());
     }
+
+    this.pipeButton = new Button(container, SWT.CHECK);
+    this.pipeButton.setText("Click to add pipe");
 
     setControl(container);
   }
@@ -131,5 +137,50 @@ public class WizardArgumentPageView extends WizardPage {
     }
 
     return arguments;
+  }
+
+  private class ModifyListenerInstance implements ModifyListener {
+
+    @Override
+    public void modifyText(ModifyEvent e) {
+      // we want to disable the buttons if
+      // any text is written
+      if (text.getText().isEmpty()) {
+        for (Button b : buttons) {
+          b.setEnabled(true);
+        }
+      } else {
+        for (Button b : buttons) {
+          b.setEnabled(false);
+        }
+      }
+    }
+  }
+
+  private class SelectionListenerInstance implements SelectionListener {
+
+    @Override
+    public void widgetSelected(SelectionEvent e) {
+      // we want to disable the text if any button is selected
+      text.setEnabled(buttonsUnselected(buttons));
+    }
+
+    @Override
+    public void widgetDefaultSelected(SelectionEvent e) {}
+
+  }
+
+  /**
+   * Check in an array of buttons if every single one of the is unselected
+   *
+   * @param buttons
+   * @return
+   */
+  private boolean buttonsUnselected(Button[] buttons) {
+    for (Button b : buttons) {
+      if (b.getSelection())
+        return false;
+    }
+    return true;
   }
 }
