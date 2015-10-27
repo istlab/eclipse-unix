@@ -63,7 +63,7 @@ public class ResourceFileDialog extends TitleAreaDialog {
 
   private void createPathTextField(final Composite container) {
     Label path = new Label(container, SWT.NONE);
-    path.setText("File's path  : ");
+    path.setText("File's path: ");
 
     GridData data = new GridData();
     data.grabExcessHorizontalSpace = true;
@@ -99,7 +99,7 @@ public class ResourceFileDialog extends TitleAreaDialog {
 
   private void createRadioButtons(Composite container) {
     Label prompt = new Label(container, SWT.NONE);
-    prompt.setText("Choose the file's attribute : ");
+    prompt.setText("Choose the file's attribute: ");
 
     this.inputOption = new Button(container, SWT.RADIO);
     this.inputOption.setText("Input");

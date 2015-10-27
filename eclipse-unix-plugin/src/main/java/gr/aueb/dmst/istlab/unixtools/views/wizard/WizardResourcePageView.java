@@ -16,7 +16,6 @@ import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Label;
 
 import gr.aueb.dmst.istlab.unixtools.util.PropertiesLoader;
 import gr.aueb.dmst.istlab.unixtools.util.ResourceFile;
@@ -30,19 +29,16 @@ import gr.aueb.dmst.istlab.unixtools.views.dialogs.ResourceFileDialog;
  */
 public class WizardResourcePageView extends WizardPage {
 
-  private Label info;
   private Button addFileButton;
   private Button display;
   private Button pipe;
   private Composite container;
-  private final String labelText;
   private List<ResourceFile> files = new ArrayList<ResourceFile>();
 
   public WizardResourcePageView() {
     super("Input resource and shell start directory");
     this.setTitle(PropertiesLoader.WIZARD_RESOURCE_PAGE_TITLE);
     this.setDescription(PropertiesLoader.WIZARD_RESOURCE_PAGE_DESCRIPTION);
-    this.labelText = PropertiesLoader.WIZARD_RESOURCE_PAGE_LABEL;
   }
 
   @Override
@@ -51,9 +47,6 @@ public class WizardResourcePageView extends WizardPage {
     GridLayout layout = new GridLayout();
     this.container.setLayout(layout);
     layout.numColumns = 1;
-
-    this.info = new Label(this.container, SWT.NONE);
-    this.info.setText(this.labelText);
 
     this.addFileButton = new Button(container, SWT.PUSH);
     this.addFileButton.setText("Add Resource");

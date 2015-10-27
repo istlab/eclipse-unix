@@ -24,7 +24,6 @@ public class PreferencesMainPageView extends AbstractPreferencesPageView {
   @Override
   public void init(IWorkbench workbench) {
     super.init(workbench);
-    setDescription("Unix plugin settings page");
   }
 
   @Override

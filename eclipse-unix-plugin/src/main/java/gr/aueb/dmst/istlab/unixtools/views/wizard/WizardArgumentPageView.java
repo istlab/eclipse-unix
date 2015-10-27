@@ -34,19 +34,16 @@ public class WizardArgumentPageView extends WizardPage {
   private String givenCommand;
   private Button[] buttons;
   private Composite container;
-  private Label label;
   private Label textLabel;
   private Text text;
   private Button pipeButton;
   private List<CommandPrototypeOption> arguments;
   private WizardArgumentPageController controller;
-  private final String labelText;
 
   public WizardArgumentPageView() {
     super("Command's arguments");
     this.setTitle(PropertiesLoader.WIZARD_ARG_PAGE_TITLE);
     this.setDescription(PropertiesLoader.WIZARD_ARG_PAGE_DESCRIPTION);
-    this.labelText = PropertiesLoader.WIZARD_ARG_PAGE_LABEL;
     this.arguments = new ArrayList<CommandPrototypeOption>();
   }
 
@@ -60,10 +57,8 @@ public class WizardArgumentPageView extends WizardPage {
     GridLayout grid = new GridLayout();
     grid.numColumns = 1;
     this.container.setLayout(grid);
-    this.label = new Label(container, SWT.NONE);
-    this.label.setText(this.labelText);
     this.textLabel = new Label(container, SWT.NONE);
-    this.textLabel.setText("Enter the arguments you want : ");
+    this.textLabel.setText("Enter the arguments you want: ");
     GridData data = new GridData();
     data.grabExcessHorizontalSpace = true;
     data.horizontalAlignment = GridData.FILL;

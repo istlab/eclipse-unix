@@ -25,7 +25,6 @@ import gr.aueb.dmst.istlab.unixtools.plugin.PluginContext;
 import gr.aueb.dmst.istlab.unixtools.util.PropertiesLoader;
 
 /**
- *
  * This class represents the Command wizard page. In this page the user can set the newly added
  * command's nickname, the actual command and the shell's starting directory. An auto complete
  * feature is implemented to help the user browse through the prototype commands quickly. When a
@@ -33,13 +32,11 @@ import gr.aueb.dmst.istlab.unixtools.util.PropertiesLoader;
  * the command to help the new users. Finally, if the user selected to pipe in a previous wizard,
  * then in the top of the page we display the current state of the command. Restrictions : the
  * command name cannot be duplicate or empty, because we use it in our inner engine as a search key.
- *
  */
 public class WizardMainPageView extends WizardPage {
 
   private Label label;
   private Label nick;
-  private Label info;
   private Label empty;
   private Label shell;
   private Label currentCommand;
@@ -56,7 +53,6 @@ public class WizardMainPageView extends WizardPage {
   private String pipedNickname;
   private String pipedShellDir;
   private WizardMainPageController controller;
-  private final String infoText;
 
   public WizardMainPageView(String command, String pipedNickname, String pipedShellDir) {
     super("Command's wizard page");
@@ -65,7 +61,6 @@ public class WizardMainPageView extends WizardPage {
     this.cc = command;
     this.pipedNickname = pipedNickname;
     this.pipedShellDir = pipedShellDir;
-    this.infoText = PropertiesLoader.WIZARD_ADD_FIRST_PAGE_LABEL;
   }
 
   @Override
@@ -78,11 +73,6 @@ public class WizardMainPageView extends WizardPage {
     this.container.setLayout(layout);
     layout.numColumns = 1;
 
-    this.info = new Label(container, SWT.NONE);
-    this.info.setText(infoText);
-    this.info.setAlignment(SWT.LEFT);
-    this.info.pack();
-
     if (this.cc.length() > 0) {
       this.currentCommand = new Label(this.container, SWT.NONE);
       this.currentCommand.setText("Current command state : ");
@@ -91,20 +81,19 @@ public class WizardMainPageView extends WizardPage {
       this.actualCommandCombo.setText(this.cc);
     }
 
-    this.empty = new Label(this.container, SWT.NONE);
-    this.empty.setText("\n");
-
     this.nick = new Label(this.container, SWT.NONE);
     this.nick.setText("Enter the command's nickname : ");
     this.nickname = new Text(this.container, SWT.NONE);
     this.nickname.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
+
     if (this.cc.length() > 0) {
       nickname.setText(this.pipedNickname);
     }
+
     this.nickname.addModifyListener(new AddCommandModifyListener());
 
     this.label = new Label(this.container, SWT.NONE);
-    this.label.setText("Enter the desired command : ");
+    this.label.setText("Enter the desired command: ");
 
     this.currentCommandCombo = new Combo(this.container, SWT.NONE);
     this.currentCommandCombo.setItems(this.controller.getCommandPrototypes());
@@ -114,21 +103,26 @@ public class WizardMainPageView extends WizardPage {
     this.controller.addAutocomplete(this.currentCommandCombo);
 
     this.descriptionLabel = new Label(this.container, SWT.NONE);
-    this.descriptionLabel.setText("Description : ");
+    this.descriptionLabel.setText("Description: ");
 
     this.descriptionCombo = new Text(this.container, SWT.NONE);
     this.descriptionCombo.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
 
     this.shell = new Label(this.container, SWT.NONE);
-    this.shell.setText("Enter the shell's starting dir :");
+    this.shell.setText("Enter the shell's starting directory: ");
 
     this.shellDirectory = new Text(this.container, SWT.BORDER);
     GridData dataShell = new GridData(GridData.FILL_HORIZONTAL);
     dataShell.horizontalSpan = 4;
+
     if (cc.length() > 0) {
       this.shellDirectory.setText(this.pipedShellDir);
     }
+
     this.shellDirectory.setLayoutData(dataShell);
+
+    this.empty = new Label(this.container, SWT.NONE);
+    this.empty.setText("\n");
 
     this.shellButton = new Button(this.container, SWT.PUSH);
     this.shellButton.setText("Browse");

@@ -49,7 +49,7 @@ public class WizardCreationPageView extends Wizard {
     addPage(mainPageView);
     argumentPageView = new WizardArgumentPageView();
     /*
-     * the Argument page is not added here but in the getNextPage to ensure that we have the command
+     * The Argument page is not added here but in the getNextPage to ensure that we have the command
      * from the first page in order to present the available arguments to the user works well for
      * now will change it to PageChangeListeners in the future
      */

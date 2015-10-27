@@ -60,7 +60,6 @@ public class PreferencesTableView extends AbstractPreferencesPageView {
   @Override
   public void init(IWorkbench workbench) {
     super.init(workbench);
-    this.setDescription(PropertiesLoader.CUSTOM_COMMAND_PAGE_DESCRIPTION);
   }
 
   @Override
@@ -136,13 +135,12 @@ public class PreferencesTableView extends AbstractPreferencesPageView {
     Table table = new Table(composite, SWT.MULTI | SWT.BORDER | SWT.FULL_SELECTION);
     String[] titles = PropertiesLoader.titles;
 
-    label.setText(PropertiesLoader.CUSTOM_COMMAND_PAGE_LABEL);
+    label.setText(PropertiesLoader.CUSTOM_COMMAND_PAGE_DESCRIPTION);
     labelData.horizontalSpan = 2;
     label.setLayoutData(labelData);
     table.setLayoutData(tableData);
     table.setLinesVisible(true);
     table.setHeaderVisible(true);
-    table.setToolTipText("Custom commands' table");
 
     for (String title : titles) {
       TableColumn column = new TableColumn(table, SWT.NONE);
