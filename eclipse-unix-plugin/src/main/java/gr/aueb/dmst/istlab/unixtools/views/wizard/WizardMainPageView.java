@@ -45,11 +45,11 @@ public class WizardMainPageView extends WizardPage {
   private Label currentCommand;
   private Label descriptionLabel;
   private Combo currentCommandCombo;
-  private Combo descriptionCombo;
-  private Combo nickname;
-  private Combo actualCommandCombo;
-  private Composite container;
+  private Text descriptionCombo;
+  private Text nickname;
   private Text shellDirectory;
+  private Text actualCommandCombo;
+  private Composite container;
   private Button shellButton;
   private Button pipe;
   private String cc;
@@ -86,7 +86,7 @@ public class WizardMainPageView extends WizardPage {
     if (this.cc.length() > 0) {
       this.currentCommand = new Label(this.container, SWT.NONE);
       this.currentCommand.setText("Current command state : ");
-      this.actualCommandCombo = new Combo(this.container, SWT.NONE);
+      this.actualCommandCombo = new Text(this.container, SWT.NONE);
       this.actualCommandCombo.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
       this.actualCommandCombo.setText(this.cc);
     }
@@ -96,7 +96,7 @@ public class WizardMainPageView extends WizardPage {
 
     this.nick = new Label(this.container, SWT.NONE);
     this.nick.setText("Enter the command's nickname : ");
-    this.nickname = new Combo(this.container, SWT.NONE);
+    this.nickname = new Text(this.container, SWT.NONE);
     this.nickname.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
     if (this.cc.length() > 0) {
       nickname.setText(this.pipedNickname);
@@ -116,7 +116,7 @@ public class WizardMainPageView extends WizardPage {
     this.descriptionLabel = new Label(this.container, SWT.NONE);
     this.descriptionLabel.setText("Description : ");
 
-    this.descriptionCombo = new Combo(this.container, SWT.NONE);
+    this.descriptionCombo = new Text(this.container, SWT.NONE);
     this.descriptionCombo.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
 
     this.shell = new Label(this.container, SWT.NONE);
