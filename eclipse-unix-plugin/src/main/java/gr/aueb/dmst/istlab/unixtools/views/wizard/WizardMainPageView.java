@@ -141,7 +141,8 @@ public class WizardMainPageView extends WizardPage {
       this.setErrorMessage("Cannot continue! Command name is either empty or duplicate!");
       return false;
     } else {
-      this.setErrorMessage("");
+      // dispose of the annoying x when no error is present
+      this.setErrorMessage(null);
       return true;
     }
   }
