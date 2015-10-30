@@ -55,9 +55,9 @@ public class WizardMainPageView extends WizardPage {
   private WizardMainPageController controller;
 
   public WizardMainPageView(String command, String pipedNickname, String pipedShellDir) {
-    super("Command's wizard page");
-    this.setTitle(PropertiesLoader.WIZARD_ADD_PAGE_TITLE);
-    this.setDescription(PropertiesLoader.WIZARD_ADD_PAGE_DESCRIPTION);
+    super("Main Page");
+    this.setTitle(PropertiesLoader.WIZARD_MAIN_PAGE_TITLE);
+    this.setDescription(PropertiesLoader.WIZARD_MAIN_PAGE_DESCRIPTION);
     this.cc = command;
     this.pipedNickname = pipedNickname;
     this.pipedShellDir = pipedShellDir;
@@ -75,14 +75,14 @@ public class WizardMainPageView extends WizardPage {
 
     if (this.cc.length() > 0) {
       this.currentCommand = new Label(this.container, SWT.NONE);
-      this.currentCommand.setText("Current command state : ");
+      this.currentCommand.setText("Current command state:");
       this.actualCommandCombo = new Text(this.container, SWT.BORDER);
       this.actualCommandCombo.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
       this.actualCommandCombo.setText(this.cc);
     }
 
     this.nick = new Label(this.container, SWT.NONE);
-    this.nick.setText("Enter the command's nickname : ");
+    this.nick.setText("Enter the command's nickname:");
     this.nickname = new Text(this.container, SWT.BORDER);
     this.nickname.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
 
@@ -93,7 +93,7 @@ public class WizardMainPageView extends WizardPage {
     this.nickname.addModifyListener(new AddCommandModifyListener());
 
     this.label = new Label(this.container, SWT.NONE);
-    this.label.setText("Enter the desired command: ");
+    this.label.setText("Enter the desired command:");
 
     this.currentCommandCombo = new Combo(this.container, SWT.NONE);
     this.currentCommandCombo.setItems(this.controller.getCommandPrototypes());
@@ -103,13 +103,13 @@ public class WizardMainPageView extends WizardPage {
     this.controller.addAutocomplete(this.currentCommandCombo);
 
     this.descriptionLabel = new Label(this.container, SWT.NONE);
-    this.descriptionLabel.setText("Description: ");
+    this.descriptionLabel.setText("Description:");
 
     this.descriptionCombo = new Text(this.container, SWT.BORDER);
     this.descriptionCombo.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
 
     this.shell = new Label(this.container, SWT.NONE);
-    this.shell.setText("Enter the shell's starting directory: ");
+    this.shell.setText("Enter the shell's starting directory:");
 
     this.shellDirectory = new Text(this.container, SWT.BORDER);
     GridData dataShell = new GridData(GridData.FILL_HORIZONTAL);
@@ -129,7 +129,7 @@ public class WizardMainPageView extends WizardPage {
     this.shellButton.addSelectionListener(new AddShellDirSelectionListener());
 
     this.pipe = new Button(this.container, SWT.CHECK);
-    this.pipe.setText("Click to add pipe");
+    this.pipe.setText(PropertiesLoader.WIZARD_ADD_PIPE_BUTTON_LABEL);
 
     // needed to avoid errors in the system
     this.setControl(this.container);
@@ -138,7 +138,7 @@ public class WizardMainPageView extends WizardPage {
   @Override
   public boolean canFlipToNextPage() {
     if (!this.controller.isValidNickname(this.nickname.getText())) {
-      this.setErrorMessage("Cannot continue! Command name is either empty or duplicate!");
+      this.setErrorMessage(PropertiesLoader.WIZARD_MAIN_PAGE_ERROR_MESSAGE);
       return false;
     } else {
       // dispose of the annoying x when no error is present

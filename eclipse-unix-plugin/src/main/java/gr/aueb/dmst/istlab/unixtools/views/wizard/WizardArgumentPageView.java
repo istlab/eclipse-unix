@@ -45,7 +45,7 @@ public class WizardArgumentPageView extends WizardPage {
   private WizardArgumentPageController controller;
 
   public WizardArgumentPageView() {
-    super("Command's arguments");
+    super("Arguments Page");
     this.setTitle(PropertiesLoader.WIZARD_ARG_PAGE_TITLE);
     this.setDescription(PropertiesLoader.WIZARD_ARG_PAGE_DESCRIPTION);
     this.arguments = new ArrayList<CommandPrototypeOption>();
@@ -62,7 +62,7 @@ public class WizardArgumentPageView extends WizardPage {
     grid.numColumns = 1;
     this.container.setLayout(grid);
     this.textLabel = new Label(container, SWT.NONE);
-    this.textLabel.setText("Enter the arguments you want: ");
+    this.textLabel.setText("Enter the arguments you want:");
     GridData data = new GridData();
     data.grabExcessHorizontalSpace = true;
     data.horizontalAlignment = GridData.FILL;
@@ -79,7 +79,7 @@ public class WizardArgumentPageView extends WizardPage {
     }
 
     this.pipeButton = new Button(container, SWT.CHECK);
-    this.pipeButton.setText("Click to add pipe");
+    this.pipeButton.setText(PropertiesLoader.WIZARD_ADD_PIPE_BUTTON_LABEL);
 
     setControl(container);
   }

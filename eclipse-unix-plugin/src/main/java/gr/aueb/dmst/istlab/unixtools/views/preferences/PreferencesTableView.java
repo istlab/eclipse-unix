@@ -34,8 +34,8 @@ import gr.aueb.dmst.istlab.unixtools.controllers.WizardMainPageController;
 import gr.aueb.dmst.istlab.unixtools.core.model.CustomCommand;
 import gr.aueb.dmst.istlab.unixtools.plugin.PluginContext;
 import gr.aueb.dmst.istlab.unixtools.util.PropertiesLoader;
-import gr.aueb.dmst.istlab.unixtools.views.dialogs.EditDialogView;
-import gr.aueb.dmst.istlab.unixtools.views.wizard.WizardCreationPageView;
+import gr.aueb.dmst.istlab.unixtools.views.dialogs.EditCustomCommandDialogView;
+import gr.aueb.dmst.istlab.unixtools.views.wizard.WizardBasePage;
 
 /**
  * This class represents the custom commands' page we use for this plugin. It has a table with 4
@@ -164,7 +164,7 @@ public class PreferencesTableView extends AbstractPreferencesPageView {
    */
   public CustomCommand handleAddButton() {
     CustomCommand commandToAdd = null;
-    WizardCreationPageView wizard = new WizardCreationPageView();
+    WizardBasePage wizard = new WizardBasePage();
     wizard.setNeedsProgressMonitor(true);
     wizard.setShell(PreferencesTableView.this.getComposite().getShell());
     WizardDialog wizardDialog =
@@ -181,7 +181,7 @@ public class PreferencesTableView extends AbstractPreferencesPageView {
       this.changed = true;
     }
 
-    WizardCreationPageView.clearValues();
+    WizardBasePage.clearValues();
 
     return commandToAdd;
   }
@@ -206,7 +206,7 @@ public class PreferencesTableView extends AbstractPreferencesPageView {
     }
 
     Shell shell = this.getShell();
-    EditDialogView dialog = new EditDialogView(shell);
+    EditCustomCommandDialogView dialog = new EditCustomCommandDialogView(shell);
     dialog.create();
 
     dialog.setDefaultValues(this.customCommandsTable.getItem(selection).getText(0),
@@ -350,8 +350,8 @@ public class PreferencesTableView extends AbstractPreferencesPageView {
       TableColumn column = this.customCommandsTable.getColumn(i);
       column.pack();
 
-      if (column.getWidth() > PropertiesLoader.MAX_COLUMN_WIDTH) {
-        column.setWidth(PropertiesLoader.MAX_COLUMN_WIDTH);
+      if (column.getWidth() > PropertiesLoader.CUSTOM_COMMANDS_TABLE_COLUMN_WIDTH) {
+        column.setWidth(PropertiesLoader.CUSTOM_COMMANDS_TABLE_COLUMN_WIDTH);
       }
     }
   }

@@ -19,8 +19,8 @@ import org.eclipse.swt.widgets.Composite;
 
 import gr.aueb.dmst.istlab.unixtools.util.PropertiesLoader;
 import gr.aueb.dmst.istlab.unixtools.util.ResourceFile;
-import gr.aueb.dmst.istlab.unixtools.views.dialogs.DisplayResourcesDialog;
-import gr.aueb.dmst.istlab.unixtools.views.dialogs.ResourceFileDialog;
+import gr.aueb.dmst.istlab.unixtools.views.dialogs.AddResourcesDialogView;
+import gr.aueb.dmst.istlab.unixtools.views.dialogs.DisplayResourcesDialogView;
 
 /**
  * This class represents the Resource wizard page . In this page the user can choose an input file
@@ -29,14 +29,14 @@ import gr.aueb.dmst.istlab.unixtools.views.dialogs.ResourceFileDialog;
  */
 public class WizardResourcePageView extends WizardPage {
 
-  private Button addFileButton;
-  private Button display;
+  private Button addResourceButton;
+  private Button viewResourcesButton;
   private Button pipe;
   private Composite container;
   private List<ResourceFile> files = new ArrayList<ResourceFile>();
 
   public WizardResourcePageView() {
-    super("Input resource and shell start directory");
+    super("Resources Page");
     this.setTitle(PropertiesLoader.WIZARD_RESOURCE_PAGE_TITLE);
     this.setDescription(PropertiesLoader.WIZARD_RESOURCE_PAGE_DESCRIPTION);
   }
@@ -48,16 +48,16 @@ public class WizardResourcePageView extends WizardPage {
     this.container.setLayout(layout);
     layout.numColumns = 1;
 
-    this.addFileButton = new Button(container, SWT.PUSH);
-    this.addFileButton.setText("Add Resource");
-    this.addFileButton.addSelectionListener(new AddResourceFileListener());
+    this.addResourceButton = new Button(container, SWT.PUSH);
+    this.addResourceButton.setText(PropertiesLoader.WIZARD_ADD_RESOURCE_BUTTON_LABEL);
+    this.addResourceButton.addSelectionListener(new AddResourceFileListener());
 
-    this.display = new Button(container, SWT.PUSH);
-    this.display.setText("View Resources");
-    this.display.addSelectionListener(new DisplayFilesListener());
+    this.viewResourcesButton = new Button(container, SWT.PUSH);
+    this.viewResourcesButton.setText(PropertiesLoader.WIZARD_VIEW_RESOURCES_BUTTON_LABEL);
+    this.viewResourcesButton.addSelectionListener(new DisplayFilesListener());
 
     this.pipe = new Button(this.container, SWT.CHECK);
-    this.pipe.setText("Click to add pipe");
+    this.pipe.setText(PropertiesLoader.WIZARD_ADD_PIPE_BUTTON_LABEL);
     this.setControl(this.container);
   }
 
@@ -78,9 +78,10 @@ public class WizardResourcePageView extends WizardPage {
 
     @Override
     public void widgetSelected(SelectionEvent e) {
-      ResourceFileDialog rfd = new ResourceFileDialog(WizardResourcePageView.this.getShell());
-      if (rfd.open() == Window.OK) {
-        files.add(new ResourceFile(rfd.getFilePath(), rfd.isInput()));
+      AddResourcesDialogView view =
+          new AddResourcesDialogView(WizardResourcePageView.this.getShell());
+      if (view.open() == Window.OK) {
+        files.add(new ResourceFile(view.getFilePath(), view.isInput()));
       }
     }
 
@@ -92,11 +93,11 @@ public class WizardResourcePageView extends WizardPage {
 
     @Override
     public void widgetSelected(SelectionEvent e) {
-      DisplayResourcesDialog drd =
-          new DisplayResourcesDialog(WizardResourcePageView.this.getShell(), files);
-      if (drd.open() == Window.OK) {
+      DisplayResourcesDialogView view =
+          new DisplayResourcesDialogView(WizardResourcePageView.this.getShell(), files);
+      if (view.open() == Window.OK) {
         files.clear();
-        files.addAll(drd.getUpdatedFileList());
+        files.addAll(view.getUpdatedFileList());
       }
     }
 

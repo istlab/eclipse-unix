@@ -15,24 +15,27 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
-public class ResourceFileDialog extends TitleAreaDialog {
+import gr.aueb.dmst.istlab.unixtools.util.PropertiesLoader;
+
+public class AddResourcesDialogView extends TitleAreaDialog {
 
   private Button inputOption;
   private Button outputOption;
-  private Button browse;
+  private Button browseButton;
   private Text filePath;
   private String path;
   private boolean isInput;
 
-  public ResourceFileDialog(Shell parentShell) {
+  public AddResourcesDialogView(Shell parentShell) {
     super(parentShell);
+    this.configureShell(parentShell);
   }
 
   @Override
   public void create() {
     super.create();
-    setTitle("Add a resource file");
-    setMessage("Enter the new resource file", IMessageProvider.INFORMATION);
+    setTitle(PropertiesLoader.ADD_RESOURCES_DIALOG_TITLE);
+    setMessage(PropertiesLoader.ADD_RESOURCES_DIALOG_MESSAGE, IMessageProvider.INFORMATION);
   }
 
   @Override
@@ -61,9 +64,15 @@ public class ResourceFileDialog extends TitleAreaDialog {
     return area;
   }
 
+  @Override
+  protected void configureShell(Shell newShell) {
+    super.configureShell(newShell);
+    newShell.setText(PropertiesLoader.DEFAULT_WINDOW_TITLE);
+  }
+
   private void createPathTextField(final Composite container) {
     Label path = new Label(container, SWT.NONE);
-    path.setText("File's path: ");
+    path.setText("File's path:");
 
     GridData data = new GridData();
     data.grabExcessHorizontalSpace = true;
@@ -71,9 +80,9 @@ public class ResourceFileDialog extends TitleAreaDialog {
 
     filePath = new Text(container, SWT.BORDER);
     filePath.setLayoutData(data);
-    browse = new Button(container, SWT.PUSH);
-    browse.setText("Browse");
-    browse.addSelectionListener(new SelectionAdapter() {
+    browseButton = new Button(container, SWT.PUSH);
+    browseButton.setText("Browse");
+    browseButton.addSelectionListener(new SelectionAdapter() {
       @Override
       public void widgetSelected(SelectionEvent event) {
         FileDialog dlg = new FileDialog(container.getShell(), SWT.SAVE);
@@ -99,7 +108,7 @@ public class ResourceFileDialog extends TitleAreaDialog {
 
   private void createRadioButtons(Composite container) {
     Label prompt = new Label(container, SWT.NONE);
-    prompt.setText("Choose the file's attribute: ");
+    prompt.setText(PropertiesLoader.DIALOG_CHOOSE_FILE_MESSAGE);
 
     this.inputOption = new Button(container, SWT.RADIO);
     this.inputOption.setText("Input");

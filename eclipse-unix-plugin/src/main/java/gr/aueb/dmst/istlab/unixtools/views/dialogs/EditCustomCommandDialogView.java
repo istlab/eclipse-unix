@@ -29,7 +29,7 @@ import gr.aueb.dmst.istlab.unixtools.util.PropertiesLoader;
  * given command's arguments. A Directory Dialog used to modify the shell's starting directory. A
  * File Dialog used to modify the input resource file.
  */
-public class EditDialogView extends TitleAreaDialog {
+public class EditCustomCommandDialogView extends TitleAreaDialog {
 
   private Text commandText;
   private Text nameText;
@@ -39,15 +39,17 @@ public class EditDialogView extends TitleAreaDialog {
   private String name;
   private String shellDirectory;
 
-  public EditDialogView(Shell parentShell) {
+  public EditCustomCommandDialogView(Shell parentShell) {
     super(parentShell);
+    this.configureShell(parentShell);
   }
 
   @Override
   public void create() {
     super.create();
-    this.setTitle(PropertiesLoader.WIZARD_EDIT_DIALOG_TITLE);
-    this.setMessage("Enter the new command's info", IMessageProvider.INFORMATION);
+    this.setTitle(PropertiesLoader.EDIT_CUSTOM_COMMAND_DIALOG_TITLE);
+    this.setMessage(PropertiesLoader.EDIT_CUSTOM_COMMAND_DIALOG_MESSAGE,
+        IMessageProvider.INFORMATION);
   }
 
   @Override
@@ -85,6 +87,12 @@ public class EditDialogView extends TitleAreaDialog {
     return area;
   }
 
+  @Override
+  protected void configureShell(Shell newShell) {
+    super.configureShell(newShell);
+    newShell.setText(PropertiesLoader.DEFAULT_WINDOW_TITLE);
+  }
+
   /**
    * This method creates the shell's path field
    *
@@ -92,7 +100,7 @@ public class EditDialogView extends TitleAreaDialog {
    */
   private void createShell(final Composite container) {
     Label shell = new Label(container, SWT.NONE);
-    shell.setText("Shell path  : ");
+    shell.setText("Shell path:");
 
     GridData data = new GridData();
     data.grabExcessHorizontalSpace = true;
@@ -113,7 +121,7 @@ public class EditDialogView extends TitleAreaDialog {
    */
   private void createName(Composite container) {
     Label name = new Label(container, SWT.NONE);
-    name.setText("Command Name : ");
+    name.setText("Command Name:");
 
     GridData data = new GridData();
     data.grabExcessHorizontalSpace = true;
@@ -130,7 +138,7 @@ public class EditDialogView extends TitleAreaDialog {
    */
   private void createCommand(Composite container) {
     Label com = new Label(container, SWT.NONE);
-    com.setText("Command  : ");
+    com.setText("Command:");
 
     GridData data = new GridData();
     data.grabExcessHorizontalSpace = true;

@@ -10,6 +10,7 @@ import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Shell;
 
+import gr.aueb.dmst.istlab.unixtools.util.PropertiesLoader;
 import gr.aueb.dmst.istlab.unixtools.util.ResourceFile;
 
 /**
@@ -24,7 +25,7 @@ import gr.aueb.dmst.istlab.unixtools.util.ResourceFile;
  * the shell's directory path and the command's nickname, are extracted from the last part of the
  * pipe i.e from the last wizard that pops up.
  */
-public class WizardCreationPageView extends Wizard {
+public class WizardBasePage extends Wizard {
 
   private Shell shell;
   private WizardMainPageView mainPageView;
@@ -39,8 +40,9 @@ public class WizardCreationPageView extends Wizard {
   private static boolean outputToScreen = true;
   private static String lastOutputFilePath;
 
-  public WizardCreationPageView() {
+  public WizardBasePage() {
     super();
+    this.setWindowTitle(PropertiesLoader.DEFAULT_WINDOW_TITLE);
   }
 
   @Override
@@ -105,7 +107,7 @@ public class WizardCreationPageView extends Wizard {
       command += " | ";
       name = mainPageView.getNickname();
       shellDirectory = mainPageView.getShellStartDirectory();
-      WizardDialog wizardDialog = new WizardDialog(this.getShell(), new WizardCreationPageView());
+      WizardDialog wizardDialog = new WizardDialog(this.getShell(), new WizardBasePage());
       wizardDialog.open();
     } else {
       for (int i = resourcePageView.getResourceFiles().size() - 1; i > -1; --i) {

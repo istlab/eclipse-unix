@@ -22,21 +22,23 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 
+import gr.aueb.dmst.istlab.unixtools.util.PropertiesLoader;
 import gr.aueb.dmst.istlab.unixtools.util.ResourceFile;
 
-public class DisplayResourcesDialog extends TitleAreaDialog implements SelectionListener {
+public class DisplayResourcesDialogView extends TitleAreaDialog implements SelectionListener {
 
   private Table table;
-  private Button edit;
-  private Button remove;
+  private Button editButton;
+  private Button removeButton;
   private List<ResourceFile> files = new ArrayList<ResourceFile>();
 
-  public DisplayResourcesDialog(Shell parentShell) {
+  public DisplayResourcesDialogView(Shell parentShell) {
     super(parentShell);
   }
 
-  public DisplayResourcesDialog(Shell parentShell, List<ResourceFile> files) {
+  public DisplayResourcesDialogView(Shell parentShell, List<ResourceFile> files) {
     this(parentShell);
+    this.configureShell(parentShell);
     this.files.addAll(files);
   }
 
@@ -47,9 +49,8 @@ public class DisplayResourcesDialog extends TitleAreaDialog implements Selection
   @Override
   public void create() {
     super.create();
-    setTitle("Chosen resource files");
-    setMessage("Here you can view or remove any resource file chosen",
-        IMessageProvider.INFORMATION);
+    setTitle(PropertiesLoader.DISPLAY_RESOURCES_DIALOG_TITLE);
+    setMessage(PropertiesLoader.DISPLAY_RESOURCES_DIALOG_MESSAGE, IMessageProvider.INFORMATION);
   }
 
   @Override
@@ -67,14 +68,20 @@ public class DisplayResourcesDialog extends TitleAreaDialog implements Selection
     return area;
   }
 
-  private void createButtons(Composite container) {
-    this.edit = new Button(container, SWT.PUSH);
-    this.edit.setText("Edit");
-    this.edit.addSelectionListener(this);
+  @Override
+  protected void configureShell(Shell newShell) {
+    super.configureShell(newShell);
+    newShell.setText(PropertiesLoader.DEFAULT_WINDOW_TITLE);
+  }
 
-    this.remove = new Button(container, SWT.PUSH);
-    this.remove.setText("Remove");
-    this.remove.addSelectionListener(this);
+  private void createButtons(Composite container) {
+    this.editButton = new Button(container, SWT.PUSH);
+    this.editButton.setText("Edit");
+    this.editButton.addSelectionListener(this);
+
+    this.removeButton = new Button(container, SWT.PUSH);
+    this.removeButton.setText("Remove");
+    this.removeButton.addSelectionListener(this);
   }
 
   private void createDisplayTable(Composite container) {
@@ -85,7 +92,6 @@ public class DisplayResourcesDialog extends TitleAreaDialog implements Selection
     this.table.setLayoutData(tableData);
     this.table.setLinesVisible(true);
     this.table.setHeaderVisible(true);
-    this.table.setToolTipText("Resource files' table");
     for (String s : titles) {
       TableColumn col = new TableColumn(this.table, SWT.NONE);
       col.setText(s);
@@ -117,44 +123,43 @@ public class DisplayResourcesDialog extends TitleAreaDialog implements Selection
   @Override
   public void widgetSelected(SelectionEvent e) {
     Object source = e.getSource();
-    if (source == this.edit) {
+    if (source == this.editButton) {
       int selectedFile = this.table.getSelectionIndex();
 
       if (selectedFile == -1) {
         // no command selected so we just return
-        MessageDialog.openInformation(this.getShell(), "Please be careful!!",
-            "Choose a command to edit/remove!");
+        MessageDialog.openInformation(this.getShell(), PropertiesLoader.DIALOG_WARNING_MESSAGE,
+            PropertiesLoader.DIALOG_EDIT_REMOVE_MESSAGE);
         return;
       }
 
       if (this.table.getSelectionIndices().length > 1) {
-        MessageDialog.openInformation(this.getShell(), "Please be careful!!",
-            "One file can be edited at a time!");
+        MessageDialog.openInformation(this.getShell(), PropertiesLoader.DIALOG_WARNING_MESSAGE,
+            PropertiesLoader.DIALOG_EDIT_WARNING_MESSAGE);
         return;
       }
 
-      ResourceFileDialog rfd = new ResourceFileDialog(this.getShell());
-      rfd.create();
-      rfd.setDefaultValues(this.table.getItem(selectedFile).getText(0),
+      AddResourcesDialogView view = new AddResourcesDialogView(this.getShell());
+      view.create();
+      view.setDefaultValues(this.table.getItem(selectedFile).getText(0),
           this.table.getItem(selectedFile).getText(0));
-      if (rfd.open() == Window.OK) {
-        this.files.get(selectedFile).setPath(rfd.getFilePath());
-        this.files.get(selectedFile).setIsInput(rfd.isInput());
+      if (view.open() == Window.OK) {
+        this.files.get(selectedFile).setPath(view.getFilePath());
+        this.files.get(selectedFile).setIsInput(view.isInput());
         refreshTable();
       }
-    } else if (source == this.remove) {
+    } else if (source == this.removeButton) {
       if (this.table.getSelectionIndex() == -1) {
         // no command selected so we just return
-        MessageDialog.openInformation(this.getShell(), "Please be careful!!",
-            "Choose a command to edit/remove!");
+        MessageDialog.openInformation(this.getShell(), PropertiesLoader.DIALOG_WARNING_MESSAGE,
+            PropertiesLoader.DIALOG_EDIT_REMOVE_MESSAGE);
         return;
       }
       int[] indices = this.table.getSelectionIndices();
       // ask the user for confirmation to avoid unwanted mistakes
       MessageDialog dg = new MessageDialog(this.getShell(), "File removal", null,
-          "Are you sure you want to remove the selected files?", MessageDialog.QUESTION_WITH_CANCEL,
-          new String[] {IDialogConstants.YES_LABEL, IDialogConstants.NO_LABEL,
-              IDialogConstants.CANCEL_LABEL},
+          PropertiesLoader.DIALOG_REMOVE_MESSAGE, MessageDialog.QUESTION_WITH_CANCEL, new String[] {
+              IDialogConstants.YES_LABEL, IDialogConstants.NO_LABEL, IDialogConstants.CANCEL_LABEL},
           0);
       if (dg.open() == MessageDialog.OK) {
         ResourceFile[] rfiles = new ResourceFile[indices.length];
