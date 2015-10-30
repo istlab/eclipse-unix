@@ -27,7 +27,7 @@ import gr.aueb.dmst.istlab.unixtools.views.dialogs.DisplayResourcesDialogView;
  * through a File Dialog to accompany the selected command. The user also has the choice to pipe the
  * current command, in which case the wizard starts from the beginning.
  */
-public class WizardResourcePageView extends WizardPage {
+public final class WizardResourcePageView extends WizardPage {
 
   private Button addResourceButton;
   private Button viewResourcesButton;

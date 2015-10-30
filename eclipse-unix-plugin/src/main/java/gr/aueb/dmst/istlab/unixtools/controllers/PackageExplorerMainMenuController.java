@@ -10,7 +10,7 @@ import java.util.List;
 import gr.aueb.dmst.istlab.unixtools.core.model.CustomCommand;
 import gr.aueb.dmst.istlab.unixtools.core.model.CustomCommandModel;
 
-public class PackageExplorerMainMenuController {
+public final class PackageExplorerMainMenuController {
 
   private CustomCommandModel model;
 

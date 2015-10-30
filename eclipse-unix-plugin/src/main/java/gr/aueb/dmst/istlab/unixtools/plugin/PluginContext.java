@@ -20,7 +20,7 @@ import gr.aueb.dmst.istlab.unixtools.core.model.CustomCommandModel;
 import gr.aueb.dmst.istlab.unixtools.dal.DataAccessException;
 import gr.aueb.dmst.istlab.unixtools.factories.ActionFactorySingleton;
 
-public class PluginContext {
+public final class PluginContext {
 
   private static final Logger logger = Logger.getLogger(PluginContext.class);
   private static PluginContext INSTANCE = new PluginContext();

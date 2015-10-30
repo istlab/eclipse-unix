@@ -18,7 +18,7 @@ import gr.aueb.dmst.istlab.unixtools.controllers.PackageExplorerMainMenuControll
 import gr.aueb.dmst.istlab.unixtools.core.model.CustomCommand;
 import gr.aueb.dmst.istlab.unixtools.plugin.PluginContext;
 
-public class PackageExplorerMainMenuView extends AbstactPackageExplorerView {
+public final class PackageExplorerMainMenuView extends AbstactPackageExplorerView {
 
   private List<CustomCommand> customCommands;
   private PackageExplorerMainMenuController controller;
@@ -43,6 +43,7 @@ public class PackageExplorerMainMenuView extends AbstactPackageExplorerView {
     return items;
   }
 
+  @Override
   protected IContributionItem[] createCustomCommandArray() {
     List<IContributionItem> contributionItemList = new ArrayList<IContributionItem>();
 

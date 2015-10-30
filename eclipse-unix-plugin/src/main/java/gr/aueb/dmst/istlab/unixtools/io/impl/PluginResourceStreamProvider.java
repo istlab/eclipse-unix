@@ -13,7 +13,7 @@ import java.net.URLConnection;
 
 import gr.aueb.dmst.istlab.unixtools.io.IOStreamProvider;
 
-public class PluginResourceStreamProvider implements IOStreamProvider {
+public final class PluginResourceStreamProvider implements IOStreamProvider {
 
   private URL fileURL;
 

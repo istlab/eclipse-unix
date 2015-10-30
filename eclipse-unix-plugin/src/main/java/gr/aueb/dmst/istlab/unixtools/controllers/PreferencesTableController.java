@@ -30,7 +30,7 @@ import gr.aueb.dmst.istlab.unixtools.serialization.yaml.YamlSerializer;
 import gr.aueb.dmst.istlab.unixtools.util.EclipsePluginUtil;
 import gr.aueb.dmst.istlab.unixtools.util.PropertiesLoader;
 
-public class PreferencesTableController {
+public final class PreferencesTableController {
 
   private static final Logger logger = Logger.getLogger(PreferencesTableController.class);
   private CustomCommandModel model;

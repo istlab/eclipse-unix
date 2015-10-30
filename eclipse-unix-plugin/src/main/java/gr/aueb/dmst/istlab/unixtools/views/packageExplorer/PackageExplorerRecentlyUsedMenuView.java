@@ -17,7 +17,7 @@ import org.eclipse.ui.menus.CommandContributionItemParameter;
 import gr.aueb.dmst.istlab.unixtools.controllers.PackageExplorerRecentlyUsedMenuController;
 import gr.aueb.dmst.istlab.unixtools.plugin.PluginContext;
 
-public class PackageExplorerRecentlyUsedMenuView extends AbstactPackageExplorerView {
+public final class PackageExplorerRecentlyUsedMenuView extends AbstactPackageExplorerView {
 
   private PackageExplorerRecentlyUsedMenuController controller;
 

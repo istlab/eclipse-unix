@@ -11,7 +11,7 @@ import gr.aueb.dmst.istlab.unixtools.actions.VoidActionResult;
 import gr.aueb.dmst.istlab.unixtools.core.model.CustomCommand;
 import gr.aueb.dmst.istlab.unixtools.core.model.CustomCommandModel;
 
-public class EditCustomCommandAction implements Action<VoidActionResult> {
+public final class EditCustomCommandAction implements Action<VoidActionResult> {
 
   private CustomCommandModel model;
   private CustomCommand commandToUpdate;

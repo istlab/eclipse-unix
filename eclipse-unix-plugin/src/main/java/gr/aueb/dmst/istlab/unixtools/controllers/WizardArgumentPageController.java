@@ -12,7 +12,7 @@ import gr.aueb.dmst.istlab.unixtools.core.model.CommandPrototype;
 import gr.aueb.dmst.istlab.unixtools.core.model.CommandPrototypeModel;
 import gr.aueb.dmst.istlab.unixtools.core.model.CommandPrototypeOption;
 
-public class WizardArgumentPageController {
+public final class WizardArgumentPageController {
 
   private CommandPrototypeModel model;
 

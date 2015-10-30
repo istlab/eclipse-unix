@@ -5,7 +5,7 @@ import java.util.List;
 
 import gr.aueb.dmst.istlab.unixtools.core.model.CustomCommand;
 
-public class PackageExplorerRecentlyUsedMenuController {
+public final class PackageExplorerRecentlyUsedMenuController {
 
   private List<CustomCommand> recentlyUsed;
 

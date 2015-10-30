@@ -1,3 +1,8 @@
+/*
+ * Copyright 2015 The ISTLab. Use of this source code is governed by a GNU AFFERO GPL 3.0 license
+ * that can be found in the LICENSE file.
+ */
+
 package gr.aueb.dmst.istlab.unixtools.views.dialogs;
 
 import java.util.ArrayList;
@@ -25,7 +30,7 @@ import org.eclipse.swt.widgets.TableItem;
 import gr.aueb.dmst.istlab.unixtools.util.PropertiesLoader;
 import gr.aueb.dmst.istlab.unixtools.util.ResourceFile;
 
-public class DisplayResourcesDialogView extends TitleAreaDialog implements SelectionListener {
+public final class DisplayResourcesDialogView extends TitleAreaDialog implements SelectionListener {
 
   private Table table;
   private Button editButton;

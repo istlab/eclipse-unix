@@ -1,6 +1,11 @@
+/*
+ * Copyright 2015 The ISTLab. Use of this source code is governed by a GNU AFFERO GPL 3.0 license
+ * that can be found in the LICENSE file.
+ */
+
 package gr.aueb.dmst.istlab.unixtools.util;
 
-public class ResourceFile {
+public final class ResourceFile {
 
   private String path;
   private boolean isInput;

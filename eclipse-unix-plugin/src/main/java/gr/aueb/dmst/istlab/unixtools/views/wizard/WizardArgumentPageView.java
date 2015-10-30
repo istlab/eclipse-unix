@@ -33,7 +33,7 @@ import gr.aueb.dmst.istlab.unixtools.util.PropertiesLoader;
  * Otherwise the user can check multiple check buttons , each one having an argument, and the
  * argument's description as a tool tip text.
  */
-public class WizardArgumentPageView extends WizardPage {
+public final class WizardArgumentPageView extends WizardPage {
 
   private String givenCommand;
   private Button[] buttons;

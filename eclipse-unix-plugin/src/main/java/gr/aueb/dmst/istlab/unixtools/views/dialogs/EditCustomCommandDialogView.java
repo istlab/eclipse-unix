@@ -29,7 +29,7 @@ import gr.aueb.dmst.istlab.unixtools.util.PropertiesLoader;
  * given command's arguments. A Directory Dialog used to modify the shell's starting directory. A
  * File Dialog used to modify the input resource file.
  */
-public class EditCustomCommandDialogView extends TitleAreaDialog {
+public final class EditCustomCommandDialogView extends TitleAreaDialog {
 
   private Text commandText;
   private Text nameText;

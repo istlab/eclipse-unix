@@ -33,7 +33,7 @@ import gr.aueb.dmst.istlab.unixtools.util.PropertiesLoader;
  * then in the top of the page we display the current state of the command. Restrictions : the
  * command name cannot be duplicate or empty, because we use it in our inner engine as a search key.
  */
-public class WizardMainPageView extends WizardPage {
+public final class WizardMainPageView extends WizardPage {
 
   private Label label;
   private Label nick;

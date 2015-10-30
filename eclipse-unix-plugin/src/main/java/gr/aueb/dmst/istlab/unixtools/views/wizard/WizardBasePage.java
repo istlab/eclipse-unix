@@ -25,7 +25,7 @@ import gr.aueb.dmst.istlab.unixtools.util.ResourceFile;
  * the shell's directory path and the command's nickname, are extracted from the last part of the
  * pipe i.e from the last wizard that pops up.
  */
-public class WizardBasePage extends Wizard {
+public final class WizardBasePage extends Wizard {
 
   private Shell shell;
   private WizardMainPageView mainPageView;

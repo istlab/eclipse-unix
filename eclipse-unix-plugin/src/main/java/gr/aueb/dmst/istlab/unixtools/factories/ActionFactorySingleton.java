@@ -8,7 +8,7 @@ package gr.aueb.dmst.istlab.unixtools.factories;
 import gr.aueb.dmst.istlab.unixtools.actions.ActionFactory;
 import gr.aueb.dmst.istlab.unixtools.actions.impl.ActionFactoryImpl;
 
-public class ActionFactorySingleton {
+public final class ActionFactorySingleton {
 
   public static final ActionFactory INSTANCE;
 

@@ -46,7 +46,7 @@ import gr.aueb.dmst.istlab.unixtools.views.wizard.WizardBasePage;
  * overwriting the existing ones in the table. Might add appending option. Export : exports the
  * custom commands from the table to a yaml file.
  */
-public class PreferencesTableView extends AbstractPreferencesPageView {
+public final class PreferencesTableView extends AbstractPreferencesPageView {
 
   private Button addButton;
   private Button editButton;

@@ -19,7 +19,7 @@ import org.eclipse.swt.widgets.Control;
 import gr.aueb.dmst.istlab.unixtools.core.model.CommandPrototype;
 import gr.aueb.dmst.istlab.unixtools.core.model.CommandPrototypeModel;
 
-public class WizardMainPageController {
+public final class WizardMainPageController {
 
   private final String lowerCaseLetters;
   private final String upperCaseLetters;

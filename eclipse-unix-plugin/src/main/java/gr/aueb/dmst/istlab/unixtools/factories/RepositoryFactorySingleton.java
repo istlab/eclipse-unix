@@ -8,7 +8,7 @@ package gr.aueb.dmst.istlab.unixtools.factories;
 import gr.aueb.dmst.istlab.unixtools.dal.RepositoryFactory;
 import gr.aueb.dmst.istlab.unixtools.dal.impl.RepositoryFactoryImpl;
 
-public class RepositoryFactorySingleton {
+public final class RepositoryFactorySingleton {
 
   public static final RepositoryFactory INSTANCE;
 

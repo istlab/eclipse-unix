@@ -12,7 +12,7 @@ import org.eclipse.ui.IWorkbench;
 
 import gr.aueb.dmst.istlab.unixtools.util.PropertiesLoader;
 
-public class PreferencesMainPageView extends AbstractPreferencesPageView {
+public final class PreferencesMainPageView extends AbstractPreferencesPageView {
 
   // instance variables
   private DirectoryFieldEditor directoryFieldEditor;
