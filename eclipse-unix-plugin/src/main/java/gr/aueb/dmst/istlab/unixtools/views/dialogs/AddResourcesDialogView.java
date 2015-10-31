@@ -8,6 +8,8 @@ package gr.aueb.dmst.istlab.unixtools.views.dialogs;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
@@ -15,6 +17,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
@@ -22,7 +25,7 @@ import org.eclipse.swt.widgets.Text;
 
 import gr.aueb.dmst.istlab.unixtools.util.PropertiesLoader;
 
-public final class AddResourcesDialogView extends TitleAreaDialog {
+public final class AddResourcesDialogView extends TitleAreaDialog implements ModifyListener {
 
   private Button inputOption;
   private Button outputOption;
@@ -45,6 +48,8 @@ public final class AddResourcesDialogView extends TitleAreaDialog {
 
   @Override
   protected void okPressed() {
+    if (this.getErrorMessage() != null)
+      return;
     saveInput();
     super.okPressed();
   }
@@ -85,6 +90,16 @@ public final class AddResourcesDialogView extends TitleAreaDialog {
 
     filePath = new Text(container, SWT.BORDER);
     filePath.setLayoutData(data);
+    filePath.addModifyListener(this);
+    // Explicitly call the modify listener of the text. Why would we like to do that?
+    // the first time the user opens the dialog the path will be always empty.
+    // but since we associated the resource editing along with this class,
+    // we cannot just setErrorMessage(something) in the control creation
+    // since if the user wants to edit an inserted resource file and along the process
+    // changes his mind and just presses ok without changing the path the dialog
+    // won't let him save and continue. Therefore we explicitly invoke the modify listener
+    // and it will display the message in an addition action only.
+    filePath.notifyListeners(SWT.Modify, new Event());
     browseButton = new Button(container, SWT.PUSH);
     browseButton.setText("Browse");
     browseButton.addSelectionListener(new SelectionAdapter() {
@@ -140,5 +155,14 @@ public final class AddResourcesDialogView extends TitleAreaDialog {
 
   public boolean isInput() {
     return this.isInput;
+  }
+
+  @Override
+  public void modifyText(ModifyEvent e) {
+    if (this.filePath.getText().trim().isEmpty()) {
+      this.setErrorMessage("File's path cannot be empty!");
+    } else {
+      this.setErrorMessage(null);
+    }
   }
 }
