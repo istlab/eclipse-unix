@@ -6,7 +6,7 @@ Development
 
 ### Requirements
 - Eclipse Mars with PDE (Plugin Development Environment).
-- Java JDK 8
+- Java JDK 7
 
 Also in Eclipse, you should have at least two projects, the plug-in project and the feature project:
 * The plug-in project should point to the plugin subfolder of this git repository,
