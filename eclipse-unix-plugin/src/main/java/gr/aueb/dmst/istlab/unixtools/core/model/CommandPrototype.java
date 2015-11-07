@@ -19,7 +19,7 @@ public final class CommandPrototype {
   public CommandPrototype(String name, String description) {
     this.setName(name);
     this.setDescription(description);
-    this.setOptions(new ArrayList<>());
+    this.setOptions(new ArrayList<CommandPrototypeOption>());
   }
 
   public void setName(String name) {

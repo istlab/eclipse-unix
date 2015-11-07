@@ -52,8 +52,11 @@ public class PreferencesTableControllerTest {
   public void testRemoveCustomCommand() {
     this.controller.saveCustomCommands(this.customCommands);
     assertEquals(2, this.controller.getCustomCommands().size());
-    this.controller.removeCustomCommand(
-        this.controller.getCustomCommands().stream().toArray(CustomCommand[]::new));
+
+    CustomCommand[] customCommands = new CustomCommand[this.controller.getCustomCommands().size()];
+    this.controller.getCustomCommands().toArray(customCommands);
+    this.controller.removeCustomCommand(customCommands);
+
     assertEquals(0, this.controller.getCustomCommands().size());
   }
 
